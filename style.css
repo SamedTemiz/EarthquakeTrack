@@ -1,0 +1,491 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    /* Flat Design Palette (Refinity Style) */
+    --bg-dark: #121212;
+    --bg-sidebar: #1E1E1E;
+    --card-bg: #252525;
+    --card-hover: #2A2A2A;
+    --border-color: #333;
+
+    --text-primary: #E0E0E0;
+    --text-secondary: #A0A0A0;
+
+    /* Solid Accents */
+    --accent-gold: #C5A065;
+    /* Refinity Gold/Beige */
+    --accent-red: #D64545;
+
+    --sidebar-width: 400px;
+    --rail-width: 70px;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-dark);
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    /* Default open width */
+    min-width: 300px;
+    /* Limit how small it can be dragged */
+    max-width: 50vw;
+    background-color: var(--bg-sidebar);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    /* Transition Max-Width and Min-Width for smooth constraint change, plus padding */
+    transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    /* Prevent wrapping during shrink */
+}
+
+/* Rail Mode */
+.sidebar.rail-mode {
+    width: var(--rail-width) !important;
+    min-width: var(--rail-width) !important;
+    padding: 20px 0;
+    /* Remove horizontal padding */
+}
+
+/* Children Transition Logic */
+/* We target specific text/content elements to fade them out */
+.sidebar .logo-area h2,
+.sidebar .main-nav span:not(.icon),
+.sidebar .earthquake-list-container,
+.sidebar #lang-toggle,
+.sidebar #sidebar-resizer {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    /* Delay the fade-in slightly so sidebar expands first? No, fade quick. */
+}
+
+/* When in rail mode, fade them out */
+.sidebar.rail-mode .logo-area h2,
+.sidebar.rail-mode .main-nav span:not(.icon),
+.sidebar.rail-mode .earthquake-list-container,
+.sidebar.rail-mode #lang-toggle,
+.sidebar.rail-mode #sidebar-resizer {
+    opacity: 0;
+    transform: translateX(-10px);
+    pointer-events: none;
+    /* Ensure they don't block clicks */
+    position: absolute;
+    /* Remove from flow so width collapses */
+    visibility: hidden;
+    /* Ensure completely gone after transition */
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    /* Visibility delay to wait for opacity */
+}
+
+/* Ensure list container collapses fully */
+.sidebar.rail-mode .earthquake-list-container {
+    flex: 0;
+    padding: 0;
+}
+
+/* Layout adjustments for Rail Mode */
+.sidebar.rail-mode .logo-area {
+    justify-content: center !important;
+    padding-bottom: 20px;
+}
+
+.sidebar.rail-mode .main-nav li {
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.sidebar.rail-mode .main-nav .icon {
+    font-size: 24px;
+    margin: 0;
+}
+
+/* Sidebar Resizer */
+#sidebar-resizer {
+    width: 6px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    cursor: col-resize;
+    z-index: 1002;
+    transition: background-color 0.2s;
+}
+
+#sidebar-resizer:hover {
+    background-color: var(--accent-gold);
+}
+
+/* Logo Area */
+.logo-area {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo-area h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.logo-area span {
+    color: var(--accent-gold);
+}
+
+/* Icon Buttons */
+.icon-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    background: rgba(197, 160, 101, 0.1);
+}
+
+#refresh-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 14px;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border-radius: 50%;
+    /* Circular */
+    transition: all 0.3s ease;
+}
+
+#refresh-btn:hover {
+    background: var(--accent-gold);
+    color: #000;
+    box-shadow: 0 0 10px rgba(197, 160, 101, 0.4);
+}
+
+/* Loading Spinner */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+    flex: 1;
+}
+
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--card-bg);
+    border-bottom-color: var(--accent-gold);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Navigation */
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.main-nav li {
+    padding: 12px 10px;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    /* Prevent text wrap during transition */
+}
+
+.main-nav li:hover {
+    background: var(--card-bg);
+    color: #fff;
+}
+
+.main-nav li.active {
+    background: rgba(197, 160, 101, 0.15);
+    /* Low opacity gold */
+    color: var(--accent-gold);
+}
+
+.main-nav .icon {
+    font-size: 18px;
+    min-width: 24px;
+    /* Ensure icon doesn't shift */
+    text-align: center;
+}
+
+/* Earthquake List */
+.earthquake-list-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 1;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.view-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 5px;
+}
+
+.list-header h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.badge {
+    background: var(--accent-gold);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.earthquake-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Scrollbar */
+.earthquake-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.earthquake-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+/* Cards (Flat Style) */
+.quake-card {
+    background-color: var(--card-bg);
+    border: none;
+    /* No border in flat design usually */
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    /* Sharper corners */
+    padding: 16px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.quake-card:hover {
+    background-color: var(--card-hover);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.source-badge {
+    font-size: 10px;
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #999;
+}
+
+.mag-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* Magnitude Colors (Solid) */
+.mag-severe {
+    background-color: #8E44AD;
+}
+
+.mag-high {
+    background-color: var(--accent-red);
+}
+
+.mag-mid {
+    background-color: #F39C12;
+    color: #fff;
+}
+
+.mag-low {
+    background-color: #27AE60;
+}
+
+.card-location {
+    color: #ddd;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #777;
+    border-top: 1px solid #333;
+    padding-top: 8px;
+    margin-top: 8px;
+}
+
+/* Map */
+.main-content {
+    flex: 1;
+    position: relative;
+    background: #111;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    background: #121212;
+}
+
+/* Leaflet Popup Flat */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: var(--bg-sidebar) !important;
+    color: #eee !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-container .leaflet-popup-content-wrapper a {
+    color: var(--accent-gold);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .main-content {
+        order: 1;
+        height: 60vh;
+        /* Map takes top 60% */
+        width: 100%;
+    }
+
+    .sidebar {
+        order: 2;
+        width: 100% !important;
+        height: 40vh;
+        /* List takes bottom 40% */
+        min-width: 0 !important;
+        max-width: none !important;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        transition: height 0.3s ease;
+        padding: 15px;
+    }
+
+    /* Rail Mode on Mobile = Minimized Bottom Bar */
+    .sidebar.rail-mode {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 80px !important;
+        /* Contextual header only */
+        padding: 10px 20px;
+        overflow: hidden;
+    }
+
+    /* Adjust content visibility in Rail Mode (Mobile) */
+    .sidebar.rail-mode .earthquake-list-container {
+        display: none;
+    }
+
+    .sidebar.rail-mode .logo-area {
+        display: flex !important;
+        /* Keep header visible */
+        justify-content: space-between !important;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border: none;
+    }
+
+    /* Hide nav in rail mode on mobile to save space, or show horizontal? 
+       Let's show horizontal nav in rail mode */
+    .sidebar.rail-mode .main-nav {
+        display: none;
+        /* Simplest: Hide nav, show only header/toggle */
+    }
+
+    /* Resizer useless on mobile vertical */
+    #sidebar-resizer {
+        display: none;
+    }
+}
