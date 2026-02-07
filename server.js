@@ -17,6 +17,24 @@ const MIME_TYPES = {
 http.createServer((req, res) => {
     // Parse URL to ignore query strings (e.g. style.css?v=2024)
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+
+    if (parsedUrl.pathname === '/sitemap.xml') {
+        const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          <url>
+            <loc>https://earthquaketrack.com.tr/</loc>
+            <priority>1.0</priority>
+          </url>
+          <url>
+            <loc>https://earthquaketrack.com.tr/izmir</loc>
+            <priority>0.8</priority>
+          </url>
+        </urlset>`;
+        
+        res.writeHead(200, { 'Content-Type': 'application/xml' });
+        return res.end(sitemap);
+    }
+    
     let filePath = '.' + parsedUrl.pathname;
     if (filePath === './') filePath = './index.html';
 
