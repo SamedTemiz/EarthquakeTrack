@@ -21,18 +21,12 @@ http.createServer((req, res) => {
     if (parsedUrl.pathname === '/sitemap.xml') {
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-          <url>
-            <loc>https://earthquaketrack.com.tr/</loc>
-            <priority>1.0</priority>
-          </url>
-          <url>
-            <loc>https://earthquaketrack.com.tr/izmir</loc>
-            <priority>0.8</priority>
-          </url>
+        <url><loc>https://earthquaketrack.com.tr/</loc><priority>1.0</priority></url>
+        <url><loc>https://earthquaketrack.com.tr/izmir</loc><priority>0.8</priority></url>
         </urlset>`;
-        
+    
         res.writeHead(200, { 'Content-Type': 'application/xml' });
-        return res.end(sitemap);
+        return res.end(sitemap); // Burada "return" olması kritik, yoksa kod aşağı devam edip hata verir.
     }
     
     let filePath = '.' + parsedUrl.pathname;
