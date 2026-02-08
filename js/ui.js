@@ -75,23 +75,19 @@ export function initSidebarResize(mapInstance) {
         if (window.innerWidth > 768) return; // Only for mobile
 
         if (isExpanded) {
-            // Minimize List (Tam Kapalı - Sadece Handle + Header + Nav)
+            // Minimize List (Tam Kapalı - Sadece Handle + Header + Safe Area)
             const resizerHeight = resizer.offsetHeight;
 
             const logoArea = document.querySelector('.logo-area');
             const logoStyle = logoArea ? window.getComputedStyle(logoArea) : null;
             const logoHeight = logoArea ? logoArea.offsetHeight + parseFloat(logoStyle.marginTop) + parseFloat(logoStyle.marginBottom) : 0;
 
-            const nav = document.querySelector('.main-nav');
-            const navStyle = nav ? window.getComputedStyle(nav) : null;
-            const navHeight = nav ? nav.offsetHeight + parseFloat(navStyle.marginTop) + parseFloat(navStyle.marginBottom) : 0;
-
             const sidebarStyles = window.getComputedStyle(sidebar);
             const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 20; // Ensure minimum safe area
             const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
 
-            // Total height needed: Logo + Nav + Handle + Paddings + Buffer
-            const handleHeight = resizerHeight + logoHeight + navHeight + paddingBottom + paddingTop;
+            // Total height needed: Logo + Handle + Paddings
+            const handleHeight = resizerHeight + logoHeight + paddingBottom + paddingTop;
 
             sidebar.style.height = `${handleHeight}px`;
             sidebar.style.flex = 'none';
