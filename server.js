@@ -18,17 +18,25 @@ http.createServer((req, res) => {
     // Parse URL to ignore query strings (e.g. style.css?v=2024)
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
+    if (parsedUrl.pathname === '/robots.txt') {
+        const robots = `User-agent: *
+Allow: /
+Sitemap: https://earthquaketrack.com.tr/sitemap.xml`;
+
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        return res.end(robots);
+    }
+
     if (parsedUrl.pathname === '/sitemap.xml') {
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url><loc>https://earthquaketrack.com.tr/</loc><priority>1.0</priority></url>
-        <url><loc>https://earthquaketrack.com.tr/izmir</loc><priority>0.8</priority></url>
+        <url><loc>https://earthquaketrack.com.tr/</loc><priority>1.0</priority><changefreq>always</changefreq></url>
         </urlset>`;
-    
+
         res.writeHead(200, { 'Content-Type': 'application/xml' });
         return res.end(sitemap); // Burada "return" olması kritik, yoksa kod aşağı devam edip hata verir.
     }
-    
+
     let filePath = '.' + parsedUrl.pathname;
     if (filePath === './') filePath = './index.html';
 

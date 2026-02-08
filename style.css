@@ -68,7 +68,7 @@ html {
 
 /* Children Transition Logic */
 /* We target specific text/content elements to fade them out */
-.sidebar .logo-area h2,
+.sidebar .logo-area h1,
 .sidebar .main-nav span:not(.icon),
 .sidebar .earthquake-list-container,
 .sidebar #lang-toggle,
@@ -80,7 +80,7 @@ html {
 }
 
 /* When in rail mode, fade them out */
-.sidebar.rail-mode .logo-area h2,
+.sidebar.rail-mode .logo-area h1,
 .sidebar.rail-mode .main-nav span:not(.icon),
 .sidebar.rail-mode .earthquake-list-container,
 .sidebar.rail-mode #lang-toggle,
@@ -142,7 +142,7 @@ html {
     border-bottom: 1px solid var(--border-color);
 }
 
-.logo-area h2 {
+.logo-area h1 {
     margin: 0;
     font-size: 20px;
     font-weight: 600;

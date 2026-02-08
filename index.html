@@ -4,7 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EarthquakeTrack</title>
+
+    <!-- Primary Meta Tags -->
+    <title>Canlı Deprem Takibi - Türkiye ve Dünyadan Son Depremler</title>
+    <meta name="title" content="Canlı Deprem Takibi - Türkiye ve Dünyadan Son Depremler">
+    <meta name="description"
+        content="Anlık deprem verilerini takip edin. Türkiye ve dünyadaki son depremleri harita üzerinde görüntüleyin, büyüklük ve konum filtrelemesi yapın.">
+    <meta name="keywords"
+        content="deprem, son depremler, kandilli, afad, earthquake, canlı deprem haritası, türkiye deprem">
+    <meta name="author" content="Samed Temiz">
+    <meta name="google-site-verification" content="0tbmelLvBJ641ecqYBwQbf9qD2mIg05W_Blyl2gvAGg" />
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://earthquaketrack.com.tr/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://earthquaketrack.com.tr/">
+    <meta property="og:title" content="Canlı Deprem Takibi - Türkiye ve Dünyadan Son Depremler">
+    <meta property="og:description"
+        content="Anlık deprem verilerini takip edin. Türkiye ve dünyadaki son depremleri harita üzerinde görüntüleyin.">
+    <meta property="og:image" content="https://earthquaketrack.com.tr/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://earthquaketrack.com.tr/">
+    <meta property="twitter:title" content="Canlı Deprem Takibi - Türkiye ve Dünyadan Son Depremler">
+    <meta property="twitter:description"
+        content="Anlık deprem verilerini takip edin. Türkiye ve dünyadaki son depremleri harita üzerinde görüntüleyin.">
+    <meta property="twitter:image" content="https://earthquaketrack.com.tr/og-image.jpg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "EarthquakeTrack",
+      "url": "https://earthquaketrack.com.tr/",
+      "description": "Anlık deprem verilerini takip etmenizi sağlayan web uygulaması.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "TRY"
+      }
+    }
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -17,7 +63,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo-area" style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>Earthquake<span>Track</span></h2>
+                <h1>Earthquake<span>Track</span></h1>
                 <div style="display:flex; gap:10px;">
                     <button id="lang-toggle" class="icon-btn" style="font-weight:600; font-size:12px;">EN</button>
                     <button id="sidebar-toggle-btn" class="icon-btn">
