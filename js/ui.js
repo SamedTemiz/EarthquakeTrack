@@ -75,18 +75,29 @@ export function initSidebarResize(mapInstance) {
         if (window.innerWidth > 768) return; // Only for mobile
 
         if (isExpanded) {
-            // Minimize List (Tam Kapalı - Sadece Handle + Safe Area)
-            // Dynamically measure current handle size and padding
+            // Minimize List (Tam Kapalı - Sadece Handle + Header + Nav)
             const resizerHeight = resizer.offsetHeight;
+
+            const logoArea = document.querySelector('.logo-area');
+            const logoStyle = logoArea ? window.getComputedStyle(logoArea) : null;
+            const logoHeight = logoArea ? logoArea.offsetHeight + parseFloat(logoStyle.marginTop) + parseFloat(logoStyle.marginBottom) : 0;
+
+            const nav = document.querySelector('.main-nav');
+            const navStyle = nav ? window.getComputedStyle(nav) : null;
+            const navHeight = nav ? nav.offsetHeight + parseFloat(navStyle.marginTop) + parseFloat(navStyle.marginBottom) : 0;
+
             const sidebarStyles = window.getComputedStyle(sidebar);
-            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
+            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 20; // Ensure minimum safe area
+            const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
 
-            const handleHeight = resizerHeight + paddingBottom;
+            // Total height needed: Logo + Nav + Handle + Paddings + Buffer
+            const handleHeight = resizerHeight + logoHeight + navHeight + paddingBottom + paddingTop;
+
             sidebar.style.height = `${handleHeight}px`;
-            sidebar.style.flex = 'none'; // Fixed height
+            sidebar.style.flex = 'none';
 
-            mainContent.style.height = 'auto'; // Reset specific height
-            mainContent.style.flex = '1'; // Fill remaining space
+            mainContent.style.height = 'auto';
+            mainContent.style.flex = '1';
 
             sidebar.style.overflow = 'hidden';
         } else {
