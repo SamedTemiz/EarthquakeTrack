@@ -2,7 +2,8 @@ import { t } from './language.js';
 
 export function initMap() {
     const map = L.map('map', {
-        zoomControl: false // Disable default top-left
+        zoomControl: false, // Disable default top-left
+        attributionControl: false // Disable attribution text
     }).setView([39.0, 35.0], 6); // Turkey centered view
 
     // Add Zoom Control to Bottom Right

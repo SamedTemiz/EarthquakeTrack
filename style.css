@@ -435,23 +435,58 @@ html {
 
     .main-content {
         order: 1;
-        height: 60vh;
-        /* Map takes top 60% */
+        height: 25vh;
+        /* Map takes top 25% */
         width: 100%;
     }
 
     .sidebar {
         order: 2;
         width: 100% !important;
-        height: 40vh;
-        /* List takes bottom 40% */
+        height: 75vh;
+        /* List takes bottom 75% */
         min-width: 0 !important;
         max-width: none !important;
         border-right: none;
         border-top: 1px solid var(--border-color);
         transition: height 0.3s ease;
-        padding: 15px;
+        padding: 10px 15px;
     }
+
+    /* Horizontal Nav Logic */
+    .sidebar .main-nav ul {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #333;
+    }
+
+    .sidebar .main-nav li {
+        flex: 1;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 6px 4px;
+        margin-bottom: 0;
+        font-size: 10px;
+        gap: 4px;
+    }
+
+    .sidebar .main-nav .icon {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .sidebar .logo-area {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+
+    .sidebar .logo-area h1 {
+        font-size: 16px;
+    }
+
 
     /* Rail Mode on Mobile = Minimized Bottom Bar */
     .sidebar.rail-mode {
@@ -484,8 +519,35 @@ html {
         /* Simplest: Hide nav, show only header/toggle */
     }
 
+    /* Hide Toggle Button on Mobile */
+    #sidebar-toggle-btn {
+        display: none !important;
+    }
+
     /* Resizer useless on mobile vertical */
     #sidebar-resizer {
-        display: none;
+        display: block;
+        width: 100%;
+        height: 20px;
+        /* Grabbable area */
+        top: -10px;
+        /* Position slightly above to overlap border */
+        left: 0;
+        bottom: auto;
+        right: auto;
+        cursor: row-resize;
+        /* Visual indicator */
+        background: transparent;
+        z-index: 1005;
+    }
+
+    #sidebar-resizer::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: #444;
+        border-radius: 2px;
+        margin: 8px auto;
     }
 }

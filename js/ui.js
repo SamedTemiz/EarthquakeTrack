@@ -62,52 +62,125 @@ export function updateSidebar(earthquakes, mapInstance) {
 
 export function initSidebarResize(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content'); // Need this to adjust map height
     const resizer = document.getElementById('sidebar-resizer');
 
     if (!resizer) return;
 
     let isResizing = false;
+    let startY = 0;
+    let isExpanded = true; // Default state (75% list)
 
+    const toggleSidebar = () => {
+        if (window.innerWidth > 768) return; // Only for mobile
+
+        if (isExpanded) {
+            // Minimize List (Tam Kapalı - Sadece Handle)
+            const handleHeight = 30;
+            sidebar.style.height = `${handleHeight}px`;
+            mainContent.style.height = `${window.innerHeight - handleHeight}px`;
+            sidebar.style.overflow = 'hidden'; // Ensure content is hidden
+        } else {
+            // Maximize List (Default Open)
+            sidebar.style.height = '75vh';
+            mainContent.style.height = '25vh';
+            sidebar.style.overflow = ''; // Restore default
+        }
+        isExpanded = !isExpanded;
+        setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
+    };
+
+    // Mouse Events (Desktop)
     resizer.addEventListener('mousedown', (e) => {
         isResizing = true;
+        startY = e.clientY;
         resizer.classList.add('resizing');
-        document.body.style.cursor = 'col-resize';
-        // Prevent text selection during drag
         document.body.style.userSelect = 'none';
+
+        if (window.innerWidth <= 768) {
+            document.body.style.cursor = 'row-resize';
+        } else {
+            document.body.style.cursor = 'col-resize';
+        }
     });
 
-    document.addEventListener('mousemove', (e) => {
+    // Touch Events (Mobile)
+    resizer.addEventListener('touchstart', (e) => {
+        isResizing = true;
+        startY = e.touches[0].clientY;
+        resizer.classList.add('resizing');
+        document.body.style.userSelect = 'none';
+        e.preventDefault(); // Prevent scrolling while resizing
+    }, { passive: false });
+
+
+    const handleMove = (clientX, clientY) => {
         if (!isResizing) return;
 
-        // Calculate new width
-        // Only consider the horizontal component
-        let newWidth = e.clientX;
+        if (window.innerWidth <= 768) {
+            // Mobile: Vertical Resize
+            // Calculate new height for map (top part) based on Y position
+            const totalHeight = window.innerHeight;
+            let newMapHeight = clientY;
 
-        // Let CSS min-width and max-width handle constraints visually? 
-        // JS often needs to enforce to update inline style correctly.
-        // CSS Constraints: 350px min, 50vw max.
+            // Constraints
+            const minMapHeight = 100; // Min map height
+            const maxMapHeight = totalHeight - 100; // Min list height
 
-        const minWidth = 350;
-        const maxWidth = window.innerWidth * 0.5;
+            if (newMapHeight < minMapHeight) newMapHeight = minMapHeight;
+            if (newMapHeight > maxMapHeight) newMapHeight = maxMapHeight;
 
-        if (newWidth < minWidth) newWidth = minWidth;
-        if (newWidth > maxWidth) newWidth = maxWidth;
+            const newListHeight = totalHeight - newMapHeight;
 
-        sidebar.style.width = `${newWidth}px`;
+            mainContent.style.height = `${newMapHeight}px`;
+            sidebar.style.height = `${newListHeight}px`;
 
-        // Update map immediately for smooth feel (can be throttled if laggy)
+            // Should we update isExpanded state?
+            // If dragging manually, we might leave it in explicit state.
+            // Let's assume if > 50% list, it is expanded.
+            isExpanded = (newListHeight / totalHeight) > 0.4;
+
+        } else {
+            // Desktop: Horizontal Resize
+            let newWidth = clientX;
+            const minWidth = 350;
+            const maxWidth = window.innerWidth * 0.5;
+
+            if (newWidth < minWidth) newWidth = minWidth;
+            if (newWidth > maxWidth) newWidth = maxWidth;
+
+            sidebar.style.width = `${newWidth}px`;
+        }
+
         mapInstance.invalidateSize();
-    });
+    };
 
-    document.addEventListener('mouseup', () => {
+    const handleEnd = (e) => {
         if (isResizing) {
+            // Check for Click (Minimal movement)
+            const clientY = (e.changedTouches ? e.changedTouches[0].clientY : e.clientY);
+            if (Math.abs(clientY - startY) < 5 && window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+
             isResizing = false;
             resizer.classList.remove('resizing');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
-            mapInstance.invalidateSize(); // Final update
+            mapInstance.invalidateSize();
         }
-    });
+    };
+
+    // Mouse Move/Up
+    document.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+    document.addEventListener('mouseup', handleEnd);
+
+    // Touch Move/End
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        handleMove(touch.clientX, touch.clientY);
+    }, { passive: false });
+    document.addEventListener('touchend', handleEnd);
 }
 
 export function initSidebarToggle(mapInstance) {
