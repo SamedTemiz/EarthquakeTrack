@@ -203,6 +203,16 @@ export function initSidebarResize(mapInstance) {
         handleMove(touch.clientX, touch.clientY);
     }, { passive: false });
     document.addEventListener('touchend', handleEnd);
+
+    // Mobile Toggle Icon Click
+    const mobileToggleIcon = document.getElementById('mobile-toggle-icon');
+    if (mobileToggleIcon) {
+        mobileToggleIcon.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    }
 }
 
 export function initSidebarToggle(mapInstance) {

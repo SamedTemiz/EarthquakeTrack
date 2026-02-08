@@ -532,9 +532,9 @@ html {
     #sidebar-resizer {
         display: block;
         width: 100%;
-        height: 20px;
-        /* Grabbable area */
-        top: -10px;
+        height: 30px;
+        /* Grabbable area - increased */
+        top: -15px;
         /* Position slightly above to overlap border */
         left: 0;
         bottom: auto;
@@ -548,30 +548,36 @@ html {
     #sidebar-resizer::after {
         content: "";
         display: block;
-        width: 40px;
-        height: 4px;
+        width: 50px;
+        height: 5px;
         background: #444;
-        border-radius: 2px;
-        margin: 8px auto 4px auto;
-        /* adjusted margin */
+        border-radius: 3px;
+        margin: 12px auto 4px auto;
     }
 
-    /* Arrow Icon */
-    #sidebar-resizer::before {
-        content: "▼";
-        /* Default Open: Down Arrow (Close) */
-        display: block;
-        text-align: center;
-        color: #666;
-        font-size: 10px;
-        line-height: 10px;
-        margin-top: -2px;
+    /* Mobile Toggle Icon */
+    .mobile-toggle-icon {
+        display: none;
+        font-size: 16px;
+        color: #C5A065;
+        cursor: pointer;
+        user-select: none;
+        line-height: 1;
+        vertical-align: middle;
     }
 
-    /* Closed State Icons */
-    .sidebar.minimized #sidebar-resizer::before {
-        content: "▲";
-        /* Closed: Up Arrow (Open) */
+    @media (max-width: 768px) {
+        .mobile-toggle-icon {
+            display: inline-block;
+        }
+
+        .mobile-toggle-icon::before {
+            content: "▼";
+        }
+
+        .sidebar.minimized .mobile-toggle-icon::before {
+            content: "▲";
+        }
     }
 
     /* Hide navigation in minimized state */
