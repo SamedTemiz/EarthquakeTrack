@@ -453,6 +453,8 @@ html {
         border-top: 1px solid var(--border-color);
         transition: height 0.3s ease;
         padding: 10px 15px;
+        /* Safe Area for Mobile Home Indicator */
+        padding-bottom: env(safe-area-inset-bottom, 20px);
     }
 
     /* Horizontal Nav Logic */

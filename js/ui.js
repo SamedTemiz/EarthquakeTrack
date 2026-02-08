@@ -75,9 +75,13 @@ export function initSidebarResize(mapInstance) {
         if (window.innerWidth > 768) return; // Only for mobile
 
         if (isExpanded) {
-            // Minimize List (Tam Kapalı - Sadece Handle)
-            // Use Flexbox to fill remaining space instead of calc()
-            const handleHeight = 30;
+            // Minimize List (Tam Kapalı - Sadece Handle + Safe Area)
+            // Dynamically measure current handle size and padding
+            const resizerHeight = resizer.offsetHeight;
+            const sidebarStyles = window.getComputedStyle(sidebar);
+            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
+
+            const handleHeight = resizerHeight + paddingBottom;
             sidebar.style.height = `${handleHeight}px`;
             sidebar.style.flex = 'none'; // Fixed height
 
