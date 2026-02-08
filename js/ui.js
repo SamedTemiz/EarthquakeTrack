@@ -76,15 +76,24 @@ export function initSidebarResize(mapInstance) {
 
         if (isExpanded) {
             // Minimize List (Tam Kapalı - Sadece Handle)
+            // Use Flexbox to fill remaining space instead of calc()
             const handleHeight = 30;
             sidebar.style.height = `${handleHeight}px`;
-            mainContent.style.height = `${window.innerHeight - handleHeight}px`;
-            sidebar.style.overflow = 'hidden'; // Ensure content is hidden
+            sidebar.style.flex = 'none'; // Fixed height
+
+            mainContent.style.height = 'auto'; // Reset specific height
+            mainContent.style.flex = '1'; // Fill remaining space
+
+            sidebar.style.overflow = 'hidden';
         } else {
             // Maximize List (Default Open)
             sidebar.style.height = '75vh';
+            sidebar.style.flex = 'none';
+
             mainContent.style.height = '25vh';
-            sidebar.style.overflow = ''; // Restore default
+            mainContent.style.flex = 'none';
+
+            sidebar.style.overflow = '';
         }
         isExpanded = !isExpanded;
         setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
