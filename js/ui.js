@@ -96,6 +96,7 @@ export function initSidebarResize(mapInstance) {
             mainContent.style.flex = '1';
 
             sidebar.style.overflow = 'hidden';
+            sidebar.classList.add('minimized');
         } else {
             // Maximize List (Default Open)
             sidebar.style.height = '75vh';
@@ -105,6 +106,7 @@ export function initSidebarResize(mapInstance) {
             mainContent.style.flex = 'none';
 
             sidebar.style.overflow = '';
+            sidebar.classList.remove('minimized');
         }
         isExpanded = !isExpanded;
         setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
@@ -201,6 +203,16 @@ export function initSidebarResize(mapInstance) {
         handleMove(touch.clientX, touch.clientY);
     }, { passive: false });
     document.addEventListener('touchend', handleEnd);
+
+    // Mobile Toggle Icon Click
+    const mobileToggleIcon = document.getElementById('mobile-toggle-icon');
+    if (mobileToggleIcon) {
+        mobileToggleIcon.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    }
 }
 
 export function initSidebarToggle(mapInstance) {
