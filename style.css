@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-    /* Flat Design Palette (Refinity Style) */
+    /* Default Dark Theme (Refinity Style) */
     --bg-dark: #121212;
     --bg-sidebar: #1E1E1E;
     --card-bg: #252525;
@@ -10,14 +10,46 @@
 
     --text-primary: #E0E0E0;
     --text-secondary: #A0A0A0;
+    --text-tertiary: #777;
 
-    /* Solid Accents */
+    /* Accents */
     --accent-gold: #C5A065;
-    /* Refinity Gold/Beige */
     --accent-red: #D64545;
+    --accent-purple: #8E44AD;
+    --accent-green: #27AE60;
 
     --sidebar-width: 400px;
     --rail-width: 70px;
+
+    /* Map Overlay Opacity */
+    --map-overlay-opacity: 0.8;
+}
+
+[data-theme="light"] {
+    /* Light Mode Palette */
+    --bg-dark: #F5F7FA;
+    /* Soft Gray Background for Map Area/Body */
+    --bg-sidebar: #F1F2F6;
+    /* Soft Gray/White for Sidebar to separate from Map */
+    --card-bg: #FFFFFF;
+    /* White Cards */
+    --card-hover: #F8F9FA;
+    /* Very Light Gray Hover */
+    --border-color: #E2E8F0;
+    /* Light Border */
+
+    --text-primary: #1A202C;
+    /* Very Dark Blue/Gray */
+    --text-secondary: #4A5568;
+    /* Medium Gray */
+    --text-tertiary: #718096;
+    /* Light Gray */
+
+    /* Accents - Darkened for visibility on white */
+    --accent-gold: #B48E55;
+    --accent-red: #C53030;
+    --accent-purple: #6B46C1;
+    --accent-green: #2F855A;
 }
 
 body,
@@ -28,6 +60,7 @@ html {
     font-family: 'Inter', sans-serif;
     color: var(--text-primary);
     background-color: var(--bg-dark);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dashboard-container {
@@ -42,7 +75,7 @@ html {
 .sidebar {
     width: var(--sidebar-width);
     /* Default open width */
-    min-width: 300px;
+    min-width: 360px;
     /* Limit how small it can be dragged */
     max-width: 50vw;
     background-color: var(--bg-sidebar);
@@ -139,8 +172,10 @@ html {
 
 /* Logo Area */
 .logo-area {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-bottom: 5px;
+    /* Reduced from 10px */
+    padding-bottom: 10px;
+    /* Reduced from 15px */
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -148,11 +183,58 @@ html {
     margin: 0;
     font-size: 20px;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .logo-area span {
     color: var(--accent-gold);
+}
+
+/* Controls Container (Theme, Lang, Toggle) */
+.logo-area .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Rail Mode Adjustments for Controls */
+.sidebar.rail-mode .logo-area {
+    flex-direction: column;
+    height: auto;
+    padding-bottom: 20px;
+    padding-top: 0;
+    /* Align to top */
+}
+
+.sidebar.rail-mode .logo-area .controls {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 5px;
+    /* Minimal margin */
+    width: 100%;
+    align-items: center;
+}
+
+.sidebar.rail-mode #sidebar-toggle-btn {
+    order: -1;
+    /* Move toggle to top of the stack? Or make it distinct */
+    width: 40px;
+    /* Larger hit area */
+    height: 40px;
+    border-radius: 8px;
+    background: var(--bg-dark);
+    /* Contrast */
+    border-color: var(--border-color);
+}
+
+.sidebar.rail-mode #sidebar-toggle-btn:hover {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+.sidebar.rail-mode .logo-area h1 {
+    display: none;
+    /* Hide text title explicitely if not already */
 }
 
 /* Icon Buttons */
@@ -160,7 +242,9 @@ html {
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    padding: 6px 10px;
+    padding: 0;
+    width: 32px;
+    height: 32px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -168,6 +252,13 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Ensure specific buttons in header maintain this shape */
+.logo-area .icon-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
 }
 
 .icon-btn:hover {
@@ -189,10 +280,23 @@ html {
     transition: all 0.3s ease;
 }
 
-#refresh-btn:hover {
+/* Only apply hover on devices that support it to prevent sticky hover on mobile */
+@media (hover: hover) {
+    #refresh-btn:hover {
+        background: var(--accent-gold);
+        color: #000;
+        box-shadow: 0 0 10px rgba(197, 160, 101, 0.4);
+    }
+}
+
+#refresh-btn:active {
     background: var(--accent-gold);
     color: #000;
-    box-shadow: 0 0 10px rgba(197, 160, 101, 0.4);
+    transform: scale(0.95);
+}
+
+#refresh-btn:focus {
+    outline: none;
 }
 
 /* Loading Spinner */
@@ -229,28 +333,28 @@ html {
 .main-nav ul {
     list-style: none;
     padding: 0;
-    margin-bottom: 30px;
+    margin: 0 0 15px 0;
 }
 
 .main-nav li {
-    padding: 12px 10px;
-    margin-bottom: 5px;
-    color: var(--text-secondary);
+    padding: 8px 10px;
     cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-size: 14px;
+    gap: 8px;
+    font-size: 13px;
     font-weight: 500;
-    white-space: nowrap;
-    /* Prevent text wrap during transition */
 }
 
 .main-nav li:hover {
     background: var(--card-bg);
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .main-nav li.active {
@@ -262,17 +366,225 @@ html {
 .main-nav .icon {
     font-size: 18px;
     min-width: 24px;
-    /* Ensure icon doesn't shift */
-    text-align: center;
+    height: 24px;
+    /* Fixed height matching width */
+    display: flex;
+    /* Flex to center SVG */
+    align-items: center;
+    /* Vertical Center */
+    justify-content: center;
+    /* Horizontal Center */
+    margin: 0;
+    padding: 0;
 }
 
-/* Earthquake List */
+.main-nav li span:not(.icon) {
+    line-height: 1;
+    /* Reset line height to avoid offset */
+    display: block;
+    /* Ensure it treats line-height correctly */
+    padding-top: 2px;
+    /* Visual adjustment if font baseline is weird */
+}
+
+/* Switch Component */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 24px;
+    position: relative;
+    width: 48px;
+    box-sizing: border-box;
+}
+
+.theme-switch * {
+    box-sizing: border-box;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #333;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    border-radius: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 3px;
+    content: "";
+    height: 18px;
+    left: 3px;
+    position: absolute;
+    transition: .4s;
+    width: 18px;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Icons */
+.slider .icon {
+    color: #555;
+    /* Default dark icon color on light background of the toggle */
+    font-size: 12px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    transition: color 0.3s;
+}
+
+.slider .icon svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Color adjustments based on state */
+/* If checked (Dark Mode), the toggle background is darker, icons might need to be lighter or stay dark? */
+/* Let's make the active icon (the one not covered by the circle) visible */
+
+/* Actually, the circle moves. 
+   - Unchecked (Light Mode): Circle is on Left (Sun). Meaning we see Moon on Right. 
+     Wait, standard toggle:
+     - Checkbox unchecked = Default. 
+     - Checked = Switched.
+     Let's assume Unchecked = Light Mode? 
+     If initTheme sets it to stored theme...
+     My logic in theme.js: checkbox.checked = (theme === 'dark').
+     So Checked = Dark.
+     
+     If Checked (Dark): Circle moves Right (covers Moon). Sun is visible on Left.
+     If Unchecked (Light): Circle moves Left (covers Sun). Moon is visible on Right.
+     
+     Wait, usually toggle shows what you WILL switch to, or the current state?
+     Usually:
+     - [ O ] -> Button is on left. Background is light. Label says "Light".
+     - [ X ] -> Button is on right. Background is dark.
+     
+     The slider has two icons inside it. 
+     <div class="slider"> <Sun> <Moon> </div>
+     
+     If ::before (circle) is on Left (Unchecked - Light), it covers Sun?
+     CSS: .slider:before { left: 3px; ... }
+     
+     So Unchecked: Circle on Left.
+     We want Sun to be ON the circle or Visible?
+     Usually icons are background for the toggle track.
+     
+     If circle is on Left, it covers the Left side content? 
+     No, `z-index: 2` on `:before`, `z-index: 1` on `.icon`.
+     Yes, it covers the icon if they overlap.
+     
+     Layout:
+     justify-content: space-between; padding: 0 5px;
+     
+     [ (Sun)  Moon ]  <- Circle covers Sun?
+     
+     If I want the visible icon to represent the CURRENT mode:
+     - Light Mode: We want to see a Sun? Or we see a Moon to switch to Dark?
+     
+     Let's stick to "Current State Icon is Highlighted" or "Visible Icon is the Target".
+     
+     Standard MacOS toggle:
+     [ Sun (O) ] -> Dark mode active?
+     
+     Let's just make them colorless (#555 or var(--text-secondary)) and clean.
+*/
+
+input:checked+.slider .icon.sun {
+    color: #fff;
+    /* Visible on dark background */
+}
+
+input:checked+.slider .icon.moon {
+    color: transparent;
+    /* Covered */
+}
+
+input:not(:checked)+.slider .icon.sun {
+    color: transparent;
+    /* Covered */
+}
+
+input:not(:checked)+.slider .icon.moon {
+    color: #555;
+}
+
+/* Adjust colors for Theme */
+/* When Dark Mode (Checked): Slider bg is #666. Sun is visible (left). */
+/* When Light Mode (Unchecked): Slider bg is #333. Moon is visible (right). */
+/* Wait, Unchecked (Light) -> slider bg is #333 defined in CSS? */
+/* .slider { background-color: #333; } */
+/* [data-theme="light"] .slider { background-color: #ccc; } */
+
+/* So:
+   Light Mode (Unchecked): Bg #ccc. Circle Left. Covers Sun?
+   We see Moon on Right. Moon color should be #555.
+   
+   Dark Mode (Checked): Bg #666. Circle Right. Covers Moon.
+   We see Sun on Left. Sun color should be #fff or #ddd.
+*/
+
+.slider .icon {
+    color: var(--text-secondary);
+}
+
+/* Specific overrides */
+input:checked+.slider .icon.sun {
+    color: #eee;
+}
+
+input:checked+.slider .icon.moon {
+    opacity: 0;
+}
+
+input:not(:checked)+.slider .icon.sun {
+    opacity: 0;
+}
+
+input:not(:checked)+.slider .icon.moon {
+    color: #555;
+}
+
+input:checked+.slider {
+    background-color: #666;
+}
+
+input:checked+.slider:before {
+    transform: translateX(24px);
+}
+
+/* Light Theme overrides for switch */
+[data-theme="light"] .slider {
+    background-color: #ccc;
+}
+
+[data-theme="light"] input:checked+.slider {
+    background-color: #2196F3;
+}
+
 .earthquake-list-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    opacity: 1;
     overflow: hidden;
     opacity: 1;
     transition: opacity 0.2s;
@@ -311,33 +623,76 @@ html {
     font-weight: 700;
 }
 
+/* Sort Menu */
+.sort-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    min-width: 150px;
+    margin-top: 5px;
+    overflow: hidden;
+    display: none;
+}
+
+.sort-option {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.sort-option:hover {
+    background: var(--card-hover);
+}
+
+.sort-option.active {
+    background: rgba(197, 160, 101, 0.1);
+    color: var(--accent-gold);
+    font-weight: 500;
+}
+
 .earthquake-list {
     flex: 1;
     overflow-y: auto;
     padding-right: 5px;
 }
 
-/* Scrollbar */
-.earthquake-list::-webkit-scrollbar {
+/* Global Scrollbar */
+*::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
-.earthquake-list::-webkit-scrollbar-thumb {
-    background: #444;
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--border-color);
     border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
 }
 
 /* Cards (Flat Style) */
 .quake-card {
     background-color: var(--card-bg);
-    border: none;
-    /* No border in flat design usually */
+    border: 1px solid var(--border-color);
+    /* Added border for better separation in light mode */
     border-left: 3px solid transparent;
     border-radius: 4px;
     /* Sharper corners */
     padding: 16px;
     margin-bottom: 10px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s;
     cursor: pointer;
 }
 
@@ -354,14 +709,23 @@ html {
 
 .source-badge {
     font-size: 10px;
-    background: #333;
+    background: var(--bg-dark);
+    /* Provide contrast in both modes */
     padding: 2px 6px;
     border-radius: 3px;
-    color: #999;
+    color: var(--text-secondary);
+}
+
+/* Utility for Truncation */
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mag-badge {
-    padding: 2px 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
     border-radius: 4px;
     color: #fff;
     font-weight: 600;
@@ -387,18 +751,21 @@ html {
 }
 
 .card-location {
-    color: #ddd;
+    color: var(--text-primary);
     font-size: 14px;
     margin-bottom: 8px;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-stats {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: #777;
-    border-top: 1px solid #333;
+    color: var(--text-tertiary);
+    border-top: 1px solid var(--border-color);
     padding-top: 8px;
     margin-top: 8px;
 }
@@ -413,20 +780,52 @@ html {
 #map {
     height: 100%;
     width: 100%;
-    background: #121212;
+    background: var(--bg-dark);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .leaflet-tile-pane {
+    filter: brightness(0.9) contrast(1.1);
+    /* Slightly darken and increase contrast */
 }
 
 /* Leaflet Popup Flat */
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
     background: var(--bg-sidebar) !important;
-    color: #eee !important;
+    color: var(--text-primary) !important;
     border-radius: 6px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
 }
 
-.leaflet-container .leaflet-popup-content-wrapper a {
-    color: var(--accent-gold);
+/* Tablet / Intermediate Desktop: Auto-Collapse to Rail Mode (Handled via JS now) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    /* 
+       We removed the forced .sidebar width and element hiding here.
+       JS will add .rail-mode class which triggers the same styles 
+       defined in .sidebar.rail-mode 
+    */
+
+    .sidebar.rail-mode .main-nav li {
+        justify-content: center;
+        padding: 15px 0;
+    }
+
+    .sidebar .main-nav .icon {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    /* Removed display:none!important for toggle to allow user interaction */
+    /* Removed padding/centering overrides that relied on hidden toggle */
+
+    /* We can keep the logo alignment if rail mode is active, but since
+       toggle is back, we might want standard layout or adapted one.
+       Let's trust the .rail-mode class styles to handle the layout. */
+
+    /* If logo has text, hide it or style it? */
+    /* Assuming rail mode usually shows just an icon or truncated text.
+       If h1 text is hidden by previous rule, we might need to ensure the container doesn't collapse weirdly. */
 }
 
 /* Mobile Optimization */
@@ -457,34 +856,83 @@ html {
         padding-bottom: env(safe-area-inset-bottom, 20px);
     }
 
-    /* Horizontal Nav Logic */
+    /* Horizontal Nav Logic - ALWAYS on Mobile */
     .sidebar .main-nav ul {
         display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #333;
+        flex-direction: row;
+        gap: 8px;
+        margin-bottom: 10px;
+        padding-bottom: 0;
+        border-bottom: none;
+        overflow-x: auto;
+        /* In case of small screens */
     }
 
     .sidebar .main-nav li {
         flex: 1;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        flex-direction: column;
+        gap: 8px;
         text-align: center;
-        padding: 6px 4px;
+        padding: 8px 6px;
         margin-bottom: 0;
-        font-size: 10px;
-        gap: 4px;
+        font-size: 13px;
+        white-space: nowrap;
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
     }
 
+    /* Reset Icon styles for mobile to ensure alignment */
     .sidebar .main-nav .icon {
-        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin: 0;
+        padding: 0;
+        width: auto;
+        height: auto;
+    }
+
+    .sidebar .main-nav .icon svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+        /* Removes SVG descender space */
+    }
+
+    /* Active State Adjustment */
+    .sidebar .main-nav li.active {
+        background: var(--accent-gold);
+        color: #000;
+        border-color: var(--accent-gold);
+    }
+
+    /* Small Mobile: Icon Only Mode (< 450px) */
+    @media (max-width: 450px) {
+        .sidebar .main-nav li span:not(.icon) {
+            display: none;
+            /* Hide text */
+        }
+
+        .sidebar .main-nav li {
+            padding: 10px;
+            /* Increase padding for touch target */
+        }
+
+        .sidebar .main-nav .icon svg {
+            width: 20px;
+            /* Larger icons */
+            height: 20px;
+        }
     }
 
     .sidebar .logo-area {
-        margin-bottom: 10px;
-        padding-bottom: 10px;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border-bottom: none;
+        /* Often cleaner on mobile */
     }
 
     .sidebar .logo-area h1 {

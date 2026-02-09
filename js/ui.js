@@ -18,12 +18,70 @@ export function toggleSidebarLoading(show) {
     }
 }
 
+let currentSort = 'date'; // 'date' or 'mag'
+
+export function initSort(earthquakes, mapInstance) {
+    const sortBtn = document.getElementById('sort-btn');
+    const sortMenu = document.getElementById('sort-menu');
+    const sortOptions = document.querySelectorAll('.sort-option');
+
+    if (sortBtn && sortMenu) {
+        sortBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', () => {
+            sortMenu.style.display = 'none';
+        });
+
+        sortOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                currentSort = option.dataset.sort;
+
+                // Update UI active state
+                sortOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+
+                // Re-render list
+                updateSidebar(currentQuakes, mapInstance); // Uses internal store
+            });
+        });
+    }
+}
+
+export function showSidebarError(message) {
+    const listContainer = document.getElementById('earthquake-list');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = `
+        <div class="error-state" style="padding: 20px; text-align: center; color: var(--text-secondary);">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <p>${message}</p>
+            <p style="font-size: 12px; margin-top: 5px;">İnternet bağlantınızı kontrol edip tekrar deneyin.</p>
+        </div>
+    `;
+}
+
 export function updateSidebar(earthquakes, mapInstance) {
     const listContainer = document.getElementById('earthquake-list');
     listContainer.innerHTML = ''; // Clear existing
 
-    // Sort by recent time
-    const sortedQuakes = earthquakes.sort((a, b) => b.time - a.time); // Newest first
+    // Save data reference if coming from external call (e.g. refresh)
+    if (earthquakes) {
+        setEarthquakeData(earthquakes);
+    } else {
+        earthquakes = currentQuakes; // Use internal if no arg passed (e.g. from sort click)
+    }
+
+    // Sort Data
+    const sortedQuakes = [...earthquakes]; // Clone to avoid mutating original order if needed elsewhere
+
+    if (currentSort === 'mag') {
+        sortedQuakes.sort((a, b) => b.mag - a.mag); // Magnitude Desc
+    } else {
+        sortedQuakes.sort((a, b) => b.time - a.time); // Date Desc (Default)
+    }
 
     sortedQuakes.forEach(quake => {
         const mag = quake.mag.toFixed(1);
@@ -54,6 +112,12 @@ export function updateSidebar(earthquakes, mapInstance) {
                 animate: true,
                 duration: 1.5
             });
+
+            // Auto-close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                const toggleIcon = document.getElementById('mobile-toggle-icon');
+                if (toggleIcon) toggleIcon.click();
+            }
         });
 
         listContainer.appendChild(card);
@@ -219,6 +283,30 @@ export function initSidebarToggle(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
 
+    // Auto-Collapse Logic for Tablet (768px - 1200px)
+    const checkResponsiveSidebar = () => {
+        if (window.innerWidth >= 769 && window.innerWidth <= 1200) {
+            sidebar.classList.add('rail-mode');
+        } else {
+            // Optional: Should we auto-expand on larger screens? 
+            // Better to leave user preference or default state.
+            // But if moving from tablet to desktop, maybe expand?
+            // For now, let's just default rail on tablet load/resize match.
+            if (window.innerWidth > 1200) sidebar.classList.remove('rail-mode');
+        }
+        setTimeout(() => mapInstance.invalidateSize(), 300);
+    };
+
+    // Initial check
+    checkResponsiveSidebar();
+
+    // Listener for resize (debounced slightly or just direct)
+    window.addEventListener('resize', () => {
+        // Only trigger if crossing breakpoints effectively
+        // For simplicity, just check.
+        // checkResponsiveSidebar(); // Disable auto-re-collapse on every resize to avoid annoying user
+    });
+
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('rail-mode');
@@ -257,19 +345,43 @@ export function initTabs(earthquakes, mapInstance) {
             if (viewEl) viewEl.style.display = 'flex';
 
             // Trigger Specific Renders
-            if (viewId === 'view-dashboard') renderDashboard(currentQuakes);
+            if (viewId === 'view-dashboard') renderDashboard(currentQuakes, mapInstance);
             if (viewId === 'view-locations') renderLocations(currentQuakes, mapInstance);
             if (viewId === 'view-active-issues') updateSidebar(currentQuakes, mapInstance); // Refresh list
         });
     });
 }
 
-function renderDashboard(earthquakes) {
+function renderDashboard(earthquakes, mapInstance) {
     const container = document.getElementById('dashboard-content');
     if (!container) return;
     container.innerHTML = '';
 
     const total = earthquakes.length;
+
+    // Date Range Calculation
+    if (total > 0) {
+        const times = earthquakes.map(q => q.time);
+        const minTime = Math.min(...times);
+
+        const now = Date.now();
+        const diffHours = (now - minTime) / (1000 * 60 * 60);
+
+        let rangeText = "";
+        if (diffHours <= 24) {
+            rangeText = "Son 24 Saat";
+        } else {
+            const days = Math.ceil(diffHours / 24);
+            rangeText = `Son ${days} Gün`;
+        }
+
+        const rangeDiv = document.createElement('div');
+        rangeDiv.style.fontSize = '12px';
+        rangeDiv.style.color = 'var(--text-tertiary)';
+        rangeDiv.style.marginBottom = '10px';
+        rangeDiv.innerHTML = `📅 Veri: <span style="color:var(--text-secondary); font-weight:500;">${rangeText}</span>`;
+        container.appendChild(rangeDiv);
+    }
 
     // Find Max Mag
     const maxQuake = earthquakes.reduce((prev, current) => (prev.mag > current.mag) ? prev : current, earthquakes[0]);
@@ -298,11 +410,24 @@ function renderDashboard(earthquakes) {
     if (maxQuake) {
         const maxCard = document.createElement('div');
         maxCard.className = 'quake-card';
+        maxCard.style.cursor = 'pointer'; // Make it look clickable
+        maxCard.title = 'Haritada Göster'; // Tooltip
         maxCard.innerHTML = `
             <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">En Büyük Deprem</div>
-            <div style="color:#fff; font-weight:500;">${maxQuake.place}</div>
-            <div style="margin-top:5px; font-size:12px; color:#777;">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
+            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${maxQuake.place}</div>
+            <div style="margin-top:5px; font-size:12px; color:var(--text-tertiary);">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
         `;
+
+        // Add Click Interaction
+        maxCard.addEventListener('click', () => {
+            if (mapInstance) {
+                mapInstance.flyTo([maxQuake.lat, maxQuake.lon], 10, {
+                    animate: true,
+                    duration: 1.5
+                });
+            }
+        });
+
         container.appendChild(maxCard);
     }
 }
@@ -344,7 +469,7 @@ function renderLocations(earthquakes, mapInstance) {
         item.style.padding = '12px';
 
         item.innerHTML = `
-            <span style="font-weight:500; color:#eee;">${region}</span>
+            <span class="text-truncate" style="font-weight:500; color:var(--text-primary); flex:1; margin-right:10px;">${region}</span>
             <span class="badge">${data.count}</span>
         `;
 

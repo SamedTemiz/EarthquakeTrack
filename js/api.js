@@ -1,9 +1,14 @@
 // API Endpoints
 const USGS_API_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson';
 const KANDILLI_API_URL = 'https://api.orhanaydogdu.com.tr/deprem/kandilli/live';
-const EMSC_API_URL = 'https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=100&minlat=35&maxlat=43&minlon=25&maxlon=45';
 
-// Turkey Bounding Box
+// EMSC: Expanded to cover Europe + Turkey
+// Lat: 30 (North Africa) to 72 (Nordics)
+// Lon: -25 (Atlantic/Iceland) to 50 (Eastern Turkey/Caucasus)
+// Limit increased to 200 to accommodate more data
+const EMSC_API_URL = 'https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=250&minlat=30&maxlat=72&minlon=-25&maxlon=50';
+
+// Turkey Bounding Box (Used for prioritizing sources, not filtering out anymore)
 const TURKEY_BOUNDS = {
     minLat: 35.0, maxLat: 43.0,
     minLon: 25.0, maxLon: 45.0
@@ -43,7 +48,7 @@ export async function getEarthquakeData() {
         return new Date(dateStr.replace(/\./g, '-')).getTime(); // Fallback
     };
 
-    // 1. Try Kandilli
+    // 1. Process Kandilli (Turkey Primary)
     if (kandilliData.status === 'fulfilled' && kandilliData.value.status === true) {
         localDataPoints = kandilliData.value.result.map(q => ({
             id: q._id || `kan-${q.date}`,
@@ -57,10 +62,11 @@ export async function getEarthquakeData() {
         }));
         turkeySourceUsed = 'Kandilli';
     }
-    // 2. Fallback to EMSC
-    else if (emscData.status === 'fulfilled' && emscData.value.features) {
-        console.warn("Kandilli failed. Using EMSC.");
-        localDataPoints = emscData.value.features.map(f => ({
+
+    // 2. Process EMSC (Europe/Regional) - ALWAYS process now
+    let emscPoints = [];
+    if (emscData.status === 'fulfilled' && emscData.value.features) {
+        emscPoints = emscData.value.features.map(f => ({
             id: f.id,
             source: 'EMSC',
             mag: f.properties.mag,
@@ -70,14 +76,24 @@ export async function getEarthquakeData() {
             lon: f.geometry.coordinates[0],
             depth: f.geometry.coordinates[2]
         }));
-        turkeySourceUsed = 'EMSC';
-    } else {
-        turkeySourceUsed = 'USGS Only';
     }
 
-    finalEarthquakes = [...localDataPoints];
+    // Merge Logic:
+    // If Kandilli exists, use Kandilli for Turkey. Use EMSC for everything else.
+    // If Kandilli failed, use EMSC for everything.
 
-    // 3. Process USGS
+    if (localDataPoints.length > 0) {
+        // Filter EMSC points that are INSIDE Turkey if we have Kandilli data
+        // This prevents double dots for Istanbul/Aegean etc.
+        const emscOutside = emscPoints.filter(q => !isInsideTurkey(q.lat, q.lon));
+        finalEarthquakes = [...localDataPoints, ...emscOutside];
+    } else {
+        // Fallback: Use all EMSC
+        finalEarthquakes = [...emscPoints];
+        if (finalEarthquakes.length > 0) turkeySourceUsed = 'EMSC (Fallback)';
+    }
+
+    // 3. Process USGS (Global > 2.5)
     if (usgsData.status === 'fulfilled') {
         const usgsNormalized = usgsData.value.features.map(f => ({
             id: f.id,
@@ -90,13 +106,27 @@ export async function getEarthquakeData() {
             depth: f.geometry.coordinates[2]
         }));
 
-        if (localDataPoints.length > 0) {
-            const outside = usgsNormalized.filter(q => !isInsideTurkey(q.lat, q.lon));
-            finalEarthquakes = [...finalEarthquakes, ...outside];
-        } else {
-            finalEarthquakes = [...finalEarthquakes, ...usgsNormalized];
-        }
+        // Filter USGS points that are inside our "Local/Regional" coverage to avoid triplets?
+        // Our EMSC covers Europe+Turkey. Kandilli covers Turkey.
+        // USGS covers world.
+        // Let's exclude USGS if it falls inside the EMSC bounding box we defined? 
+        // Or just exclude if inside Turkey (covered by Kandilli) and keep duplicates for Europe?
+        // For simplicity: Exclude USGS if inside Turkey (Kandilli is better).
+        // For Europe, usually EMSC is better than USGS (more low mag). 
+        // Let's filter USGS if inside the EMSC query bounds we defined?
+        // EMSC bounds: 30-72 Lat, -25-50 Lon.
+
+        const isInsideEMSCRegion = (lat, lon) => {
+            return lat >= 30 && lat <= 72 && lon >= -25 && lon <= 50;
+        };
+
+        // If we have EMSC/Kandilli data, prefer them for their region.
+        const outside = usgsNormalized.filter(q => !isInsideEMSCRegion(q.lat, q.lon));
+        finalEarthquakes = [...finalEarthquakes, ...outside];
     }
+
+    // console.log(`Merged: ${finalEarthquakes.length}, Source: ${turkeySourceUsed}`);
+    return finalEarthquakes;
 
     // console.log(`Merged: ${finalEarthquakes.length}, Source: ${turkeySourceUsed}`);
     return finalEarthquakes;
