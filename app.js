@@ -1,6 +1,6 @@
 import { getEarthquakeData } from './js/api.js';
 import { initMap, updateMapMarkers } from './js/map.js';
-import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError } from './js/ui.js';
+import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations } from './js/ui.js';
 import { initLanguage, toggleLanguage } from './js/language.js';
 import { initTheme } from './js/theme.js';
 
@@ -14,6 +14,9 @@ async function initApp() {
             // Re-render on language change
             if (globalEarthquakes.length > 0 && globalMap) {
                 updateSidebar(globalEarthquakes, globalMap);
+                renderDashboard(globalEarthquakes, globalMap);
+                renderLocations(globalEarthquakes, globalMap);
+
                 // Ideally update map popups too, but that requires re-creating markers or updating their content.
                 // For V1, we focused on Sidebar.
                 updateMapMarkers(globalMap, globalEarthquakes);

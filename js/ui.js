@@ -57,8 +57,8 @@ export function showSidebarError(message) {
     listContainer.innerHTML = `
         <div class="error-state" style="padding: 20px; text-align: center; color: var(--text-secondary);">
             <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
-            <p>${message}</p>
-            <p style="font-size: 12px; margin-top: 5px;">İnternet bağlantınızı kontrol edip tekrar deneyin.</p>
+            <p>${message || t('error_data_access')}</p>
+            <p style="font-size: 12px; margin-top: 5px;">${t('error_check_connection')}</p>
         </div>
     `;
 }
@@ -352,7 +352,7 @@ export function initTabs(earthquakes, mapInstance) {
     });
 }
 
-function renderDashboard(earthquakes, mapInstance) {
+export function renderDashboard(earthquakes, mapInstance) {
     const container = document.getElementById('dashboard-content');
     if (!container) return;
     container.innerHTML = '';
@@ -367,19 +367,20 @@ function renderDashboard(earthquakes, mapInstance) {
         const now = Date.now();
         const diffHours = (now - minTime) / (1000 * 60 * 60);
 
+        // ...
         let rangeText = "";
         if (diffHours <= 24) {
-            rangeText = "Son 24 Saat";
+            rangeText = t('last_24_hours');
         } else {
             const days = Math.ceil(diffHours / 24);
-            rangeText = `Son ${days} Gün`;
+            rangeText = t('last_x_days').replace('{days}', days);
         }
 
         const rangeDiv = document.createElement('div');
         rangeDiv.style.fontSize = '12px';
         rangeDiv.style.color = 'var(--text-tertiary)';
         rangeDiv.style.marginBottom = '10px';
-        rangeDiv.innerHTML = `📅 Veri: <span style="color:var(--text-secondary); font-weight:500;">${rangeText}</span>`;
+        rangeDiv.innerHTML = `📅 ${t('data_label')}: <span style="color:var(--text-secondary); font-weight:500;">${rangeText}</span>`;
         container.appendChild(rangeDiv);
     }
 
@@ -413,7 +414,7 @@ function renderDashboard(earthquakes, mapInstance) {
         maxCard.style.cursor = 'pointer'; // Make it look clickable
         maxCard.title = 'Haritada Göster'; // Tooltip
         maxCard.innerHTML = `
-            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">En Büyük Deprem</div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">${t('largest_earthquake')}</div>
             <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${maxQuake.place}</div>
             <div style="margin-top:5px; font-size:12px; color:var(--text-tertiary);">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
         `;
@@ -432,7 +433,7 @@ function renderDashboard(earthquakes, mapInstance) {
     }
 }
 
-function renderLocations(earthquakes, mapInstance) {
+export function renderLocations(earthquakes, mapInstance) {
     const container = document.getElementById('locations-list');
     if (!container) return;
     container.innerHTML = '';
