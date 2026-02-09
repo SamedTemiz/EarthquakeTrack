@@ -198,28 +198,21 @@ html {
 }
 
 /* Rail Mode Adjustments for Controls */
-.sidebar.rail-mode .logo-area .controls {
-    flex-direction: column;
-    gap: 16px;
-    /* Increased gap */
-    margin-top: 15px;
-    width: 100%;
-    align-items: center;
-}
-
-/* Specific order for Rail Mode: Toggle first or last?
-   User said "daha düzgün yerleştir".
-   Let's try: Toggle (Top), Theme (Middle), Lang (Bottom) OR
-   Theme, Lang, Toggle (Bottom with spacing).
-
-   Let's add a separator or just spacing.
-*/
-
 .sidebar.rail-mode .logo-area {
     flex-direction: column;
     height: auto;
     padding-bottom: 20px;
-    padding-top: 10px;
+    padding-top: 0;
+    /* Align to top */
+}
+
+.sidebar.rail-mode .logo-area .controls {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 5px;
+    /* Minimal margin */
+    width: 100%;
+    align-items: center;
 }
 
 .sidebar.rail-mode #sidebar-toggle-btn {

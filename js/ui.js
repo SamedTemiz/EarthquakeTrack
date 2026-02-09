@@ -50,6 +50,19 @@ export function initSort(earthquakes, mapInstance) {
     }
 }
 
+export function showSidebarError(message) {
+    const listContainer = document.getElementById('earthquake-list');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = `
+        <div class="error-state" style="padding: 20px; text-align: center; color: var(--text-secondary);">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <p>${message}</p>
+            <p style="font-size: 12px; margin-top: 5px;">İnternet bağlantınızı kontrol edip tekrar deneyin.</p>
+        </div>
+    `;
+}
+
 export function updateSidebar(earthquakes, mapInstance) {
     const listContainer = document.getElementById('earthquake-list');
     listContainer.innerHTML = ''; // Clear existing
