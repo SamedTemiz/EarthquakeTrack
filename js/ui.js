@@ -99,6 +99,12 @@ export function updateSidebar(earthquakes, mapInstance) {
                 animate: true,
                 duration: 1.5
             });
+
+            // Auto-close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                const toggleIcon = document.getElementById('mobile-toggle-icon');
+                if (toggleIcon) toggleIcon.click();
+            }
         });
 
         listContainer.appendChild(card);
@@ -263,6 +269,30 @@ export function initSidebarResize(mapInstance) {
 export function initSidebarToggle(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
+
+    // Auto-Collapse Logic for Tablet (768px - 1200px)
+    const checkResponsiveSidebar = () => {
+        if (window.innerWidth >= 769 && window.innerWidth <= 1200) {
+            sidebar.classList.add('rail-mode');
+        } else {
+            // Optional: Should we auto-expand on larger screens? 
+            // Better to leave user preference or default state.
+            // But if moving from tablet to desktop, maybe expand?
+            // For now, let's just default rail on tablet load/resize match.
+            if (window.innerWidth > 1200) sidebar.classList.remove('rail-mode');
+        }
+        setTimeout(() => mapInstance.invalidateSize(), 300);
+    };
+
+    // Initial check
+    checkResponsiveSidebar();
+
+    // Listener for resize (debounced slightly or just direct)
+    window.addEventListener('resize', () => {
+        // Only trigger if crossing breakpoints effectively
+        // For simplicity, just check.
+        // checkResponsiveSidebar(); // Disable auto-re-collapse on every resize to avoid annoying user
+    });
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {

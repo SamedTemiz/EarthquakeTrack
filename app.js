@@ -29,7 +29,12 @@ async function initApp() {
         globalMap = map;
 
         // Initialize Theme
-        initTheme(map);
+        initTheme(map, () => {
+            // Re-draw markers when theme changes
+            if (globalEarthquakes.length > 0) {
+                updateMapMarkers(map, globalEarthquakes);
+            }
+        });
 
         // 2. Initialize UI Interactions
         initSidebarResize(map);

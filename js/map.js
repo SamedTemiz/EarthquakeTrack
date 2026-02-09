@@ -33,24 +33,33 @@ export function setMapTheme(map, theme) {
     };
 
     map.tileLayer.setUrl(urls[theme]);
+    map._currentTheme = theme;
 }
 
-function getMarkerColor(mag) {
+function getMarkerColor(mag, theme) {
     if (mag >= 6.0) return '#9d4edd'; // Purple (Severe)
     if (mag >= 5.0) return '#ff4d4d'; // Red (High)
     if (mag >= 4.0) return '#ffd700'; // Yellow (Moderate)
-    return '#4dff88'; // Green (Low)
+
+    // Theme-specific Green
+    if (theme === 'light') {
+        return '#00b894'; // Darker Mint/Green for Light Mode
+    }
+    return '#4dff88'; // Bright Green for Dark Mode
 }
 
 export function updateMapMarkers(map, earthquakes) {
-    // Clear existing markers if we were tracking them (not implemented in v1, but good for v2)
-    // For now, we assume this is called once or we just add on top. 
-    // To do it properly, we should clear. But let's keep it simple for now as per previous app.js logic.
-    // Actually, app.js didn't clear markers on re-fetch, which might be a bug if re-fetching.
-    // Let's implement basics.
+    // Initialize LayerGroup if not exists
+    if (!map._markerLayer) {
+        map._markerLayer = L.layerGroup().addTo(map);
+    } else {
+        map._markerLayer.clearLayers();
+    }
+
+    const currentTheme = map._currentTheme || 'dark';
 
     earthquakes.forEach(quake => {
-        const color = getMarkerColor(quake.mag);
+        const color = getMarkerColor(quake.mag, currentTheme);
 
         const marker = L.circleMarker([quake.lat, quake.lon], {
             radius: Math.max(quake.mag * 2.5, 4),
@@ -59,7 +68,9 @@ export function updateMapMarkers(map, earthquakes) {
             weight: 1,
             opacity: 1,
             fillOpacity: 0.7
-        }).addTo(map);
+        }); // Do not addTo(map) directly
+
+        marker.addTo(map._markerLayer);
 
         marker.bindPopup(`
             <div style="font-size: 14px;">
