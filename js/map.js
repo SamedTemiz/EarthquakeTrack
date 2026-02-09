@@ -12,13 +12,27 @@ export function initMap() {
     }).addTo(map);
 
     // Dark Map Tiles (CartoDB Dark Matter)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 19
     }).addTo(map);
 
+    // Save reference for theming
+    map.tileLayer = tileLayer;
+
     return map;
+}
+
+export function setMapTheme(map, theme) {
+    if (!map || !map.tileLayer) return;
+
+    const urls = {
+        dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+    };
+
+    map.tileLayer.setUrl(urls[theme]);
 }
 
 function getMarkerColor(mag) {
@@ -52,9 +66,9 @@ export function updateMapMarkers(map, earthquakes) {
                 <b>${quake.place}</b><br>
                 <div style="margin-top:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span>${t('mag')} <b>${quake.mag.toFixed(1)}</b></span>
-                    <span style="font-size:11px; opacity:0.8; background:#333; padding:2px 4px; border-radius:4px;">${quake.source}</span>
+                    <span class="popup-source-badge">${quake.source}</span>
                 </div>
-                <div style="margin-top:4px; font-size:12px; color:#aaa;">
+                <div class="popup-meta">
                     ${new Date(quake.time).toLocaleDateString()} ${new Date(quake.time).toLocaleTimeString()} • ${quake.depth}km
                 </div>
             </div>

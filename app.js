@@ -1,7 +1,8 @@
 import { getEarthquakeData } from './js/api.js';
 import { initMap, updateMapMarkers } from './js/map.js';
-import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading } from './js/ui.js';
+import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort } from './js/ui.js';
 import { initLanguage, toggleLanguage } from './js/language.js';
+import { initTheme } from './js/theme.js';
 
 let globalEarthquakes = [];
 let globalMap = null;
@@ -27,9 +28,13 @@ async function initApp() {
         const map = initMap();
         globalMap = map;
 
+        // Initialize Theme
+        initTheme(map);
+
         // 2. Initialize UI Interactions
         initSidebarResize(map);
         initSidebarToggle(map);
+        initSort(null, map); // Init sort listeners
 
         // Refresh Data Function
         const refreshData = async () => {
