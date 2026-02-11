@@ -94,8 +94,36 @@ async function initApp() {
             refreshData(true); // Silent refresh
         }, 60000);
 
-        // Manual Refresh Listener
-        const manualRefresh = () => refreshData(false);
+        // Manual Refresh: 15s cooldown to avoid excessive API calls
+        const REFRESH_COOLDOWN_MS = 15000;
+        let lastManualRefreshAt = 0;
+        let refreshCooldownIntervalId = null;
+
+        const manualRefresh = () => {
+            const now = Date.now();
+            if (now - lastManualRefreshAt < REFRESH_COOLDOWN_MS) return;
+            lastManualRefreshAt = now;
+
+            const btn = document.getElementById('refresh-btn');
+            if (btn) {
+                btn.disabled = true;
+                let remaining = Math.ceil(REFRESH_COOLDOWN_MS / 1000);
+                const updateTitle = () => {
+                    if (remaining > 0) {
+                        btn.title = `Yenile (${remaining} s)`;
+                        remaining--;
+                    } else {
+                        clearInterval(refreshCooldownIntervalId);
+                        refreshCooldownIntervalId = null;
+                        btn.disabled = false;
+                        btn.title = 'Yenile';
+                    }
+                };
+                updateTitle();
+                refreshCooldownIntervalId = setInterval(updateTitle, 1000);
+            }
+            refreshData(false);
+        };
         document.getElementById('refresh-btn')?.addEventListener('click', manualRefresh);
 
     } catch (error) {

@@ -299,6 +299,12 @@ html {
     outline: none;
 }
 
+#refresh-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Loading Spinner */
 .loader-container {
     display: flex;
@@ -598,6 +604,12 @@ input:checked+.slider:before {
     overflow: hidden;
 }
 
+/* Extra bottom padding on scrollable tab content so last item is fully visible on small screens */
+#view-dashboard,
+#view-locations {
+    padding-bottom: 24px !important;
+}
+
 .list-header {
     display: flex;
     justify-content: space-between;
@@ -661,6 +673,8 @@ input:checked+.slider:before {
     flex: 1;
     overflow-y: auto;
     padding-right: 5px;
+    /* Bottom spacing so last item is fully visible when scrolled on small screens */
+    padding-bottom: 24px;
 }
 
 /* Global Scrollbar */
@@ -1028,8 +1042,18 @@ input:checked+.slider:before {
         }
     }
 
-    /* Hide navigation in minimized state */
+    /* Hide navigation and list in minimized state — only logo-area + handle visible */
     .sidebar.minimized .main-nav {
         display: none !important;
+    }
+
+    .sidebar.minimized .earthquake-list-container {
+        display: none !important;
+    }
+
+    /* Minimized bar at viewport bottom; no extra gap when device has no safe area */
+    .sidebar.minimized {
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        box-sizing: border-box;
     }
 }
