@@ -139,38 +139,44 @@ export function initSidebarResize(mapInstance) {
         if (window.innerWidth > 768) return; // Only for mobile
 
         if (isExpanded) {
-            // Minimize List (Tam Kapalı - Sadece Handle + Header + Safe Area)
-            const resizerHeight = resizer.offsetHeight;
-
+            // Minimize: only logo-area + handle visible, fixed at viewport bottom (safe-area aware)
+            sidebar.classList.add('minimized');
             const logoArea = document.querySelector('.logo-area');
-            const logoStyle = logoArea ? window.getComputedStyle(logoArea) : null;
-            const logoHeight = logoArea ? logoArea.offsetHeight + parseFloat(logoStyle.marginTop) + parseFloat(logoStyle.marginBottom) : 0;
-
+            const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
+            const resizerHeight = resizer.offsetHeight;
             const sidebarStyles = window.getComputedStyle(sidebar);
-            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 20; // Ensure minimum safe area
+            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
             const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
+            const totalHeight = paddingTop + logoHeight + resizerHeight + paddingBottom;
 
-            // Total height needed: Logo + Handle + Paddings
-            const handleHeight = resizerHeight + logoHeight + paddingBottom + paddingTop;
-
-            sidebar.style.height = `${handleHeight}px`;
+            sidebar.style.position = 'fixed';
+            sidebar.style.bottom = '0';
+            sidebar.style.left = '0';
+            sidebar.style.right = '0';
+            sidebar.style.width = '100%';
+            sidebar.style.height = `${totalHeight}px`;
             sidebar.style.flex = 'none';
+            sidebar.style.overflow = 'hidden';
+            sidebar.classList.add('minimized');
 
             mainContent.style.height = 'auto';
             mainContent.style.flex = '1';
-
-            sidebar.style.overflow = 'hidden';
-            sidebar.classList.add('minimized');
+            mainContent.style.paddingBottom = `${totalHeight}px`;
         } else {
-            // Maximize List (Default Open)
+            // Maximize (default open)
+            sidebar.style.position = '';
+            sidebar.style.bottom = '';
+            sidebar.style.left = '';
+            sidebar.style.right = '';
+            sidebar.style.width = '';
             sidebar.style.height = '75vh';
             sidebar.style.flex = 'none';
+            sidebar.style.overflow = '';
+            sidebar.classList.remove('minimized');
 
             mainContent.style.height = '25vh';
             mainContent.style.flex = 'none';
-
-            sidebar.style.overflow = '';
-            sidebar.classList.remove('minimized');
+            mainContent.style.paddingBottom = '';
         }
         isExpanded = !isExpanded;
         setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
