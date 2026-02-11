@@ -299,6 +299,12 @@ html {
     outline: none;
 }
 
+#refresh-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Loading Spinner */
 .loader-container {
     display: flex;
@@ -598,6 +604,12 @@ input:checked+.slider:before {
     overflow: hidden;
 }
 
+/* Extra bottom padding on scrollable tab content so last item is fully visible on small screens */
+#view-dashboard,
+#view-locations {
+    padding-bottom: 24px !important;
+}
+
 .list-header {
     display: flex;
     justify-content: space-between;
@@ -661,6 +673,8 @@ input:checked+.slider:before {
     flex: 1;
     overflow-y: auto;
     padding-right: 5px;
+    /* Bottom spacing so last item is fully visible when scrolled on small screens */
+    padding-bottom: 24px;
 }
 
 /* Global Scrollbar */
