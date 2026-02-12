@@ -18,7 +18,11 @@ export const translations = {
         last_x_days: "Son {days} Gün",
         largest_earthquake: "En Büyük Deprem",
         error_data_access: "Veri erişim sorunu.",
-        error_check_connection: "İnternet bağlantınızı kontrol edip tekrar deneyin."
+        error_check_connection: "İnternet bağlantınızı kontrol edip tekrar deneyin.",
+        about: "Hakkında",
+        faq: "SSS",
+        privacy: "Gizlilik Politikası",
+        terms: "Kullanım Koşulları"
     },
     en: {
         title: "EarthquakeTrack",
@@ -40,7 +44,11 @@ export const translations = {
         largest_earthquake: "Largest Earthquake",
         error_data_access: "Data access issue.",
         error_check_connection: "Check your internet connection and try again.",
-        data_label: "Data"
+        data_label: "Data",
+        about: "About Us",
+        faq: "FAQ",
+        privacy: "Privacy Policy",
+        terms: "Terms of Use"
     },
     tr: {
         title: "EarthquakeTrack",

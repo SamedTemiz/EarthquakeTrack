@@ -3,6 +3,7 @@ import { initMap, updateMapMarkers } from './js/map.js';
 import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations } from './js/ui.js';
 import { initLanguage, toggleLanguage } from './js/language.js';
 import { initTheme } from './js/theme.js';
+import { initModal } from './js/modal.js';
 
 let globalEarthquakes = [];
 let globalMap = null;
@@ -11,6 +12,7 @@ async function initApp() {
     try {
         // Initialize Language
         initLanguage(() => {
+            initModal();
             // Re-render on language change
             if (globalEarthquakes.length > 0 && globalMap) {
                 updateSidebar(globalEarthquakes, globalMap);
@@ -29,6 +31,10 @@ async function initApp() {
 
         // 1. Initialize Map
         const map = initMap();
+
+        // Initialize Modal
+        initModal();
+
         globalMap = map;
 
         // Initialize Theme

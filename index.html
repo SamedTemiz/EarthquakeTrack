@@ -209,6 +209,12 @@
                     <div id="locations-list" style="display:flex; flex-direction:column; gap:10px;"></div>
                 </div>
             </div>
+            <div class="sidebar-footer">
+                <a onclick="openModal('about')" data-i18n="about">Hakkında</a>
+                <a onclick="openModal('faq')" data-i18n="faq">SSS</a>
+                <a onclick="openModal('privacy')" data-i18n="privacy">Gizlilik Politikası</a>
+                <a onclick="openModal('terms')" data-i18n="terms">Kullanım Koşulları</a>
+            </div>
             <div id="sidebar-resizer"></div>
         </aside>
 
@@ -216,6 +222,14 @@
         <main class="main-content">
             <div id="map"></div>
         </main>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-text"></div>
+        </div>
     </div>
 
     <!-- Leaflet JS -->
