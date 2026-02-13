@@ -23,6 +23,13 @@
 
     /* Map Overlay Opacity */
     --map-overlay-opacity: 0.8;
+
+    /* Modal / Surface Colors (Dark Default) */
+    --surface-bg: #1E1E1E;
+    /* Matches --bg-sidebar */
+    --surface-card: #252525;
+    /* Matches --card-bg */
+    --accent-blue: #3498DB;
 }
 
 [data-theme="light"] {
@@ -50,6 +57,14 @@
     --accent-red: #C53030;
     --accent-purple: #6B46C1;
     --accent-green: #2F855A;
+
+    /* Modal / Surface Colors (Light Mode) */
+    --surface-bg: #F1F2F6;
+    /* Matches --bg-sidebar */
+    --surface-card: #FFFFFF;
+    /* Matches --card-bg */
+    --accent-blue: #2196F3;
+    /* Matches slider active color */
 }
 
 body,
@@ -810,6 +825,61 @@ input:checked+.slider:before {
     color: var(--text-primary) !important;
     border-radius: 6px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Custom Leaflet Controls */
+.leaflet-control-location {
+    background-color: var(--surface-card) !important;
+    width: 34px !important;
+    height: 34px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    color: var(--text-primary) !important;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box !important;
+    line-height: 0 !important;
+    text-align: center;
+    font-size: 0 !important;
+    text-decoration: none !important;
+}
+
+.leaflet-control-location:hover {
+    background-color: var(--card-hover) !important;
+    color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+/* Light Theme Override for border/shadow if needed */
+[data-theme="light"] .leaflet-control-location {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-control-location svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: block !important;
+    margin: 0 !important;
+    fill: currentColor;
+    flex-shrink: 0 !important;
+    /* Prevent squishing */
+}
+
+.leaflet-control-location.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Tablet / Intermediate Desktop: Auto-Collapse to Rail Mode (Handled via JS now) */
