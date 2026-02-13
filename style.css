@@ -23,6 +23,13 @@
 
     /* Map Overlay Opacity */
     --map-overlay-opacity: 0.8;
+
+    /* Modal / Surface Colors (Dark Default) */
+    --surface-bg: #1E1E1E;
+    /* Matches --bg-sidebar */
+    --surface-card: #252525;
+    /* Matches --card-bg */
+    --accent-blue: #3498DB;
 }
 
 [data-theme="light"] {
@@ -50,6 +57,14 @@
     --accent-red: #C53030;
     --accent-purple: #6B46C1;
     --accent-green: #2F855A;
+
+    /* Modal / Surface Colors (Light Mode) */
+    --surface-bg: #F1F2F6;
+    /* Matches --bg-sidebar */
+    --surface-card: #FFFFFF;
+    /* Matches --card-bg */
+    --accent-blue: #2196F3;
+    /* Matches slider active color */
 }
 
 body,
