@@ -23,7 +23,9 @@ export const translations = {
         about: "Hakkında",
         faq: "SSS",
         privacy: "Gizlilik Politikası",
-        terms: "Kullanım Koşulları"
+        terms: "Kullanım Koşulları",
+        preparedness: "Deprem Önlemleri",
+        education: "Deprem Bilgisi"
     },
     en: {
         title: "EarthquakeTrack",
@@ -49,7 +51,9 @@ export const translations = {
         about: "About Us",
         faq: "FAQ",
         privacy: "Privacy Policy",
-        terms: "Terms of Use"
+        terms: "Terms of Use",
+        preparedness: "Preparedness",
+        education: "Earthquake Info"
     }
 };
 

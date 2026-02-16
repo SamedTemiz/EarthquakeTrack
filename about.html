@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkında - EarthquakeTrack</title>
+    <meta name="description"
+        content="EarthquakeTrack hakkında bilgi edinin. Veri kaynaklarımız, amacımız ve misyonumuz.">
+
+    <!-- Link to main styles for variables -->
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        /* Standalone page styles reusing variables */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        h2,
+        h3 {
+            color: var(--text-primary);
+            margin-top: 25px;
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .content-container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-container">
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>Hakkında</h1>
+            <p>EarthquakeTrack, Türkiye ve dünyadaki deprem verilerini anlık olarak takip etmenizi sağlayan, tamamen
+                ücretsiz bir web uygulamasıdır.</p>
+
+            <h3>Veri Kaynakları</h3>
+            <p>Uygulamamız, verilerini güvenilir ve halka açık API servislerinden almaktadır:</p>
+            <ul>
+                <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a>
+                        (Amerika Birleşik Devletleri Jeoloji Araştırmaları Kurumu):</strong> Dünya genelindeki büyük
+                    depremler için ana veri kaynağımızdır.</li>
+                <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a>
+                        (Avrupa-Akdeniz Sismoloji Merkezi):</strong> Avrupa ve Akdeniz bölgesindeki deprem verileri için
+                    kullandığımız önemli bir kaynaktır.</li>
+                <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli
+                            Rasathanesi</a> ve <a href="https://deprem.afad.gov.tr/" target="_blank"
+                            rel="noopener noreferrer">AFAD</a>:</strong> Türkiye ve yakın çevresindeki depremler için
+                    birincil kaynaklarımızdır.</li>
+            </ul>
+
+            <h3>Amacımız</h3>
+            <p>Deprem kuşağında yer alan bir ülke olarak, bilgiye hızlı ve doğru ulaşmanın hayati önem taşıdığına
+                inanıyoruz. EarthquakeTrack ile deprem farkındalığını artırmayı ve kullanıcılarımıza en güncel verileri
+                en anlaşılır şekilde sunmayı hedefliyoruz.</p>
+
+            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>About Us</h1>
+            <p>EarthquakeTrack is a completely free web application that allows you to track earthquake data in Turkey
+                and around the world instantly.</p>
+
+            <h3>Data Sources</h3>
+            <p>Our application sources its data from reliable and publicly available API services:</p>
+            <ul>
+                <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a>
+                        (United States Geological Survey):</strong> Our main data source for major earthquakes
+                    worldwide.</li>
+                <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a>
+                        (European-Mediterranean Seismological Centre):</strong> An important source for earthquake data
+                    in the Europe and Mediterranean region.</li>
+                <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli
+                            Observatory</a> and <a href="https://deprem.afad.gov.tr/" target="_blank"
+                            rel="noopener noreferrer">AFAD</a>:</strong> Our primary sources for earthquakes in Turkey
+                    and the surrounding region.</li>
+            </ul>
+
+            <h3>Our Mission</h3>
+            <p>As a country located in an earthquake zone, we believe that accessing information quickly and accurately
+                is of vital importance. With EarthquakeTrack, we aim to raise earthquake awareness and present the most
+                up-to-date data to our users in the most understandable way.</p>
+
+            <a href="/" class="back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Apply Theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Apply Language
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'About Us - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
+</body>
+
+</html>
