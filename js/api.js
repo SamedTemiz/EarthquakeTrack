@@ -32,15 +32,11 @@ export async function getEarthquakeData() {
     let turkeySourceUsed = 'None';
     let localDataPoints = [];
 
-    // Helper to parse Kandilli date format: "2025.02.07 15:10:45" -> timestamp
-    // Assuming TR time? Kandilli usually gives local time (UTC+3) but format is YYYY.MM.DD HH:mm:ss
+    // Helper to parse Kandilli date format: "2025.02.07 15:10:45" or "2025-02-07 15:10:45" -> timestamp
     const parseKandilliDate = (dateStr) => {
         if (!dateStr) return Date.now();
-        // Replace . with - to make it ISO-like "2025-02-07 15:10:45"
-        // Then parse. Note: If string has no timezone, browsers assume local. 
-        // Kandilli is in TR time (UTC+3). 
-        // To be safe, let's parse manual parts.
-        const parts = dateStr.match(/(\d{4})\.(\d{2})\.(\d{2})\s(\d{2}):(\d{2}):(\d{2})/);
+        // Handle both . and - as separators
+        const parts = dateStr.match(/(\d{4})[.-](\d{2})[.-](\d{2})\s(\d{2}):(\d{2}):(\d{2})/);
         if (parts) {
             // new Date(year, monthIndex, day, hour, minute, second) is local time
             return new Date(parts[1], parts[2] - 1, parts[3], parts[4], parts[5], parts[6]).getTime();
@@ -51,11 +47,11 @@ export async function getEarthquakeData() {
     // 1. Process Kandilli (Turkey Primary)
     if (kandilliData.status === 'fulfilled' && kandilliData.value.status === true) {
         localDataPoints = kandilliData.value.result.map(q => ({
-            id: q._id || `kan-${q.date}`,
+            id: q.earthquake_id || q._id || `kan-${q.date_time || q.date}`,
             source: 'Kandilli',
             mag: parseFloat(q.mag),
             place: q.title,
-            time: parseKandilliDate(q.date),
+            time: parseKandilliDate(q.date_time || q.date),
             lat: parseFloat(q.geojson.coordinates[1]),
             lon: parseFloat(q.geojson.coordinates[0]),
             depth: parseFloat(q.depth)
@@ -70,7 +66,7 @@ export async function getEarthquakeData() {
             id: f.id,
             source: 'EMSC',
             mag: f.properties.mag,
-            place: f.properties.unid || `Region ${f.geometry.coordinates[1].toFixed(2)},${f.geometry.coordinates[0].toFixed(2)}`,
+            place: f.properties.flynn_region || `Region ${f.geometry.coordinates[1].toFixed(2)},${f.geometry.coordinates[0].toFixed(2)}`,
             time: new Date(f.properties.time).getTime(),
             lat: f.geometry.coordinates[1],
             lon: f.geometry.coordinates[0],
