@@ -1,4 +1,4 @@
-import { t } from './language.js';
+import { t, localizeLocation } from './language.js';
 
 let currentQuakes = []; // Store data internally to avoid stale closures
 
@@ -100,10 +100,10 @@ export function updateSidebar(earthquakes, mapInstance) {
                 <span class="source-badge">${quake.source}</span>
                 <span class="mag-badge ${magClass}">M ${mag}</span>
             </div>
-            <div class="card-location">📍 ${quake.place}</div>
+            <div class="card-location">📍 ${localizeLocation(quake.place)}</div>
             <div class="card-stats">
                 <span>🕒 ${timeStr}</span>
-                <span>${quake.depth}km</span>
+                <span>${t('depth')}: ${Math.max(0, quake.depth)}km</span>
             </div>
         `;
 
@@ -421,7 +421,7 @@ export function renderDashboard(earthquakes, mapInstance) {
         maxCard.title = 'Haritada Göster'; // Tooltip
         maxCard.innerHTML = `
             <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">${t('largest_earthquake')}</div>
-            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${maxQuake.place}</div>
+            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${localizeLocation(maxQuake.place)}</div>
             <div style="margin-top:5px; font-size:12px; color:var(--text-tertiary);">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
         `;
 
@@ -447,7 +447,8 @@ export function renderLocations(earthquakes, mapInstance) {
     // Group by Place
     const placeCounts = {};
     earthquakes.forEach(q => {
-        // Extract city/region (Simple heuristic: text after " of " or last word)
+        // Localize first to group properly if multiple sources use different EN naming for same place? 
+        // Actually best to extract region then localize it.
         let region = q.place;
         if (region.includes(' of ')) {
             region = region.split(' of ')[1];
@@ -455,8 +456,7 @@ export function renderLocations(earthquakes, mapInstance) {
             region = region.split(' at ')[1];
         }
 
-        // Clean up
-        region = region.trim();
+        region = localizeLocation(region.trim());
 
         if (!placeCounts[region]) {
             placeCounts[region] = { count: 0, lat: q.lat, lon: q.lon }; // Keep one coordinate for jumping

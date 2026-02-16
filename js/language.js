@@ -19,6 +19,7 @@ export const translations = {
         largest_earthquake: "En Büyük Deprem",
         error_data_access: "Veri erişim sorunu.",
         error_check_connection: "İnternet bağlantınızı kontrol edip tekrar deneyin.",
+        data_label: "Veri",
         about: "Hakkında",
         faq: "SSS",
         privacy: "Gizlilik Politikası",
@@ -49,28 +50,6 @@ export const translations = {
         faq: "FAQ",
         privacy: "Privacy Policy",
         terms: "Terms of Use"
-    },
-    tr: {
-        title: "EarthquakeTrack",
-        activeIssues: "Son Depremler",
-        dashboard: "Panel",
-        locations: "Konumlar",
-        recentActivity: "Son Hareketler",
-        live: "Canlı",
-        loading: "Yükleniyor...",
-        error: "Hata oluştu!",
-        depth: "Derinlik",
-        mag: "Büyüklük",
-        source: "Kaynak",
-        time: "Zaman",
-        sort_date_desc: "Tarih (Yeni > Eski)",
-        sort_mag_desc: "Büyüklük (Büyük > Küçük)",
-        last_24_hours: "Son 24 Saat",
-        last_x_days: "Son {days} Gün",
-        largest_earthquake: "En Büyük Deprem",
-        error_data_access: "Veri erişim sorunu.",
-        error_check_connection: "İnternet bağlantınızı kontrol edip tekrar deneyin.",
-        data_label: "Veri"
     }
 };
 
@@ -102,6 +81,44 @@ export function toggleLanguage() {
 
 export function t(key) {
     return translations[currentLang][key] || key;
+}
+
+export function localizeLocation(place) {
+    if (currentLang === 'en' || !place) return place;
+
+    let localized = place;
+    // Common geographical terms mapping (EN -> TR)
+    const terms = {
+        'Near the coast of': 'Açıkları',
+        'Coast of': 'Açıkları',
+        'Near': 'Yakınları',
+        'Western': 'Batı',
+        'Eastern': 'Doğu',
+        'Northern': 'Kuzey',
+        'Southern': 'Güney',
+        'Central': 'Merkez',
+        'Region': 'Bölgesi',
+        'Sea': 'Denizi',
+        'Turkey': 'Türkiye',
+        'Greece': 'Yunanistan',
+        'Italy': 'İtalya',
+        'France': 'Fransa',
+        'Spain': 'İspanya',
+        'Border': 'Sınırı',
+        'and': 've',
+        'the': '',
+        'of': ''
+    };
+
+    // Apply translations
+    Object.keys(terms).forEach(en => {
+        // Use word boundary to avoid partial replacements
+        const regex = new RegExp(`\\b${en}\\b`, 'gi');
+        localized = localized.replace(regex, terms[en]);
+    });
+
+    // Clean up extra spaces
+    return localized.replace(/\s+/g, ' ').trim().toUpperCase();
 }
 
 export function getCurrentLang() {
