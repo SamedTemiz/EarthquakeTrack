@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sıkça Sorulan Sorular - EarthquakeTrack</title>
+    <meta name="description"
+        content="EarthquakeTrack hakkında sıkça sorulan sorular. Veri güncellemeleri, deprem büyüklüğü ve listeleme hakkında bilgiler.">
+
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            margin-top: 25px;
+            font-size: 1.1em;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .content-container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-container">
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>Sıkça Sorulan Sorular (SSS)</h1>
+
+            <h3>Veriler ne sıklıkla güncelleniyor?</h3>
+            <p>Veriler, sismoloji merkezlerinden (USGS, Kandilli vb.) yayınlandığı anda sistemimize düşer. Genellikle
+                deprem olduktan birkaç dakika sonra listede görebilirsiniz.</p>
+
+            <h3>Neden bazı depremleri listede göremiyorum?</h3>
+            <p>Sistemimiz varsayılan olarak son 24 saatteki ve belirli bir büyüklüğün üzerindeki (genellikle 2.5+)
+                depremleri gösterir. Filtreleme seçenekleri gelecekteki güncellemelerle eklenecektir.</p>
+
+            <h3>"Büyüklük" (Magnitude) ne anlama geliyor?</h3>
+            <p>Depremin açığa çıkardığı enerjinin ölçüsüdür. Logaritmik bir ölçek olduğu için, 6.0 büyüklüğündeki bir
+                deprem 5.0 büyüklüğündekinden 10 kat daha güçlü sarsıntı yaratır ve 32 kat daha fazla enerji açığa
+                çıkarır.</p>
+
+            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>Frequently Asked Questions (FAQ)</h1>
+
+            <h3>How often is data updated?</h3>
+            <p>Data arrives in our system as soon as it is published by seismology centers (USGS, Kandilli, etc.). You
+                can usually see it in the list a few minutes after the earthquake occurs.</p>
+
+            <h3>Why can't I see some earthquakes in the list?</h3>
+            <p>Our system defaults to showing earthquakes from the last 24 hours and above a certain magnitude (usually
+                2.5+). Filtering options will be added in future updates.</p>
+
+            <h3>What does "Magnitude" mean?</h3>
+            <p>It is a measure of the energy released by the earthquake. Since it is a logarithmic scale, a magnitude
+                6.0 earthquake creates shaking 10 times stronger than a magnitude 5.0 earthquake and releases 32 times
+                more energy.</p>
+
+            <a href="/" class="back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'FAQ - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
+</body>
+
+</html>

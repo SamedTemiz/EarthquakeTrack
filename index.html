@@ -210,10 +210,18 @@
                 </div>
             </div>
             <div class="sidebar-footer">
-                <a onclick="openModal('about')" data-i18n="about">Hakkında</a>
-                <a onclick="openModal('faq')" data-i18n="faq">SSS</a>
-                <a onclick="openModal('privacy')" data-i18n="privacy">Gizlilik Politikası</a>
-                <a onclick="openModal('terms')" data-i18n="terms">Kullanım Koşulları</a>
+                <div class="footer-row">
+                    <a href="preparedness.html" data-i18n="preparedness">Deprem Önlemleri</a>
+                    <a href="education.html" data-i18n="education">Deprem Bilgisi</a>
+                </div>
+                <div class="footer-row">
+                    <a href="about.html" onclick="openModal('about'); return false;" data-i18n="about">Hakkında</a>
+                    <a href="faq.html" onclick="openModal('faq'); return false;" data-i18n="faq">SSS</a>
+                    <a href="privacy.html" onclick="openModal('privacy'); return false;" data-i18n="privacy">Gizlilik
+                        Politikası</a>
+                    <a href="terms.html" onclick="openModal('terms'); return false;" data-i18n="terms">Kullanım
+                        Koşulları</a>
+                </div>
             </div>
             <div id="sidebar-resizer"></div>
         </aside>

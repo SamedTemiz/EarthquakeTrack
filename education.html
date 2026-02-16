@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deprem Bilgisi ve Terimler - EarthquakeTrack</title>
+    <meta name="description"
+        content="Deprem büyüklüğü ve şiddeti arasındaki fark nedir? Derinlik ne anlama gelir? Fay hattı nedir? Temel sismoloji bilgileri.">
+
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 15px;
+            /* Slightly smaller base font */
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.6rem;
+            /* Reduced */
+        }
+
+        h2 {
+            color: var(--accent-blue);
+            margin-top: 25px;
+            font-size: 1.3em;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .term-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .term-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-gold);
+        }
+
+        .term-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .icon {
+            font-size: 1.4em;
+        }
+
+        .citation {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8em;
+            color: var(--text-tertiary);
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .content-container {
+                padding: 20px;
+                margin: 15px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-container">
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>Deprem Bilgisi ve Terimler</h1>
+
+            <p>Deprem verilerini daha iyi yorumlayabilmeniz için sıkça kullanılan temel terimlerin açıklamalarını
+                derledik.</p>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">📊</span> Büyüklük (Magnitude) vs Şiddet (Intensity)</span>
+                <p><strong>Büyüklük:</strong> Depremin merkezinde açığa çıkan enerjinin matematiksel ölçüsüdür.
+                    Aletseldir ve değişmez (Örn: 7.4).</p>
+                <p><strong>Şiddet:</strong> Depremin yeryüzündeki etkisidir. Binalara, doğaya ve insanlara verdiği
+                    hasara göre belirlenir ve bölgeden bölgeye değişir.</p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">🌍</span> Odak Derinliği (Depth)</span>
+                <p>Depremin yerin kaç kilometre altında gerçekleştiğini gösterir. Yüzeye yakın depremler (0-60 km) daha
+                    dar bir alanda hissedilir ancak daha yıkıcı olabilir. Derin depremler ise çok daha geniş bir alanda
+                    hissedilir ancak yıkıcılığı genellikle daha azdır.</p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">⚡</span> Fay Hattı</span>
+                <p>Yer kabuğundaki kayaçların kırılarak yer değiştirdiği hatlardır. Depremler genellikle bu hatlar
+                    üzerinde biriken enerjinin aniden boşalmasıyla oluşur.</p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">📉</span> Artçı Deprem (Aftershock)</span>
+                <p>Ana depremden sonra, aynı bölgede meydana gelen daha küçük sarsıntılardır. Yer kabuğu dengesini
+                    bulana kadar haftalarca hatta aylarca sürebilir.</p>
+            </div>
+
+            <div class="citation">
+                <strong>Kaynaklar:</strong> <a
+                    href="http://www.koeri.boun.edu.tr/sismo/2/deprem-bilgileri/temel-bilgiler/"
+                    target="_blank">Kandilli Rasathanesi</a>, <a href="https://www.usgs.gov/programs/earthquake-hazards"
+                    target="_blank">USGS</a>
+            </div>
+
+            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>Earthquake Education & Terminology</h1>
+
+            <p>We have compiled explanations of frequently used basic terms so you can interpret earthquake data better.
+            </p>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">📊</span> Magnitude vs Intensity</span>
+                <p><strong>Magnitude:</strong> It is the mathematical measure of the energy released at the earthquake's
+                    source. It is instrumental and does not change (e.g., 7.4).</p>
+                <p><strong>Intensity:</strong> It is the effect of the earthquake on the earth's surface. It is
+                    determined by the damage caused to buildings, nature, and people, and varies from region to region.
+                </p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">🌍</span> Focal Depth</span>
+                <p>It indicates how many kilometers below the ground the earthquake occurred. Shallow earthquakes (0-60
+                    km) are felt in a smaller area but can be more destructive. Deep earthquakes are felt over a much
+                    wider area but are generally less destructive.</p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">⚡</span> Fault Line</span>
+                <p>These are lines where rocks in the earth's crust break and shift. Earthquakes usually occur due to
+                    the sudden release of energy accumulated along these lines.</p>
+            </div>
+
+            <div class="term-box">
+                <span class="term-title"><span class="icon">📉</span> Aftershock</span>
+                <p>Smaller tremors that occur in the same area after the main earthquake. They can last for weeks or
+                    even months until the earth's crust finds its balance.</p>
+            </div>
+
+            <div class="citation">
+                <strong>Sources:</strong> <a href="https://www.usgs.gov/" target="_blank">USGS</a>, <a
+                    href="https://www.emsc-csem.org/" target="_blank">EMSC</a>
+            </div>
+
+            <a href="/" class="back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'Earthquake Info - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
+</body>
+
+</html>

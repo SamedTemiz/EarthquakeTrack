@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanım Koşulları - EarthquakeTrack</title>
+    <meta name="description"
+        content="EarthquakeTrack Kullanım Koşulları. Hizmet kullanımı, sorumluluk reddi ve telif hakları.">
+
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            margin-top: 25px;
+            font-size: 1.1em;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .content-container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-container">
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>Kullanım Koşulları</h1>
+            <p>Lütfen sitemizi kullanmadan önce bu koşulları okuyunuz.</p>
+
+            <h3>1. Hizmetin Kullanımı</h3>
+            <p>EarthquakeTrack, yalnızca bilgilendirme amaçlıdır. Deprem tahminleri yapmaz veya resmi bir uyarı sistemi
+                yerine geçmez. Doğal afet durumlarında lütfen AFAD ve yetkili mercilerin duyurularını takip ediniz.</p>
+
+            <h3>2. Sorumluluk Reddi</h3>
+            <p>Sunulan deprem verileri, sismoloji merkezlerinden otomatik olarak çekilmektedir. Verilerin doğruluğu,
+                kesinliği veya zamanlaması konusunda garanti veremeyiz. Bu verilerin kullanımından doğabilecek
+                zararlardan earthquakeTrack sorumlu tutulamaz.</p>
+
+            <h3>3. Telif Hakları</h3>
+            <p>Sitemizin tasarımı ve kodları telif hakları ile korunmaktadır. İzinsiz kopyalanamaz.</p>
+
+            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>Terms of Use</h1>
+            <p>Please read these terms before using our site.</p>
+
+            <h3>1. Use of Service</h3>
+            <p>EarthquakeTrack is for informational purposes only. It does not make earthquake predictions or serve as
+                an official warning system. In case of natural disasters, please follow the announcements of AFAD and
+                authorized authorities.</p>
+
+            <h3>2. Disclaimer</h3>
+            <p>The earthquake data presented is automatically retrieved from seismology centers. We cannot guarantee the
+                accuracy, precision, or timing of the data. earthquakeTrack cannot be held responsible for any damages
+                arising from the use of this data.</p>
+
+            <h3>3. Copyrights</h3>
+            <p>Our site's design and code are protected by copyright. It cannot be copied without permission.</p>
+
+            <a href="/" class="back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'Terms of Use - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası - EarthquakeTrack</title>
+    <meta name="description"
+        content="EarthquakeTrack Gizlilik Politikası. Kişisel veri toplama, çerezler ve kullanıcı hakları hakkında bilgi.">
+
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            margin-top: 25px;
+            font-size: 1.1em;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .content-container {
+                padding: 25px;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content-container">
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>Gizlilik Politikası</h1>
+            <p>Son Güncelleme: 12 Şubat 2026</p>
+
+            <h3>1. Toplanan Veriler</h3>
+            <p>EarthquakeTrack olarak gizliliğinize önem veriyoruz. Sitemizi ziyaret ettiğinizde herhangi bir kişisel
+                verinizi (isim, e-posta, telefon vb.) kaydetmiyoruz. Üyelik sistemi bulunmamaktadır.</p>
+
+            <h3>2. Çerezler (Cookies) ve Yerel Depolama</h3>
+            <p>Sitemiz, kullanıcı deneyimini iyileştirmek için tarayıcınızın "Local Storage" özelliğini kullanabilir
+                (örneğin: tema tercihinizi hatırlamak için). Ayrıca Google AdSense ve Google Analytics gibi üçüncü taraf
+                hizmetler, size uygun reklamlar göstermek ve site trafiğini analiz etmek için çerez kullanabilir.</p>
+
+            <h3>3. Konum Bilgisi</h3>
+            <p>Harita üzerinde konumunuzu görmek isterseniz, tarayıcınız konum izni isteyecektir. Bu veri sadece
+                cihazınızda işlenir ve sunucularımıza kaydedilmez.</p>
+
+            <h3>4. Üçüncü Taraf Bağlantılar</h3>
+            <p>Sitemizdeki dış bağlantıların (örneğin deprem kaynağına giden linkler) gizlilik politikalarından sorumlu
+                değiliz.</p>
+
+            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>Privacy Policy</h1>
+            <p>Last Update: February 12, 2026</p>
+
+            <h3>1. Collected Data</h3>
+            <p>We value your privacy at EarthquakeTrack. We do not record any of your personal data (name, email, phone,
+                etc.) when you visit our site. There is no membership system.</p>
+
+            <h3>2. Cookies and Local Storage</h3>
+            <p>Our site may use your browser's "Local Storage" feature to improve user experience (for example: to
+                remember your theme preference). Additionally, third-party services such as Google AdSense and Google
+                Analytics may use cookies to show you appropriate ads and analyze site traffic.</p>
+
+            <h3>3. Location Information</h3>
+            <p>If you wish to see your location on the map, your browser will request location permission. This data is
+                only processed on your device and is not saved to our servers.</p>
+
+            <h3>4. Third Party Links</h3>
+            <p>We are not responsible for the privacy policies of external links on our site (for example links going to
+                the earthquake source).</p>
+
+            <a href="/" class="back-link">&larr; Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'Privacy Policy - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
+</body>
+
+</html>
