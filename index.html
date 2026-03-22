@@ -55,7 +55,7 @@
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
     <!-- Leaflet CSS (self-hosted to avoid local CORS/CDN issues) -->
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="stylesheet" href="style.css?v=2035">
     <!-- Google AdSense - site verification & ad scripts -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1547168097704291"
         crossorigin="anonymous"></script>
@@ -157,14 +157,18 @@
             <div class="earthquake-list-container">
                 <!-- Location selector: focus map by country/city (no list filtering) -->
                 <div class="location-selector">
-                    <label for="country-select" class="location-label" data-i18n="country">Ülke</label>
-                    <select id="country-select" class="location-select" aria-label="Country">
-                        <option value="" data-i18n="allCountries">Tüm ülkeler</option>
-                    </select>
-                    <label for="city-select" class="location-label location-label-city" data-i18n="city">Şehir</label>
-                    <select id="city-select" class="location-select" aria-label="City" disabled>
-                        <option value="" data-i18n="allCities">Tüm şehirler</option>
-                    </select>
+                    <div class="location-field">
+                        <label for="country-select" class="location-label" data-i18n="country">Ülke</label>
+                        <select id="country-select" class="location-select" aria-label="Country">
+                            <option value="" data-i18n="allCountries">Tüm ülkeler</option>
+                        </select>
+                    </div>
+                    <div class="location-field">
+                        <label for="city-select" class="location-label location-label-city" data-i18n="city">Şehir</label>
+                        <select id="city-select" class="location-select" aria-label="City" disabled>
+                            <option value="" data-i18n="allCities">Tüm şehirler</option>
+                        </select>
+                    </div>
                 </div>
                 <!-- View: Active Issues (Default) -->
                 <div id="view-active-issues" class="view-section active">

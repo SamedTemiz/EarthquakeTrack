@@ -271,35 +271,49 @@ export function initSidebarResize(mapInstance) {
 
     let isResizing = false;
     let startY = 0;
-    let isExpanded = true; // Default state (75% list)
 
+    /**
+     * Mobile collapse/expand must follow the real `.minimized` class — not a separate flag.
+     * `handleMove` used to set `isExpanded` from drag math without updating `.minimized`, so the next
+     * toggle could run the wrong branch and leave `.minimized` stuck (footer stays `display:none`).
+     */
     const toggleSidebar = () => {
         if (window.innerWidth > 768) return; // Only for mobile
 
-        if (isExpanded) {
-            // Minimize: only logo-area + handle visible, fixed at viewport bottom (safe-area aware)
-            sidebar.classList.add('minimized');
-            const logoArea = document.querySelector('.logo-area');
-            const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
-            const resizerHeight = resizer.offsetHeight;
-            const sidebarStyles = window.getComputedStyle(sidebar);
-            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
-            const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
-            const totalHeight = paddingTop + logoHeight + resizerHeight + paddingBottom;
+        const isCollapsed = sidebar.classList.contains('minimized');
 
+        if (!isCollapsed) {
+            // Minimize: only logo-area + handle visible, fixed at viewport bottom (safe-area aware).
+            // Apply .minimized before measuring padding — expanded state uses padding-bottom fallback (e.g. 20px)
+            // which must not be baked into the collapsed bar height or content sits high with empty space below.
+            sidebar.classList.add('minimized');
             sidebar.style.position = 'fixed';
             sidebar.style.bottom = '0';
             sidebar.style.left = '0';
             sidebar.style.right = '0';
             sidebar.style.width = '100%';
-            sidebar.style.height = `${totalHeight}px`;
+            sidebar.style.height = 'auto';
             sidebar.style.flex = 'none';
             sidebar.style.overflow = 'hidden';
-            sidebar.classList.add('minimized');
 
             mainContent.style.height = 'auto';
             mainContent.style.flex = '1';
-            mainContent.style.paddingBottom = `${totalHeight}px`;
+
+            const applyCollapsedHeight = () => {
+                const logoArea = document.querySelector('.logo-area');
+                const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
+                const resizerHeight = resizer.offsetHeight;
+                const sidebarStyles = window.getComputedStyle(sidebar);
+                const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
+                const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
+                const totalHeight = paddingTop + logoHeight + resizerHeight + paddingBottom;
+                sidebar.style.height = `${totalHeight}px`;
+                mainContent.style.paddingBottom = `${totalHeight}px`;
+            };
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(applyCollapsedHeight);
+            });
         } else {
             // Maximize (default open)
             sidebar.style.position = '';
@@ -316,7 +330,6 @@ export function initSidebarResize(mapInstance) {
             mainContent.style.flex = 'none';
             mainContent.style.paddingBottom = '';
         }
-        isExpanded = !isExpanded;
         setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
     };
 
@@ -348,7 +361,12 @@ export function initSidebarResize(mapInstance) {
         if (!isResizing) return;
 
         if (window.innerWidth <= 768) {
-            // Mobile: Vertical Resize
+            // Mobile: Vertical Resize — only when the sheet is expanded (not `.minimized`).
+            // Dragging while collapsed would fight toggleSidebar() and desync footer visibility.
+            if (sidebar.classList.contains('minimized')) {
+                return;
+            }
+
             // Calculate new height for map (top part) based on Y position
             const totalHeight = window.innerHeight;
             let newMapHeight = clientY;
@@ -364,11 +382,6 @@ export function initSidebarResize(mapInstance) {
 
             mainContent.style.height = `${newMapHeight}px`;
             sidebar.style.height = `${newListHeight}px`;
-
-            // Should we update isExpanded state?
-            // If dragging manually, we might leave it in explicit state.
-            // Let's assume if > 50% list, it is expanded.
-            isExpanded = (newListHeight / totalHeight) > 0.4;
 
         } else {
             // Desktop: Horizontal Resize

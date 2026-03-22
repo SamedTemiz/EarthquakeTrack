@@ -667,15 +667,25 @@ input:checked+.slider:before {
     transition: opacity 0.2s;
 }
 
-/* Location selector: country/city for map focus only */
+/* Location selector: country/city for map focus only (two columns via .location-field) */
 .location-selector {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 12px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 10px 12px;
     margin-bottom: 12px;
     padding: 0 2px;
 }
+
+.location-field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .location-label {
     font-size: 11px;
     text-transform: uppercase;
@@ -684,9 +694,10 @@ input:checked+.slider:before {
     margin: 0;
 }
 .location-select {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
-    max-width: 180px;
+    width: 100%;
+    max-width: none;
     padding: 8px 32px 8px 12px;
     font-size: 13px;
     color: var(--text-primary);
@@ -720,7 +731,7 @@ input:checked+.slider:before {
     padding: 8px 12px;
 }
 .location-label-city {
-    margin-left: 4px;
+    margin-left: 0;
 }
 
 .view-section {
@@ -1056,19 +1067,14 @@ input:checked+.slider:before {
         padding-bottom: env(safe-area-inset-bottom, 20px);
     }
 
-    /* Location selector: stack on mobile */
+    /* Location selector: same row layout comes from base .location-field flex; tighten gaps on small screens */
     .location-selector {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
+        gap: 8px;
         margin-bottom: 10px;
     }
-    .location-selector .location-label {
-        margin-left: 0;
-    }
-    .location-selector .location-select {
-        max-width: none;
-        width: 100%;
+
+    .location-field {
+        gap: 3px;
     }
 
     /* Horizontal Nav Logic - ALWAYS on Mobile */
@@ -1255,10 +1261,22 @@ input:checked+.slider:before {
         display: none !important;
     }
 
-    /* Minimized bar at viewport bottom; no extra gap when device has no safe area */
+    /* Minimized bar: safe-area padding only at bottom; center logo row vertically in the strip */
     .sidebar.minimized {
-        padding-bottom: env(safe-area-inset-bottom, 0);
+        padding-top: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: max(0px, env(safe-area-inset-bottom, 0px));
         box-sizing: border-box;
+        justify-content: center;
+        align-items: stretch;
+        min-height: 0;
+    }
+
+    .sidebar.minimized .logo-area {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
     }
 }
 
