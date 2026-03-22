@@ -1,6 +1,142 @@
-import { t, localizeLocation } from './language.js';
+import { t, localizeLocation, getCountryDisplayName, getCurrentLang } from './language.js';
 
 let currentQuakes = []; // Store data internally to avoid stale closures
+let currentCountryFilter = '';
+let currentCityFilter = '';
+
+function getFilteredQuakes(quakes) {
+    if (!currentCountryFilter) return quakes;
+    const byCountry = quakes.filter(q => (q.countryName || '').trim() === currentCountryFilter);
+    if (currentCountryFilter === 'Turkey' && currentCityFilter) {
+        return byCountry.filter(q => (q.cityName || '').trim() === currentCityFilter);
+    }
+    return byCountry;
+}
+
+function buildLocationOptions(quakes) {
+    const byCountry = {};
+    (quakes || []).forEach((q) => {
+        const country = (q.countryName || '').trim() || 'Other';
+        if (!byCountry[country]) byCountry[country] = [];
+        byCountry[country].push(q);
+    });
+    const countries = Object.keys(byCountry).sort().map((name) => {
+        const group = byCountry[name];
+        return {
+            value: name,
+            label: getCountryDisplayName(name, getCurrentLang()),
+            lat: group.reduce((sum, q) => sum + q.lat, 0) / group.length,
+            lon: group.reduce((sum, q) => sum + q.lon, 0) / group.length
+        };
+    });
+
+    const turkeyQuakes = byCountry.Turkey || [];
+    const byCity = {};
+    turkeyQuakes.forEach((q) => {
+        const city = (q.cityName || '').trim();
+        if (!city) return;
+        if (!byCity[city]) byCity[city] = [];
+        byCity[city].push(q);
+    });
+    const cities = Object.keys(byCity).sort().map((name) => {
+        const group = byCity[name];
+        return {
+            value: name,
+            label: name,
+            lat: group.reduce((sum, q) => sum + q.lat, 0) / group.length,
+            lon: group.reduce((sum, q) => sum + q.lon, 0) / group.length
+        };
+    });
+    return { countries, cities };
+}
+
+function focusMapToSelection(countryValue, cityValue, options, mapInstance) {
+    if (!mapInstance) return;
+    if (countryValue === 'Turkey' && cityValue) {
+        const city = options.cities.find((c) => c.value === cityValue);
+        if (city) {
+            mapInstance.flyTo([city.lat, city.lon], 8, { animate: true, duration: 1.2 });
+            return;
+        }
+    }
+    if (countryValue) {
+        const country = options.countries.find((c) => c.value === countryValue);
+        if (country) {
+            mapInstance.flyTo([country.lat, country.lon], 6, { animate: true, duration: 1.2 });
+        }
+    }
+}
+
+export function initLocationSelector(earthquakes, mapInstance) {
+    const countrySelect = document.getElementById('country-select');
+    const citySelect = document.getElementById('city-select');
+    if (!countrySelect || !citySelect) return;
+
+    const options = buildLocationOptions(earthquakes || currentQuakes);
+    const selectedCountry = countrySelect.value;
+    const selectedCity = citySelect.value;
+
+    countrySelect.innerHTML = `<option value="">${t('allCountries')}</option>`;
+    options.countries.forEach((country) => {
+        const opt = document.createElement('option');
+        opt.value = country.value;
+        opt.textContent = country.label;
+        countrySelect.appendChild(opt);
+    });
+    countrySelect.value = options.countries.some((c) => c.value === selectedCountry) ? selectedCountry : '';
+    currentCountryFilter = countrySelect.value;
+
+    const refreshCities = () => {
+        citySelect.innerHTML = `<option value="">${t('allCities')}</option>`;
+        if (countrySelect.value !== 'Turkey') {
+            citySelect.disabled = true;
+            currentCityFilter = '';
+            return;
+        }
+        citySelect.disabled = false;
+        options.cities.forEach((city) => {
+            const opt = document.createElement('option');
+            opt.value = city.value;
+            opt.textContent = city.label;
+            citySelect.appendChild(opt);
+        });
+        citySelect.value = options.cities.some((c) => c.value === selectedCity) ? selectedCity : '';
+        currentCityFilter = citySelect.value;
+    };
+    refreshCities();
+
+    const countryClone = countrySelect.cloneNode(true);
+    const cityClone = citySelect.cloneNode(true);
+    countrySelect.replaceWith(countryClone);
+    citySelect.replaceWith(cityClone);
+
+    countryClone.addEventListener('change', () => {
+        currentCountryFilter = countryClone.value;
+        currentCityFilter = '';
+        const fresh = buildLocationOptions(currentQuakes);
+        cityClone.innerHTML = `<option value="">${t('allCities')}</option>`;
+        if (countryClone.value === 'Turkey') {
+            cityClone.disabled = false;
+            fresh.cities.forEach((city) => {
+                const opt = document.createElement('option');
+                opt.value = city.value;
+                opt.textContent = city.label;
+                cityClone.appendChild(opt);
+            });
+        } else {
+            cityClone.disabled = true;
+        }
+        updateSidebar(currentQuakes, mapInstance);
+        focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+    });
+
+    cityClone.addEventListener('change', () => {
+        currentCityFilter = cityClone.value;
+        updateSidebar(currentQuakes, mapInstance);
+        const fresh = buildLocationOptions(currentQuakes);
+        focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+    });
+}
 
 export function setEarthquakeData(data) {
     currentQuakes = data;
@@ -74,8 +210,10 @@ export function updateSidebar(earthquakes, mapInstance) {
         earthquakes = currentQuakes; // Use internal if no arg passed (e.g. from sort click)
     }
 
+    const filteredQuakes = getFilteredQuakes(earthquakes);
+
     // Sort Data
-    const sortedQuakes = [...earthquakes]; // Clone to avoid mutating original order if needed elsewhere
+    const sortedQuakes = [...filteredQuakes]; // Clone to avoid mutating original order if needed elsewhere
 
     if (currentSort === 'mag') {
         sortedQuakes.sort((a, b) => b.mag - a.mag); // Magnitude Desc

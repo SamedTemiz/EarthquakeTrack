@@ -1,5 +1,56 @@
 import { t } from './language.js';
 
+/** Wired once: themed alert dialog in index.html (replaces native alert for geolocation). */
+let locationAlertDialogInitialized = false;
+
+function ensureLocationAlertDialog() {
+    if (locationAlertDialogInitialized) return;
+    const dialog = document.getElementById('alert-dialog');
+    const okBtn = document.getElementById('alert-dialog-ok');
+    if (!dialog || !okBtn) return;
+
+    const close = () => {
+        dialog.style.display = 'none';
+        document.body.style.overflow = '';
+    };
+
+    okBtn.addEventListener('click', close);
+    dialog.addEventListener('click', (ev) => {
+        if (ev.target === dialog) close();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dialog.style.display === 'flex') close();
+    });
+
+    locationAlertDialogInitialized = true;
+}
+
+/**
+ * Maps Leaflet/GeolocationPositionError codes to i18n strings (language.js).
+ * @param {GeolocationPositionError & { message?: string }} e
+ */
+function showLocationErrorDialog(e) {
+    ensureLocationAlertDialog();
+    const dialog = document.getElementById('alert-dialog');
+    const msgEl = document.getElementById('alert-dialog-message');
+    const okBtn = document.getElementById('alert-dialog-ok');
+    if (!dialog || !msgEl || !okBtn) {
+        window.alert(e.message || 'Geolocation error');
+        return;
+    }
+
+    let key = 'location_error_unavailable';
+    const code = typeof e.code === 'number' ? e.code : null;
+    if (code === 1) key = 'location_error_denied';
+    else if (code === 2) key = 'location_error_unavailable';
+    else if (code === 3) key = 'location_error_timeout';
+
+    msgEl.textContent = t(key);
+    okBtn.textContent = t('ok');
+    dialog.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
 export function initMap() {
     const map = L.map('map', {
         zoomControl: false, // Disable default top-left
@@ -92,7 +143,7 @@ export function initMap() {
     map.on('locationerror', (e) => {
         const locationBtn = document.querySelector('.leaflet-control-location');
         if (locationBtn) locationBtn.classList.remove('loading');
-        alert(e.message); // Simple alert for now
+        showLocationErrorDialog(e);
     });
 
     // Dark Map Tiles (CartoDB Dark Matter)

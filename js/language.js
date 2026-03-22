@@ -22,10 +22,20 @@ export const translations = {
         data_label: "Veri",
         about: "Hakkında",
         faq: "SSS",
+        contact: "İletişim",
         privacy: "Gizlilik Politikası",
         terms: "Kullanım Koşulları",
         preparedness: "Deprem Önlemleri",
-        education: "Deprem Bilgisi"
+        education: "Deprem Bilgisi",
+        country: "Ülke",
+        city: "Şehir",
+        allCountries: "Tüm ülkeler",
+        allCities: "Tüm şehirler",
+        myLocation: "Konumum",
+        location_error_denied: "Konum izni verilmedi. Tarayıcı veya site ayarlarından konum erişimine izin verebilirsiniz.",
+        location_error_unavailable: "Konum şu an alınamıyor. Bağlantı veya cihaz ayarlarınızı kontrol edin.",
+        location_error_timeout: "Konum isteği zaman aşımına uğradı. Lütfen tekrar deneyin.",
+        ok: "Tamam"
     },
     en: {
         title: "EarthquakeTrack",
@@ -50,10 +60,20 @@ export const translations = {
         data_label: "Data",
         about: "About Us",
         faq: "FAQ",
+        contact: "Contact",
         privacy: "Privacy Policy",
         terms: "Terms of Use",
         preparedness: "Preparedness",
-        education: "Earthquake Info"
+        education: "Earthquake Info",
+        country: "Country",
+        city: "City",
+        allCountries: "All countries",
+        allCities: "All cities",
+        myLocation: "My location",
+        location_error_denied: "Location permission denied. You can enable location access in your browser or site settings.",
+        location_error_unavailable: "Location is currently unavailable. Check your connection or device settings.",
+        location_error_timeout: "Location request timed out. Please try again.",
+        ok: "OK"
     }
 };
 
@@ -129,6 +149,43 @@ export function getCurrentLang() {
     return currentLang;
 }
 
+/** Canonical English country name -> Turkish label for location selector. */
+const countryNamesTr = {
+    Turkey: 'Türkiye',
+    Greece: 'Yunanistan',
+    Italy: 'İtalya',
+    France: 'Fransa',
+    Spain: 'İspanya',
+    Germany: 'Almanya',
+    Russia: 'Rusya',
+    'United Kingdom': 'Birleşik Krallık',
+    'United States': 'Amerika Birleşik Devletleri',
+    Iran: 'İran',
+    Syria: 'Suriye',
+    Iraq: 'Irak',
+    Armenia: 'Ermenistan',
+    Georgia: 'Gürcistan',
+    Azerbaijan: 'Azerbaycan',
+    Albania: 'Arnavutluk',
+    Romania: 'Romanya',
+    Bulgaria: 'Bulgaristan',
+    Switzerland: 'İsviçre',
+    Austria: 'Avusturya',
+    Morocco: 'Fas',
+    Poland: 'Polonya',
+    Portugal: 'Portekiz',
+    Other: 'Diğer'
+};
+
+/**
+ * Returns display name for country based on language. TR uses countryNamesTr, else canonical key.
+ */
+export function getCountryDisplayName(canonicalKey, lang) {
+    if (!canonicalKey) return '';
+    if (lang === 'tr' && countryNamesTr[canonicalKey]) return countryNamesTr[canonicalKey];
+    return canonicalKey;
+}
+
 function updateStaticText() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -141,5 +198,15 @@ function updateStaticText() {
     const langBtn = document.getElementById('lang-toggle');
     if (langBtn) {
         langBtn.innerText = currentLang === 'tr' ? 'EN' : 'TR';
+    }
+
+    // Keep location selector placeholders synced with current language.
+    const countrySelect = document.getElementById('country-select');
+    if (countrySelect && countrySelect.options.length > 0) {
+        countrySelect.options[0].textContent = t('allCountries');
+    }
+    const citySelect = document.getElementById('city-select');
+    if (citySelect && citySelect.options.length > 0) {
+        citySelect.options[0].textContent = t('allCities');
     }
 }
