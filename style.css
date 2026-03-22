@@ -1050,6 +1050,7 @@ input:checked+.slider:before {
         height: 25vh;
         /* Map takes top 25% */
         width: 100%;
+        transition: height 240ms ease-out, padding-bottom 240ms ease-out;
     }
 
     .sidebar {
@@ -1061,10 +1062,16 @@ input:checked+.slider:before {
         max-width: none !important;
         border-right: none;
         border-top: 1px solid var(--border-color);
-        transition: height 0.3s ease;
+        /* Smooth open/close with JS-driven heights (75vh <-> collapsed px); avoid animating to height:auto */
+        transition: height 240ms ease-out;
         padding: 10px 15px;
         /* Safe Area for Mobile Home Indicator */
         padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+
+    /* Footer stays visible in the flex column when list grows (avoid clipping) */
+    .sidebar .sidebar-footer {
+        flex-shrink: 0;
     }
 
     /* Location selector: same row layout comes from base .location-field flex; tighten gaps on small screens */
@@ -1277,6 +1284,13 @@ input:checked+.slider:before {
         margin-bottom: 0;
         padding-bottom: 0;
         border-bottom: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .sidebar,
+        .main-content {
+            transition: none !important;
+        }
     }
 }
 

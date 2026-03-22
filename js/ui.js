@@ -271,6 +271,8 @@ export function initSidebarResize(mapInstance) {
 
     let isResizing = false;
     let startY = 0;
+    /** True only when mousedown/touchstart began on #sidebar-resizer (avoids stray toggle on touchend). */
+    let pointerDownOnResizer = false;
 
     /**
      * Mobile collapse/expand must follow the real `.minimized` class — not a separate flag.
@@ -315,7 +317,8 @@ export function initSidebarResize(mapInstance) {
                 requestAnimationFrame(applyCollapsedHeight);
             });
         } else {
-            // Maximize (default open)
+            // Maximize (default open): clear .minimized first so footer display:none rules drop immediately.
+            sidebar.classList.remove('minimized');
             sidebar.style.position = '';
             sidebar.style.bottom = '';
             sidebar.style.left = '';
@@ -324,17 +327,17 @@ export function initSidebarResize(mapInstance) {
             sidebar.style.height = '75vh';
             sidebar.style.flex = 'none';
             sidebar.style.overflow = '';
-            sidebar.classList.remove('minimized');
 
             mainContent.style.height = '25vh';
             mainContent.style.flex = 'none';
             mainContent.style.paddingBottom = '';
         }
-        setTimeout(() => mapInstance.invalidateSize(), 300); // Wait for transition
+        setTimeout(() => mapInstance.invalidateSize(), 320); // After height transition (~240ms) + buffer
     };
 
     // Mouse Events (Desktop)
     resizer.addEventListener('mousedown', (e) => {
+        pointerDownOnResizer = true;
         isResizing = true;
         startY = e.clientY;
         resizer.classList.add('resizing');
@@ -349,6 +352,7 @@ export function initSidebarResize(mapInstance) {
 
     // Touch Events (Mobile)
     resizer.addEventListener('touchstart', (e) => {
+        pointerDownOnResizer = true;
         isResizing = true;
         startY = e.touches[0].clientY;
         resizer.classList.add('resizing');
@@ -400,12 +404,17 @@ export function initSidebarResize(mapInstance) {
 
     const handleEnd = (e) => {
         if (isResizing) {
-            // Check for Click (Minimal movement)
-            const clientY = (e.changedTouches ? e.changedTouches[0].clientY : e.clientY);
-            if (Math.abs(clientY - startY) < 5 && window.innerWidth <= 768) {
+            // Tap-to-toggle only when the gesture started on the resizer strip (not a stray document touchend).
+            const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+            if (
+                pointerDownOnResizer &&
+                Math.abs(clientY - startY) < 5 &&
+                window.innerWidth <= 768
+            ) {
                 toggleSidebar();
             }
 
+            pointerDownOnResizer = false;
             isResizing = false;
             resizer.classList.remove('resizing');
             document.body.style.cursor = '';
@@ -440,16 +449,16 @@ export function initSidebarToggle(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
 
-    // Auto-Collapse Logic for Tablet (768px - 1200px)
+    // Rail mode: tablet band only. On phone (<=768) always strip rail-mode so global
+    // .sidebar.rail-mode .sidebar-footer { display:none } cannot hide the footer after resize from tablet.
     const checkResponsiveSidebar = () => {
-        if (window.innerWidth >= 769 && window.innerWidth <= 1200) {
+        const w = window.innerWidth;
+        if (w <= 768) {
+            sidebar.classList.remove('rail-mode');
+        } else if (w >= 769 && w <= 1200) {
             sidebar.classList.add('rail-mode');
-        } else {
-            // Optional: Should we auto-expand on larger screens? 
-            // Better to leave user preference or default state.
-            // But if moving from tablet to desktop, maybe expand?
-            // For now, let's just default rail on tablet load/resize match.
-            if (window.innerWidth > 1200) sidebar.classList.remove('rail-mode');
+        } else if (w > 1200) {
+            sidebar.classList.remove('rail-mode');
         }
         setTimeout(() => mapInstance.invalidateSize(), 300);
     };
@@ -457,11 +466,10 @@ export function initSidebarToggle(mapInstance) {
     // Initial check
     checkResponsiveSidebar();
 
-    // Listener for resize (debounced slightly or just direct)
+    let railResizeTimer = null;
     window.addEventListener('resize', () => {
-        // Only trigger if crossing breakpoints effectively
-        // For simplicity, just check.
-        // checkResponsiveSidebar(); // Disable auto-re-collapse on every resize to avoid annoying user
+        clearTimeout(railResizeTimer);
+        railResizeTimer = setTimeout(() => checkResponsiveSidebar(), 150);
     });
 
     if (toggleBtn) {
