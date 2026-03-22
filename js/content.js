@@ -1,118 +1,183 @@
+/**
+ * Modal copy for info dialog (About, FAQ, Privacy, Terms).
+ * Markup uses .modal-doc* classes; styles in style.css (#modal-text scope).
+ */
+
+const ICON_INFO = `<span class="modal-doc__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>`;
+
+const ICON_FAQ = `<span class="modal-doc__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></span>`;
+
+const ICON_SHIELD = `<span class="modal-doc__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>`;
+
+const ICON_FILE = `<span class="modal-doc__icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></span>`;
+
 export const content = {
     tr: {
         about: `
-            <h2>Hakkında</h2>
-            <p>EarthquakeTrack, Türkiye ve dünyadaki deprem verilerini anlık olarak takip etmenizi sağlayan, tamamen ücretsiz bir web uygulamasıdır.</p>
-            
-            <h3>Veri Kaynakları</h3>
-            <p>Uygulamamız, verilerini güvenilir ve halka açık API servislerinden almaktadır:</p>
-            <ul>
-                <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a> (Amerika Birleşik Devletleri Jeoloji Araştırmaları Kurumu):</strong> Dünya genelindeki büyük depremler için ana veri kaynağımızdır.</li>
-                <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a> (Avrupa-Akdeniz Sismoloji Merkezi):</strong> Avrupa ve Akdeniz bölgesindeki deprem verileri için kullandığımız önemli bir kaynaktır.</li>
-                <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Rasathanesi</a> ve <a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a>:</strong> Türkiye ve yakın çevresindeki depremler için birincil kaynaklarımızdır.</li>
-            </ul>
-
-            <h3>Amacımız</h3>
-            <p>Deprem kuşağında yer alan bir ülke olarak, bilgiye hızlı ve doğru ulaşmanın hayati önem taşıdığına inanıyoruz. EarthquakeTrack ile deprem farkındalığını artırmayı ve kullanıcılarımıza en güncel verileri en anlaşılır şekilde sunmayı hedefliyoruz.</p>
-        `,
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_INFO}
+    <h2 class="modal-doc__title" id="modal-doc-title">Hakkında</h2>
+  </header>
+  <p class="modal-doc__lead">EarthquakeTrack, Türkiye ve dünyadaki deprem verilerini anlık olarak takip etmenizi sağlayan, tamamen ücretsiz bir web uygulamasıdır.</p>
+  <section class="modal-doc__section" aria-labelledby="about-sources-tr">
+    <h3 class="modal-doc__h" id="about-sources-tr">Veri kaynakları</h3>
+    <p>Uygulamamız verilerini güvenilir ve halka açık API servislerinden alır:</p>
+    <ul class="modal-doc__list">
+      <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong> (Amerika Birleşik Devletleri Jeoloji Araştırmaları Kurumu): Dünya genelindeki büyük depremler için ana veri kaynağımızdır.</li>
+      <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a></strong> (Avrupa-Akdeniz Sismoloji Merkezi): Avrupa ve Akdeniz bölgesi için önemli bir kaynaktır.</li>
+      <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Rasathanesi</a></strong> ve <strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong>: Türkiye ve yakın çevre için birincil kaynaklarımızdır.</li>
+    </ul>
+  </section>
+  <section class="modal-doc__section" aria-labelledby="about-mission-tr">
+    <h3 class="modal-doc__h" id="about-mission-tr">Amacımız</h3>
+    <p>Deprem kuşağında yer alan bir ülke olarak bilgiye hızlı ve doğru ulaşmanın hayati olduğuna inanıyoruz. EarthquakeTrack ile deprem farkındalığını artırmayı ve güncel verileri anlaşılır şekilde sunmayı hedefliyoruz.</p>
+  </section>
+</div>`,
         faq: `
-            <h2>Sıkça Sorulan Sorular (SSS)</h2>
-            
-            <h3>Veriler ne sıklıkla güncelleniyor?</h3>
-            <p>Veriler, sismoloji merkezlerinden (USGS, Kandilli vb.) yayınlandığı anda sistemimize düşer. Genellikle deprem olduktan birkaç dakika sonra listede görebilirsiniz.</p>
-
-            <h3>Neden bazı depremleri listede göremiyorum?</h3>
-            <p>Sistemimiz varsayılan olarak son 24 saatteki ve belirli bir büyüklüğün üzerindeki (genellikle 2.5+) depremleri gösterir. Filtreleme seçenekleri gelecekteki güncellemelerle eklenecektir.</p>
-
-            <h3>"Büyüklük" (Magnitude) ne anlama geliyor?</h3>
-            <p>Depremin açığa çıkardığı enerjinin ölçüsüdür. Logaritmik bir ölçek olduğu için, 6.0 büyüklüğündeki bir deprem 5.0 büyüklüğündekinden 10 kat daha güçlü sarsıntı yaratır ve 32 kat daha fazla enerji açığa çıkarır.</p>
-        `,
+<div class="modal-doc modal-doc--faq">
+  <header class="modal-doc__header">${ICON_FAQ}
+    <h2 class="modal-doc__title" id="modal-doc-title">Sıkça sorulan sorular</h2>
+  </header>
+  <div class="modal-faq">
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">Veriler ne sıklıkla güncelleniyor?</h3>
+      <p class="modal-faq__a">Veriler, sismoloji merkezlerinden (USGS, Kandilli vb.) yayınlandığı anda sistemimize düşer. Genellikle deprem olduktan birkaç dakika sonra listede görebilirsiniz.</p>
+    </article>
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">Neden bazı depremleri listede göremiyorum?</h3>
+      <p class="modal-faq__a">Sistem varsayılan olarak son 24 saatteki ve belirli bir büyüklüğün üzerindeki (genellikle 2.5+) depremleri gösterir. İleri düzey filtreleme seçenekleri gelecek güncellemelerle eklenebilir.</p>
+    </article>
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">“Büyüklük” (magnitude) ne anlama geliyor?</h3>
+      <p class="modal-faq__a">Depremin açığa çıkardığı enerjinin ölçüsüdür. Logaritmik ölçek olduğu için 6.0 büyüklüğündeki bir deprem, 5.0’a göre yaklaşık 10 kat daha güçlü sarsıntı ve 32 kat daha fazla enerji ile ilişkilendirilir.</p>
+    </article>
+  </div>
+</div>`,
         privacy: `
-            <h2>Gizlilik Politikası</h2>
-            <p>Son Güncelleme: 12 Şubat 2026</p>
-            
-            <h3>1. Toplanan Veriler</h3>
-            <p>EarthquakeTrack olarak gizliliğinize önem veriyoruz. Sitemizi ziyaret ettiğinizde herhangi bir kişisel verinizi (isim, e-posta, telefon vb.) kaydetmiyoruz. Üyelik sistemi bulunmamaktadır.</p>
-
-            <h3>2. Çerezler (Cookies) ve Yerel Depolama</h3>
-            <p>Sitemiz, kullanıcı deneyimini iyileştirmek için tarayıcınızın "Local Storage" özelliğini kullanabilir (örneğin: tema tercihinizi hatırlamak için). Ayrıca Google AdSense ve Google Analytics gibi üçüncü taraf hizmetler, size uygun reklamlar göstermek ve site trafiğini analiz etmek için çerez kullanabilir.</p>
-
-            <h3>3. Konum Bilgisi</h3>
-            <p>Harita üzerinde konumunuzu görmek isterseniz, tarayıcınız konum izni isteyecektir. Bu veri sadece cihazınızda işlenir ve sunucularımıza kaydedilmez.</p>
-
-            <h3>4. Üçüncü Taraf Bağlantılar</h3>
-            <p>Sitemizdeki dış bağlantıların (örneğin deprem kaynağına giden linkler) gizlilik politikalarından sorumlu değiliz.</p>
-        `,
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_SHIELD}
+    <h2 class="modal-doc__title" id="modal-doc-title">Gizlilik politikası</h2>
+  </header>
+  <p class="modal-doc__meta">Son güncelleme: 12 Şubat 2026</p>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">1. Toplanan veriler</h3>
+    <p>EarthquakeTrack olarak gizliliğinize önem veriyoruz. Sitemizi ziyaret ettiğinizde kişisel verinizi (isim, e-posta, telefon vb.) kaydetmiyoruz. Üyelik sistemi bulunmamaktadır.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">2. Çerezler ve yerel depolama</h3>
+    <p>Tarayıcınızın yerel depolaması (ör. tema ve dil tercihi) kullanıcı deneyimi için kullanılabilir. Google AdSense ve benzeri üçüncü taraf hizmetler çerez veya analiz araçları kullanabilir.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">3. Konum bilgisi</h3>
+    <p>Haritada konumunuzu göstermek için tarayıcı izni gerekir; bu veri yalnızca cihazınızda işlenir, sunucularımıza kaydedilmez.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">4. Üçüncü taraf bağlantılar</h3>
+    <p>Sitedeki dış bağlantıların gizlilik politikalarından sorumlu değiliz.</p>
+  </section>
+</div>`,
         terms: `
-            <h2>Kullanım Koşulları</h2>
-            <p>Lütfen sitemizi kullanmadan önce bu koşulları okuyunuz.</p>
-
-            <h3>1. Hizmetin Kullanımı</h3>
-            <p>EarthquakeTrack, yalnızca bilgilendirme amaçlıdır. Deprem tahminleri yapmaz veya resmi bir uyarı sistemi yerine geçmez. Doğal afet durumlarında lütfen AFAD ve yetkili mercilerin duyurularını takip ediniz.</p>
-
-            <h3>2. Sorumluluk Reddi</h3>
-            <p>Sunulan deprem verileri, sismoloji merkezlerinden otomatik olarak çekilmektedir. Verilerin doğruluğu, kesinliği veya zamanlaması konusunda garanti veremeyiz. Bu verilerin kullanımından doğabilecek zararlardan earthquakeTrack sorumlu tutulamaz.</p>
-
-            <h3>3. Telif Hakları</h3>
-            <p>Sitemizin tasarımı ve kodları telif hakları ile korunmaktadır. İzinsiz kopyalanamaz.</p>
-        `
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_FILE}
+    <h2 class="modal-doc__title" id="modal-doc-title">Kullanım koşulları</h2>
+  </header>
+  <p class="modal-doc__lead">Lütfen sitemizi kullanmadan önce bu koşulları okuyun.</p>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">1. Hizmetin kullanımı</h3>
+    <p>EarthquakeTrack yalnızca bilgilendirme amaçlıdır. Deprem tahmini yapmaz ve resmi uyarı sisteminin yerine geçmez. Afet durumlarında AFAD ve yetkili mercilerin duyurularını takip edin.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">2. Sorumluluk reddi</h3>
+    <p>Deprem verileri sismoloji merkezlerinden otomatik alınır; doğruluk veya zamanlama garantisi verilemez. Verilerin kullanımından doğan zararlardan EarthquakeTrack sorumlu tutulamaz.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">3. Telif hakları</h3>
+    <p>Sitenin tasarımı ve kodları telif ile korunur; izinsiz kopyalanamaz.</p>
+  </section>
+</div>`
     },
     en: {
         about: `
-            <h2>About Us</h2>
-            <p>EarthquakeTrack is a completely free web application that allows you to track earthquake data in Turkey and around the world instantly.</p>
-            
-            <h3>Data Sources</h3>
-            <p>Our application sources its data from reliable and publicly available API services:</p>
-            <ul>
-                <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a> (United States Geological Survey):</strong> Our main data source for major earthquakes worldwide.</li>
-                <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a> (European-Mediterranean Seismological Centre):</strong> An important source for earthquake data in the Europe and Mediterranean region.</li>
-                <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Observatory</a> and <a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a>:</strong> Our primary sources for earthquakes in Turkey and the surrounding region.</li>
-            </ul>
-
-            <h3>Our Mission</h3>
-            <p>As a country located in an earthquake zone, we believe that accessing information quickly and accurately is of vital importance. With EarthquakeTrack, we aim to raise earthquake awareness and present the most up-to-date data to our users in the most understandable way.</p>
-        `,
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_INFO}
+    <h2 class="modal-doc__title" id="modal-doc-title">About</h2>
+  </header>
+  <p class="modal-doc__lead">EarthquakeTrack is a free web application for following earthquake data in Turkey and worldwide in near real time.</p>
+  <section class="modal-doc__section" aria-labelledby="about-sources-en">
+    <h3 class="modal-doc__h" id="about-sources-en">Data sources</h3>
+    <p>We use reliable, publicly available APIs:</p>
+    <ul class="modal-doc__list">
+      <li><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong> (United States Geological Survey): Primary source for large global earthquakes.</li>
+      <li><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a></strong> (European-Mediterranean Seismological Centre): Important for Europe and the Mediterranean.</li>
+      <li><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Observatory</a></strong> and <strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong>: Primary sources for Turkey and the surrounding region.</li>
+    </ul>
+  </section>
+  <section class="modal-doc__section" aria-labelledby="about-mission-en">
+    <h3 class="modal-doc__h" id="about-mission-en">Our mission</h3>
+    <p>We believe fast, accurate information matters in earthquake-prone regions. EarthquakeTrack aims to improve awareness and present up-to-date data clearly.</p>
+  </section>
+</div>`,
         faq: `
-            <h2>Frequently Asked Questions (FAQ)</h2>
-            
-            <h3>How often is data updated?</h3>
-            <p>Data arrives in our system as soon as it is published by seismology centers (USGS, Kandilli, etc.). You can usually see it in the list a few minutes after the earthquake occurs.</p>
-
-            <h3>Why can't I see some earthquakes in the list?</h3>
-            <p>Our system defaults to showing earthquakes from the last 24 hours and above a certain magnitude (usually 2.5+). Filtering options will be added in future updates.</p>
-
-            <h3>What does "Magnitude" mean?</h3>
-            <p>It is a measure of the energy released by the earthquake. Since it is a logarithmic scale, a magnitude 6.0 earthquake creates shaking 10 times stronger than a magnitude 5.0 earthquake and releases 32 times more energy.</p>
-        `,
+<div class="modal-doc modal-doc--faq">
+  <header class="modal-doc__header">${ICON_FAQ}
+    <h2 class="modal-doc__title" id="modal-doc-title">Frequently asked questions</h2>
+  </header>
+  <div class="modal-faq">
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">How often is data updated?</h3>
+      <p class="modal-faq__a">Data appears as soon as it is published by seismology centers (USGS, Kandilli, etc.). You will usually see events within a few minutes.</p>
+    </article>
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">Why are some earthquakes missing from the list?</h3>
+      <p class="modal-faq__a">By default we show roughly the last 24 hours and events above a magnitude threshold (often 2.5+). More filtering options may come in future updates.</p>
+    </article>
+    <article class="modal-faq__item">
+      <h3 class="modal-faq__q">What does “magnitude” mean?</h3>
+      <p class="modal-faq__a">It measures energy released at the source. Because the scale is logarithmic, a magnitude 6.0 event is associated with about 10× stronger shaking and about 32× more energy than magnitude 5.0.</p>
+    </article>
+  </div>
+</div>`,
         privacy: `
-            <h2>Privacy Policy</h2>
-            <p>Last Update: February 12, 2026</p>
-            
-            <h3>1. Collected Data</h3>
-            <p>We value your privacy at EarthquakeTrack. We do not record any of your personal data (name, email, phone, etc.) when you visit our site. There is no membership system.</p>
-
-            <h3>2. Cookies and Local Storage</h3>
-            <p>Our site may use your browser's "Local Storage" feature to improve user experience (for example: to remember your theme preference). Additionally, third-party services such as Google AdSense and Google Analytics may use cookies to show you appropriate ads and analyze site traffic.</p>
-
-            <h3>3. Location Information</h3>
-            <p>If you wish to see your location on the map, your browser will request location permission. This data is only processed on your device and is not saved to our servers.</p>
-
-            <h3>4. Third Party Links</h3>
-            <p>We are not responsible for the privacy policies of external links on our site (for example links going to the earthquake source).</p>
-        `,
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_SHIELD}
+    <h2 class="modal-doc__title" id="modal-doc-title">Privacy policy</h2>
+  </header>
+  <p class="modal-doc__meta">Last updated: February 12, 2026</p>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">1. Data we collect</h3>
+    <p>We do not collect personal data such as name, email, or phone. There is no account system.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">2. Cookies and local storage</h3>
+    <p>Your browser may store preferences (e.g. theme and language). Third-party services such as Google AdSense may use cookies or analytics.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">3. Location</h3>
+    <p>Showing your position on the map requires browser permission. That data is processed on your device only and is not saved on our servers.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">4. Third-party links</h3>
+    <p>We are not responsible for the privacy practices of external sites linked from EarthquakeTrack.</p>
+  </section>
+</div>`,
         terms: `
-            <h2>Terms of Use</h2>
-            <p>Please read these terms before using our site.</p>
-
-            <h3>1. Use of Service</h3>
-            <p>EarthquakeTrack is for informational purposes only. It does not make earthquake predictions or serve as an official warning system. In case of natural disasters, please follow the announcements of AFAD and authorized authorities.</p>
-
-            <h3>2. Disclaimer</h3>
-            <p>The earthquake data presented is automatically retrieved from seismology centers. We cannot guarantee the accuracy, precision, or timing of the data. earthquakeTrack cannot be held responsible for any damages arising from the use of this data.</p>
-
-            <h3>3. Copyrights</h3>
-            <p>Our site's design and code are protected by copyright. It cannot be copied without permission.</p>
-        `
+<div class="modal-doc">
+  <header class="modal-doc__header">${ICON_FILE}
+    <h2 class="modal-doc__title" id="modal-doc-title">Terms of use</h2>
+  </header>
+  <p class="modal-doc__lead">Please read these terms before using the site.</p>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">1. Use of the service</h3>
+    <p>EarthquakeTrack is for information only. It does not predict earthquakes or replace official warning systems. In emergencies follow AFAD and authorized authorities.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">2. Disclaimer</h3>
+    <p>Earthquake data is fetched automatically from seismology centers. We cannot guarantee accuracy or timing. EarthquakeTrack is not liable for damages arising from use of this data.</p>
+  </section>
+  <section class="modal-doc__section">
+    <h3 class="modal-doc__h">3. Copyright</h3>
+    <p>Site design and code are protected; copying without permission is not allowed.</p>
+  </section>
+</div>`
     }
 };

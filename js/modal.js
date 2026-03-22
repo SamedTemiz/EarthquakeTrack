@@ -16,29 +16,28 @@ export function initModal() {
         if (langContent && langContent[type]) {
             modalContent.innerHTML = langContent[type];
             modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
+            closeBtn.focus();
         }
     };
 
-    // Close on cross
-    closeBtn.addEventListener('click', () => {
+    const closeInfoModal = () => {
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-    });
+    };
+
+    // Close on button
+    closeBtn.addEventListener('click', closeInfoModal);
 
     // Close on backdrop click
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
+        if (e.target === modal) closeInfoModal();
     });
 
     // Close on ESC
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeInfoModal();
     });
 }

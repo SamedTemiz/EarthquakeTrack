@@ -10,210 +10,371 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://earthquaketrack.com.tr/education.html">
 
-    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="stylesheet" href="style.css?v=2029">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
 
     <style>
-        body {
+        /* EarthquakeTrack theme — education / terminology page */
+        body.edu-page {
+            min-height: 100%;
             background-color: var(--bg-dark);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
             margin: 0;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+            transition: background-color 0.25s ease, color 0.25s ease;
             font-size: 15px;
-            /* Slightly smaller base font */
         }
 
-        .content-container {
-            max-width: 800px;
-            margin: 30px auto;
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
+        .edu-shell {
+            max-width: 820px;
+            margin: 28px auto 40px;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
         }
 
-        h1 {
+        .edu-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(52, 152, 219, 0.08) 0%, transparent 100%);
+        }
+
+        .edu-header h1 {
+            margin: 0 0 12px;
+            font-size: clamp(1.35rem, 4vw, 1.75rem);
+            font-weight: 700;
             color: var(--accent-gold);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-            font-size: 1.6rem;
-            /* Reduced */
+            letter-spacing: -0.02em;
+            line-height: 1.25;
         }
 
-        h2 {
-            color: var(--accent-blue);
-            margin-top: 25px;
-            font-size: 1.3em;
-        }
-
-        p {
+        .edu-lead {
+            margin: 0;
             color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 62ch;
+        }
+
+        .edu-body {
+            padding: 24px 28px 32px;
+        }
+
+        .edu-term {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px 18px 16px;
+            margin-bottom: 14px;
+            background: var(--surface-card, var(--card-bg));
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .edu-term:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .edu-term:hover {
+            border-color: rgba(197, 160, 101, 0.45);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .edu-term-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
             margin-bottom: 12px;
         }
 
-        .term-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .term-box:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-gold);
-        }
-
-        .term-title {
-            font-weight: 700;
-            color: var(--text-primary);
-            font-size: 1.1em;
+        .edu-ico {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
+            justify-content: center;
+            background: rgba(52, 152, 219, 0.12);
+            border: 1px solid rgba(52, 152, 219, 0.28);
+            color: var(--accent-blue);
         }
 
-        .icon {
-            font-size: 1.4em;
+        .edu-ico svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .citation {
-            margin-top: 30px;
-            padding-top: 15px;
+        .edu-term h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        .edu-term p {
+            margin: 0 0 10px;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+
+        .edu-term p:last-child {
+            margin-bottom: 0;
+        }
+
+        .edu-term strong {
+            color: var(--text-primary);
+        }
+
+        .edu-citation {
+            margin-top: 28px;
+            padding-top: 18px;
             border-top: 1px solid var(--border-color);
-            font-size: 0.8em;
+            font-size: 0.8rem;
             color: var(--text-tertiary);
         }
 
-        a {
-            color: var(--accent-blue);
+        .edu-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 22px;
+            padding: 10px 0;
+            color: var(--accent-gold);
             text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s ease, opacity 0.2s ease;
         }
 
-        a:hover {
+        .edu-back:hover {
+            color: #d4b078;
+        }
+
+        .edu-back:focus-visible {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        body.edu-page a[href^="http"] {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        body.edu-page a[href^="http"]:hover {
             text-decoration: underline;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--accent-gold);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9em;
+        body.edu-page a[href^="http"]:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
         @media (max-width: 600px) {
-            body {
+            body.edu-page {
                 padding: 10px;
             }
 
-            .content-container {
-                padding: 20px;
-                margin: 15px auto;
+            .edu-header,
+            .edu-body {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .edu-term {
+                padding: 16px 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .edu-term {
+                transition: none;
+            }
+
+            .edu-back,
+            body.edu-page a[href^="http"] {
+                transition: none;
             }
         }
     </style>
 </head>
 
-<body>
-
-    <div class="content-container">
-        <!-- Turkish Content -->
+<body class="edu-page">
+    <main class="edu-shell">
         <div id="content-tr">
-            <h1>Deprem Bilgisi ve Terimler</h1>
+            <header class="edu-header">
+                <h1>Deprem bilgisi ve terimler</h1>
+                <p class="edu-lead">Deprem verilerini daha iyi yorumlamanız için temel kavramların kısa özetleri. Bilgi
+                    amaçlıdır; resmi kurum açıklamaları esas alınmalıdır.</p>
+            </header>
 
-            <p>Deprem verilerini daha iyi yorumlayabilmeniz için sıkça kullanılan temel terimlerin açıklamalarını
-                derledik.</p>
+            <div class="edu-body">
+                <article class="edu-term" aria-labelledby="term-mag-tr">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <!-- bar chart -->
+                            <svg viewBox="0 0 24 24">
+                                <line x1="18" y1="20" x2="18" y2="10" />
+                                <line x1="12" y1="20" x2="12" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="14" />
+                            </svg>
+                        </span>
+                        <h2 id="term-mag-tr">Büyüklük (magnitude) ve şiddet (intensity)</h2>
+                    </div>
+                    <p><strong>Büyüklük:</strong> Depremin odakta açığa çıkardığı enerjinin ölçüsüdür; sayısal ve
+                        kaynakta (ör. 7.4) sabittir.</p>
+                    <p><strong>Şiddet:</strong> Yeryüzündeki etkisidir; hasar ve hissedilen güç bölgeye göre değişir.</p>
+                </article>
 
-            <div class="term-box">
-                <span class="term-title"><span class="icon">📊</span> Büyüklük (Magnitude) vs Şiddet (Intensity)</span>
-                <p><strong>Büyüklük:</strong> Depremin merkezinde açığa çıkan enerjinin matematiksel ölçüsüdür.
-                    Aletseldir ve değişmez (Örn: 7.4).</p>
-                <p><strong>Şiddet:</strong> Depremin yeryüzündeki etkisidir. Binalara, doğaya ve insanlara verdiği
-                    hasara göre belirlenir ve bölgeden bölgeye değişir.</p>
+                <article class="edu-term" aria-labelledby="term-depth-tr">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <!-- layers / depth -->
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                <path d="M2 17l10 5 10-5-10-5-10 5z" />
+                                <path d="M2 12l10 5 10-5" />
+                            </svg>
+                        </span>
+                        <h2 id="term-depth-tr">Odak derinliği (depth)</h2>
+                    </div>
+                    <p>Depremin yerin kaç kilometre altında gerçekleştiğini gösterir. Yüzeye yakın depremler (ör. 0–60
+                        km) daha dar alanda hissedilebilir ancak yıkıcı etki daha yüksek olabilir; derin depremler daha
+                        geniş alanda hissedilir, yıkıcılık genelde daha düşük olabilir.</p>
+                </article>
+
+                <article class="edu-term" aria-labelledby="term-fault-tr">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <!-- zap -->
+                            <svg viewBox="0 0 24 24">
+                                <polygon fill="none" points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                        </span>
+                        <h2 id="term-fault-tr">Fay hattı</h2>
+                    </div>
+                    <p>Yer kabuğunda kırılmaların ve kaymaların yoğunlaştığı bölgelerdir. Depremler çoğunlukla bu
+                        yapılarda biriken gerilimin aniden boşalmasıyla oluşur.</p>
+                </article>
+
+                <article class="edu-term" aria-labelledby="term-after-tr">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <!-- activity / pulse -->
+                            <svg viewBox="0 0 24 24">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </span>
+                        <h2 id="term-after-tr">Artçı deprem (aftershock)</h2>
+                    </div>
+                    <p>Ana şoktan sonra aynı bölgede meydana gelen daha küçük sarsıntılardır. Haftalar veya aylarca
+                        sürebilir.</p>
+                </article>
+
+                <footer class="edu-citation">
+                    <strong>Kaynaklar:</strong>
+                    <a href="http://www.koeri.boun.edu.tr/sismo/2/deprem-bilgileri/temel-bilgiler/" target="_blank"
+                        rel="noopener noreferrer">Kandilli Rasathanesi</a>,
+                    <a href="https://www.usgs.gov/programs/earthquake-hazards" target="_blank"
+                        rel="noopener noreferrer">USGS</a>
+                </footer>
+
+                <a href="/" class="edu-back">&larr; Ana sayfaya dön</a>
             </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">🌍</span> Odak Derinliği (Depth)</span>
-                <p>Depremin yerin kaç kilometre altında gerçekleştiğini gösterir. Yüzeye yakın depremler (0-60 km) daha
-                    dar bir alanda hissedilir ancak daha yıkıcı olabilir. Derin depremler ise çok daha geniş bir alanda
-                    hissedilir ancak yıkıcılığı genellikle daha azdır.</p>
-            </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">⚡</span> Fay Hattı</span>
-                <p>Yer kabuğundaki kayaçların kırılarak yer değiştirdiği hatlardır. Depremler genellikle bu hatlar
-                    üzerinde biriken enerjinin aniden boşalmasıyla oluşur.</p>
-            </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">📉</span> Artçı Deprem (Aftershock)</span>
-                <p>Ana depremden sonra, aynı bölgede meydana gelen daha küçük sarsıntılardır. Yer kabuğu dengesini
-                    bulana kadar haftalarca hatta aylarca sürebilir.</p>
-            </div>
-
-            <div class="citation">
-                <strong>Kaynaklar:</strong> <a
-                    href="http://www.koeri.boun.edu.tr/sismo/2/deprem-bilgileri/temel-bilgiler/"
-                    target="_blank">Kandilli Rasathanesi</a>, <a href="https://www.usgs.gov/programs/earthquake-hazards"
-                    target="_blank">USGS</a>
-            </div>
-
-            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
         </div>
 
-        <!-- English Content -->
         <div id="content-en" style="display: none;">
-            <h1>Earthquake Education & Terminology</h1>
+            <header class="edu-header">
+                <h1>Earthquake education &amp; terminology</h1>
+                <p class="edu-lead">Short definitions of key terms to help you read earthquake data. For information
+                    only—follow official guidance.</p>
+            </header>
 
-            <p>We have compiled explanations of frequently used basic terms so you can interpret earthquake data better.
-            </p>
+            <div class="edu-body">
+                <article class="edu-term" aria-labelledby="term-mag-en">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <line x1="18" y1="20" x2="18" y2="10" />
+                                <line x1="12" y1="20" x2="12" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="14" />
+                            </svg>
+                        </span>
+                        <h2 id="term-mag-en">Magnitude vs intensity</h2>
+                    </div>
+                    <p><strong>Magnitude:</strong> A measure of energy released at the source; it is a fixed value for
+                        that event (e.g. 7.4).</p>
+                    <p><strong>Intensity:</strong> Shaking and effects at the surface; it varies by location and
+                        damage.</p>
+                </article>
 
-            <div class="term-box">
-                <span class="term-title"><span class="icon">📊</span> Magnitude vs Intensity</span>
-                <p><strong>Magnitude:</strong> It is the mathematical measure of the energy released at the earthquake's
-                    source. It is instrumental and does not change (e.g., 7.4).</p>
-                <p><strong>Intensity:</strong> It is the effect of the earthquake on the earth's surface. It is
-                    determined by the damage caused to buildings, nature, and people, and varies from region to region.
-                </p>
+                <article class="edu-term" aria-labelledby="term-depth-en">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                <path d="M2 17l10 5 10-5-10-5-10 5z" />
+                                <path d="M2 12l10 5 10-5" />
+                            </svg>
+                        </span>
+                        <h2 id="term-depth-en">Focal depth</h2>
+                    </div>
+                    <p>How deep the earthquake is below the surface. Shallow events (e.g. 0–60 km) may be felt in a
+                        smaller area but can be more destructive; deep events are often felt over a wider area with
+                        generally lower damage potential.</p>
+                </article>
+
+                <article class="edu-term" aria-labelledby="term-fault-en">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <polygon fill="none" points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                        </span>
+                        <h2 id="term-fault-en">Fault line</h2>
+                    </div>
+                    <p>Regions where crustal rocks break and slip. Earthquakes often occur when stored stress is
+                        released suddenly along these structures.</p>
+                </article>
+
+                <article class="edu-term" aria-labelledby="term-after-en">
+                    <div class="edu-term-head">
+                        <span class="edu-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </span>
+                        <h2 id="term-after-en">Aftershock</h2>
+                    </div>
+                    <p>Smaller earthquakes in the same region after the main shock. They can continue for weeks or
+                        months.</p>
+                </article>
+
+                <footer class="edu-citation">
+                    <strong>Sources:</strong>
+                    <a href="https://www.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a>,
+                    <a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a>
+                </footer>
+
+                <a href="/" class="edu-back">&larr; Back to home</a>
             </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">🌍</span> Focal Depth</span>
-                <p>It indicates how many kilometers below the ground the earthquake occurred. Shallow earthquakes (0-60
-                    km) are felt in a smaller area but can be more destructive. Deep earthquakes are felt over a much
-                    wider area but are generally less destructive.</p>
-            </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">⚡</span> Fault Line</span>
-                <p>These are lines where rocks in the earth's crust break and shift. Earthquakes usually occur due to
-                    the sudden release of energy accumulated along these lines.</p>
-            </div>
-
-            <div class="term-box">
-                <span class="term-title"><span class="icon">📉</span> Aftershock</span>
-                <p>Smaller tremors that occur in the same area after the main earthquake. They can last for weeks or
-                    even months until the earth's crust finds its balance.</p>
-            </div>
-
-            <div class="citation">
-                <strong>Sources:</strong> <a href="https://www.usgs.gov/" target="_blank">USGS</a>, <a
-                    href="https://www.emsc-csem.org/" target="_blank">EMSC</a>
-            </div>
-
-            <a href="/" class="back-link">&larr; Back to Home</a>
         </div>
-    </div>
+    </main>
 
     <script>
         const savedTheme = localStorage.getItem('theme') || 'dark';

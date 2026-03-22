@@ -244,10 +244,11 @@
         </main>
     </div>
 
-    <!-- Info Modal -->
-    <div id="info-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
+    <!-- Info Modal (About, FAQ, Privacy, Terms) -->
+    <div id="info-modal" class="modal info-modal" role="dialog" aria-modal="true" aria-labelledby="modal-doc-title"
+        aria-hidden="true">
+        <div class="modal-content modal-content--doc">
+            <button type="button" class="close-modal" aria-label="Close dialog">&times;</button>
             <div id="modal-text"></div>
         </div>
     </div>
