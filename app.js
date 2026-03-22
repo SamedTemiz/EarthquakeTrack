@@ -1,6 +1,6 @@
 import { getEarthquakeData, getCountryFromCoords } from './js/api.js';
 import { initMap, updateMapMarkers } from './js/map.js';
-import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations, initLocationSelector } from './js/ui.js';
+import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations, initLocationSelector, resetLocationFiltersAndMap } from './js/ui.js';
 import { initLanguage, toggleLanguage } from './js/language.js';
 import { initTheme } from './js/theme.js';
 import { initModal } from './js/modal.js';
@@ -30,10 +30,27 @@ async function initApp() {
         // 1. Initialize Map
         const map = initMap();
 
+        globalMap = map;
+
+        // Country selector sync from geolocation (listener before any await — avoids missing fast location events)
+        const setCountryFromCoords = async (lat, lng) => {
+            const countryKey = await getCountryFromCoords(lat, lng);
+            if (!countryKey) return;
+            const countrySelect = document.getElementById('country-select');
+            if (!countrySelect) return;
+            const hasOption = Array.from(countrySelect.options).some(o => o.value === countryKey);
+            if (!hasOption) return;
+            countrySelect.value = countryKey;
+            countrySelect.dispatchEvent(new Event('change'));
+        };
+
+        window.addEventListener('userLocationFound', (e) => {
+            const { lat, lng } = e.detail || {};
+            if (typeof lat === 'number' && typeof lng === 'number') setCountryFromCoords(lat, lng);
+        });
+
         // Initialize Modal
         initModal();
-
-        globalMap = map;
 
         // Initialize Theme
         initTheme(map, () => {
@@ -94,24 +111,7 @@ async function initApp() {
         // 4. Init Tabs (Initial)
         initTabs(globalEarthquakes, map);
 
-        // 4b. Auto-select country from user location (when location is obtained or already saved)
-        const setCountryFromCoords = async (lat, lng) => {
-            const countryKey = await getCountryFromCoords(lat, lng);
-            if (!countryKey) return;
-            const countrySelect = document.getElementById('country-select');
-            if (!countrySelect) return;
-            const hasOption = Array.from(countrySelect.options).some(o => o.value === countryKey);
-            if (!hasOption) return;
-            countrySelect.value = countryKey;
-            countrySelect.dispatchEvent(new Event('change'));
-        };
-
-        window.addEventListener('userLocationFound', (e) => {
-            const { lat, lng } = e.detail || {};
-            if (typeof lat === 'number' && typeof lng === 'number') setCountryFromCoords(lat, lng);
-        });
-
-        // On load: if we have saved location, set country selector from it (same for mobile and web)
+        // On load: if we have saved location, set country selector from it (after options exist — same for mobile and web)
         try {
             const saved = localStorage.getItem('userLocation');
             if (saved) {
@@ -153,6 +153,8 @@ async function initApp() {
                 updateTitle();
                 refreshCooldownIntervalId = setInterval(updateTitle, 1000);
             }
+            // Manual refresh: clear country/city filters and reset map focus, then fetch fresh data.
+            resetLocationFiltersAndMap(map);
             refreshData(false);
         };
         document.getElementById('refresh-btn')?.addEventListener('click', manualRefresh);

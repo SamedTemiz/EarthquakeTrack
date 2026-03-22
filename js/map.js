@@ -26,7 +26,22 @@ function ensureLocationAlertDialog() {
 }
 
 /**
- * Maps Leaflet/GeolocationPositionError codes to i18n strings (language.js).
+ * @param {'location_error_denied'|'location_error_unavailable'|'location_error_timeout'} key
+ */
+function showLocationErrorByKey(key) {
+    ensureLocationAlertDialog();
+    const dialog = document.getElementById('alert-dialog');
+    const msgEl = document.getElementById('alert-dialog-message');
+    const okBtn = document.getElementById('alert-dialog-ok');
+    if (!dialog || !msgEl || !okBtn) return;
+    msgEl.textContent = t(key);
+    okBtn.textContent = t('ok');
+    dialog.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Maps GeolocationPositionError codes to i18n strings (language.js).
  * @param {GeolocationPositionError & { message?: string }} e
  */
 function showLocationErrorDialog(e) {
@@ -39,8 +54,34 @@ function showLocationErrorDialog(e) {
         return;
     }
 
-    let key = 'location_error_unavailable';
     const code = typeof e.code === 'number' ? e.code : null;
+
+    /**
+     * Browsers may report PERMISSION_DENIED (1) even when site permission is "granted"
+     * (VPN, private mode, or stale callbacks). If Permissions API says granted, show
+     * "unavailable" instead of "denied" to avoid confusing the user.
+     */
+    if (code === 1 && navigator.permissions?.query) {
+        navigator.permissions
+            .query({ name: 'geolocation' })
+            .then((result) => {
+                if (result.state === 'granted') {
+                    showLocationErrorByKey('location_error_unavailable');
+                } else {
+                    showLocationErrorByKey('location_error_denied');
+                }
+            })
+            .catch(() => {
+                let key = 'location_error_unavailable';
+                if (code === 1) key = 'location_error_denied';
+                else if (code === 2) key = 'location_error_unavailable';
+                else if (code === 3) key = 'location_error_timeout';
+                showLocationErrorByKey(key);
+            });
+        return;
+    }
+
+    let key = 'location_error_unavailable';
     if (code === 1) key = 'location_error_denied';
     else if (code === 2) key = 'location_error_unavailable';
     else if (code === 3) key = 'location_error_timeout';
@@ -49,6 +90,93 @@ function showLocationErrorDialog(e) {
     okBtn.textContent = t('ok');
     dialog.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+}
+
+/** Distinguishes automatic page-load locate from the manual control (error dialog only for control). */
+const LOCATION_SOURCE_INITIAL = 'initial';
+const LOCATION_SOURCE_CONTROL = 'control';
+
+/** City-scale zoom when focusing on the user's position (aligned with `focusMapToSelection` city level in ui.js). */
+const LOCATION_FOCUS_ZOOM = 8;
+
+/**
+ * Uses the Geolocation API directly (not map.locate) so each request has a monotonic id.
+ * Leaflet's map.locate uses getCurrentPosition without cancelling prior calls; overlapping
+ * requests can fire locationerror for an old attempt while map._locationRequestSource was
+ * overwritten (e.g. initial + "My location" click), wrongly showing the permission dialog.
+ *
+ * After TIMEOUT (3) or POSITION_UNAVAILABLE (2), performs one automatic fallback with
+ * enableHighAccuracy: false and a longer timeout so Wi‑Fi / coarse / cached fixes succeed
+ * indoors or with VPN (high‑accuracy GPS often times out at 10s).
+ *
+ * @param {L.Map} map
+ * @param {typeof LOCATION_SOURCE_INITIAL | typeof LOCATION_SOURCE_CONTROL} source
+ */
+function runGeolocationRequest(map, source) {
+    if (!navigator.geolocation) {
+        map._locationRequestSource = source;
+        map.fire('locationerror', { code: 0, message: 'Geolocation not supported' });
+        return;
+    }
+
+    if (typeof map._geolocationRequestId !== 'number' || Number.isNaN(map._geolocationRequestId)) {
+        map._geolocationRequestId = 0;
+    }
+    const requestId = ++map._geolocationRequestId;
+    map._locationRequestSource = source;
+
+    /** First attempt: GPS‑class fix. Fallback: network / cache (faster, works more often). */
+    let didWeakFallback = false;
+
+    const optionsPrimary = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+    };
+
+    const optionsFallback = {
+        enableHighAccuracy: false,
+        timeout: 45000,
+        maximumAge: 300000
+    };
+
+    function onSuccess(pos) {
+        if (requestId !== map._geolocationRequestId) return;
+        const latlng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+        map.fire('locationfound', { latlng, timestamp: pos.timestamp });
+    }
+
+    function onError(err) {
+        if (requestId !== map._geolocationRequestId) return;
+        const code = typeof err.code === 'number' ? err.code : 0;
+        // Do not retry permission denied — user must change site settings.
+        if ((code === 3 || code === 2) && !didWeakFallback) {
+            didWeakFallback = true;
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, optionsFallback);
+            return;
+        }
+        map.fire('locationerror', { code: err.code, message: err.message });
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, optionsPrimary);
+}
+
+/**
+ * Requests user location once on load when permission is not already denied.
+ * Skips calling locate if Permissions API reports "denied" (avoids pointless errors each visit).
+ */
+function scheduleInitialLocate(map) {
+    (async () => {
+        try {
+            if (navigator.permissions?.query) {
+                const result = await navigator.permissions.query({ name: 'geolocation' });
+                if (result.state === 'denied') return;
+            }
+        } catch (_) {
+            // Permissions API unsupported or "geolocation" not queryable — proceed with locate.
+        }
+        runGeolocationRequest(map, LOCATION_SOURCE_INITIAL);
+    })();
 }
 
 export function initMap() {
@@ -79,9 +207,7 @@ export function initMap() {
             L.DomEvent.disableClickPropagation(button);
             L.DomEvent.on(button, 'click', function (e) {
                 L.DomEvent.stop(e);
-                // Request high accuracy for better results
-                // Disable setView to handle it manually with flyTo
-                map.locate({ setView: false, maxZoom: 16, enableHighAccuracy: true });
+                runGeolocationRequest(map, LOCATION_SOURCE_CONTROL);
                 button.classList.add('loading');
             });
 
@@ -133,17 +259,31 @@ export function initMap() {
         // Save to localStorage
         localStorage.setItem('userLocation', JSON.stringify(e.latlng));
 
-        // Animate to location (Same style as list click)
-        map.flyTo(e.latlng, 12, { // Orbiting slightly higher than max zoom for context
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        window.dispatchEvent(
+            new CustomEvent('userLocationFound', {
+                detail: { lat, lng }
+            })
+        );
+
+        // City-level overview (not street-level)
+        map.flyTo(e.latlng, LOCATION_FOCUS_ZOOM, {
             animate: true,
             duration: 1.5
         });
+
+        delete map._locationRequestSource;
     });
 
     map.on('locationerror', (e) => {
         const locationBtn = document.querySelector('.leaflet-control-location');
         if (locationBtn) locationBtn.classList.remove('loading');
-        showLocationErrorDialog(e);
+        const source = map._locationRequestSource;
+        delete map._locationRequestSource;
+        if (source === LOCATION_SOURCE_CONTROL) {
+            showLocationErrorDialog(e);
+        }
     });
 
     // Dark Map Tiles (CartoDB Dark Matter)
@@ -155,6 +295,8 @@ export function initMap() {
 
     // Save reference for theming
     map.tileLayer = tileLayer;
+
+    scheduleInitialLocate(map);
 
     return map;
 }

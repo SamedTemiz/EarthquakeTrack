@@ -110,7 +110,7 @@ export function initLocationSelector(earthquakes, mapInstance) {
     countrySelect.replaceWith(countryClone);
     citySelect.replaceWith(cityClone);
 
-    countryClone.addEventListener('change', () => {
+    countryClone.addEventListener('change', (e) => {
         currentCountryFilter = countryClone.value;
         currentCityFilter = '';
         const fresh = buildLocationOptions(currentQuakes);
@@ -127,15 +127,44 @@ export function initLocationSelector(earthquakes, mapInstance) {
             cityClone.disabled = true;
         }
         updateSidebar(currentQuakes, mapInstance);
-        focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+        // Programmatic changes (e.g. sync from geolocation in app.js) must not override map focus —
+        // the map may have just flown to the user's position at zoom 12.
+        const shouldFocusMap = typeof e.isTrusted !== 'boolean' || e.isTrusted;
+        if (shouldFocusMap) {
+            focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+        }
     });
 
-    cityClone.addEventListener('change', () => {
+    cityClone.addEventListener('change', (e) => {
         currentCityFilter = cityClone.value;
         updateSidebar(currentQuakes, mapInstance);
         const fresh = buildLocationOptions(currentQuakes);
-        focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+        const shouldFocusMap = typeof e.isTrusted !== 'boolean' || e.isTrusted;
+        if (shouldFocusMap) {
+            focusMapToSelection(countryClone.value, cityClone.value, fresh, mapInstance);
+        }
     });
+}
+
+/** Default map view — keep in sync with `setView` in `map.js` `initMap`. */
+const DEFAULT_MAP_CENTER = [39.0, 35.0];
+const DEFAULT_MAP_ZOOM = 6;
+
+/**
+ * Clears country/city filters and recenters the map to the default overview.
+ * Invoked on manual "Son Hareketler" refresh only (not silent polling).
+ */
+export function resetLocationFiltersAndMap(mapInstance) {
+    currentCountryFilter = '';
+    currentCityFilter = '';
+    const countrySelect = document.getElementById('country-select');
+    if (countrySelect) {
+        countrySelect.value = '';
+        countrySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (mapInstance) {
+        mapInstance.flyTo(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM, { animate: true, duration: 1.2 });
+    }
 }
 
 export function setEarthquakeData(data) {
