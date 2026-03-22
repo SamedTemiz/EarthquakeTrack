@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim - EarthquakeTrack</title>
+    <meta name="description" content="EarthquakeTrack iletişim sayfası. Geri bildirim, hata bildirimi ve iş birliği için iletişime geçin.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://earthquaketrack.com.tr/contact.html">
+    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--accent-gold);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .mail-address {
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .mail-address:hover {
+            text-decoration: underline;
+        }
+
+        .mail-row {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        /* Primary CTA: opens default mail client */
+        .mail-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            padding: 12px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #000;
+            background: var(--accent-gold);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .mail-btn:hover {
+            background: #d4b078;
+        }
+
+        .mail-btn:active {
+            transform: scale(0.98);
+        }
+
+        .mail-btn svg {
+            flex-shrink: 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile: match other static pages — comfortable padding and tap targets */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
+            }
+
+            .content-container {
+                padding: 24px;
+                margin: 20px auto;
+            }
+
+            .mail-btn {
+                width: 100%;
+                max-width: 100%;
+                min-height: 44px;
+                box-sizing: border-box;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-container">
+        <h1>İletişim</h1>
+        <p>Öneri, hata bildirimi veya iş birliği talepleriniz için bize e-posta gönderebilirsiniz.</p>
+        <p class="mail-row">
+            <span>E-posta:
+                <a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a>
+            </span>
+            <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                </svg>
+                E-posta gönder
+            </a>
+        </p>
+        <p>Not: Deprem verileri bilgilendirme amaçlıdır, resmi kurum duyuruları esas alınmalıdır.</p>
+        <a class="back-link" href="index.html">← Ana sayfaya dön</a>
+    </div>
+    <script src="js/page-transition.js" defer></script>
+</body>
+
+</html>

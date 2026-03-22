@@ -51,10 +51,10 @@
     }
     </script>
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+    <!-- Leaflet CSS (self-hosted to avoid local CORS/CDN issues) -->
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="style.css?v=2028">
     <!-- Google AdSense - site verification & ad scripts -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1547168097704291"
@@ -155,6 +155,17 @@
             </nav>
 
             <div class="earthquake-list-container">
+                <!-- Location selector: focus map by country/city (no list filtering) -->
+                <div class="location-selector">
+                    <label for="country-select" class="location-label" data-i18n="country">Ülke</label>
+                    <select id="country-select" class="location-select" aria-label="Country">
+                        <option value="" data-i18n="allCountries">Tüm ülkeler</option>
+                    </select>
+                    <label for="city-select" class="location-label location-label-city" data-i18n="city">Şehir</label>
+                    <select id="city-select" class="location-select" aria-label="City" disabled>
+                        <option value="" data-i18n="allCities">Tüm şehirler</option>
+                    </select>
+                </div>
                 <!-- View: Active Issues (Default) -->
                 <div id="view-active-issues" class="view-section active">
                     <div class="list-header">
@@ -217,6 +228,7 @@
                 <div class="footer-row">
                     <a href="about.html" onclick="openModal('about'); return false;" data-i18n="about">Hakkında</a>
                     <a href="faq.html" onclick="openModal('faq'); return false;" data-i18n="faq">SSS</a>
+                    <a href="contact.html" data-i18n="contact">İletişim</a>
                     <a href="privacy.html" onclick="openModal('privacy'); return false;" data-i18n="privacy">Gizlilik
                         Politikası</a>
                     <a href="terms.html" onclick="openModal('terms'); return false;" data-i18n="terms">Kullanım
@@ -240,9 +252,17 @@
         </div>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Theme-alert dialog (e.g. location error); no native alert -->
+    <div id="alert-dialog" class="modal" role="alertdialog" aria-labelledby="alert-dialog-message" aria-modal="true">
+        <div class="modal-content alert-dialog-content">
+            <p id="alert-dialog-message" class="alert-dialog-message"></p>
+            <button type="button" id="alert-dialog-ok" class="alert-dialog-ok">OK</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS (self-hosted to avoid local CORS/CDN issues) -->
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script src="js/page-transition.js" defer></script>
     <script type="module" src="app.js"></script>
 </body>
 

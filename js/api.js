@@ -19,6 +19,42 @@ function isInsideTurkey(lat, lon) {
         lon >= TURKEY_BOUNDS.minLon && lon <= TURKEY_BOUNDS.maxLon;
 }
 
+const COUNTRY_CODE_MAP = {
+    tr: 'Turkey',
+    us: 'United States',
+    gb: 'United Kingdom',
+    de: 'Germany',
+    fr: 'France',
+    it: 'Italy',
+    es: 'Spain',
+    gr: 'Greece',
+    ir: 'Iran',
+    ru: 'Russia',
+    jp: 'Japan',
+    pt: 'Portugal',
+    pl: 'Poland'
+};
+
+/**
+ * Reverse geocodes coordinates to country key used by country selector.
+ * Returns null on failure.
+ */
+export async function getCountryFromCoords(lat, lon) {
+    if (typeof lat !== 'number' || typeof lon !== 'number') return null;
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    try {
+        const res = await fetch(url, { headers: { Accept: 'application/json' } });
+        if (!res.ok) return null;
+        const data = await res.json();
+        const code = (data?.address?.country_code || '').toLowerCase();
+        if (COUNTRY_CODE_MAP[code]) return COUNTRY_CODE_MAP[code];
+        const rawCountry = (data?.address?.country || '').trim();
+        return rawCountry || null;
+    } catch {
+        return null;
+    }
+}
+
 export async function getEarthquakeData() {
 
 
@@ -54,7 +90,9 @@ export async function getEarthquakeData() {
             time: parseKandilliDate(q.date_time || q.date),
             lat: parseFloat(q.geojson.coordinates[1]),
             lon: parseFloat(q.geojson.coordinates[0]),
-            depth: parseFloat(q.depth)
+            depth: parseFloat(q.depth),
+            countryName: 'Turkey',
+            cityName: q.location_properties?.epiCenter?.name || q.location_properties?.closestCity?.name || undefined
         }));
         turkeySourceUsed = 'Kandilli';
     }
@@ -70,7 +108,8 @@ export async function getEarthquakeData() {
             time: new Date(f.properties.time).getTime(),
             lat: f.geometry.coordinates[1],
             lon: f.geometry.coordinates[0],
-            depth: f.geometry.coordinates[2]
+            depth: f.geometry.coordinates[2],
+            countryName: isInsideTurkey(f.geometry.coordinates[1], f.geometry.coordinates[0]) ? 'Turkey' : undefined
         }));
     }
 
@@ -99,7 +138,8 @@ export async function getEarthquakeData() {
             time: f.properties.time,
             lat: f.geometry.coordinates[1],
             lon: f.geometry.coordinates[0],
-            depth: f.geometry.coordinates[2]
+            depth: f.geometry.coordinates[2],
+            countryName: (f.properties.place || '').includes(',') ? (f.properties.place.split(',').pop() || '').trim() : undefined
         }));
 
         // Filter USGS points that are inside our "Local/Regional" coverage to avoid triplets?

@@ -1,6 +1,6 @@
-import { getEarthquakeData } from './js/api.js';
+import { getEarthquakeData, getCountryFromCoords } from './js/api.js';
 import { initMap, updateMapMarkers } from './js/map.js';
-import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations } from './js/ui.js';
+import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations, initLocationSelector } from './js/ui.js';
 import { initLanguage, toggleLanguage } from './js/language.js';
 import { initTheme } from './js/theme.js';
 import { initModal } from './js/modal.js';
@@ -18,10 +18,8 @@ async function initApp() {
                 updateSidebar(globalEarthquakes, globalMap);
                 renderDashboard(globalEarthquakes, globalMap);
                 renderLocations(globalEarthquakes, globalMap);
-
-                // Ideally update map popups too, but that requires re-creating markers or updating their content.
-                // For V1, we focused on Sidebar.
                 updateMapMarkers(globalMap, globalEarthquakes);
+                initLocationSelector(globalEarthquakes, globalMap);
             }
         });
 
@@ -69,6 +67,7 @@ async function initApp() {
 
                 updateMapMarkers(map, earthquakes);
                 updateSidebar(earthquakes, map);
+                initLocationSelector(earthquakes, map);
 
                 // Re-init tabs to ensure they have fresh data reference
                 // Note: Repeatedly calling initTabs might stack listeners if not handled carefully, 
@@ -94,6 +93,32 @@ async function initApp() {
 
         // 4. Init Tabs (Initial)
         initTabs(globalEarthquakes, map);
+
+        // 4b. Auto-select country from user location (when location is obtained or already saved)
+        const setCountryFromCoords = async (lat, lng) => {
+            const countryKey = await getCountryFromCoords(lat, lng);
+            if (!countryKey) return;
+            const countrySelect = document.getElementById('country-select');
+            if (!countrySelect) return;
+            const hasOption = Array.from(countrySelect.options).some(o => o.value === countryKey);
+            if (!hasOption) return;
+            countrySelect.value = countryKey;
+            countrySelect.dispatchEvent(new Event('change'));
+        };
+
+        window.addEventListener('userLocationFound', (e) => {
+            const { lat, lng } = e.detail || {};
+            if (typeof lat === 'number' && typeof lng === 'number') setCountryFromCoords(lat, lng);
+        });
+
+        // On load: if we have saved location, set country selector from it (same for mobile and web)
+        try {
+            const saved = localStorage.getItem('userLocation');
+            if (saved) {
+                const { lat, lng } = JSON.parse(saved);
+                if (typeof lat === 'number' && typeof lng === 'number') setCountryFromCoords(lat, lng);
+            }
+        } catch (_) {}
 
         // 5. Auto-Refresh (Every 60 Seconds)
         setInterval(() => {
