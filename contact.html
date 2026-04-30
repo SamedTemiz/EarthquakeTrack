@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İletişim - EarthquakeTrack</title>
-    <meta name="description" content="EarthquakeTrack iletişim sayfası. Geri bildirim, hata bildirimi ve iş birliği için iletişime geçin.">
+    <meta name="description"
+        content="EarthquakeTrack iletişim sayfası. Hata bildirimi, veri sorunu, öneri ve iş birliği için bize ulaşın.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://earthquaketrack.com.tr/contact.html">
     <link rel="stylesheet" href="style.css?v=2028">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+
     <style>
         body {
             background-color: var(--bg-dark);
@@ -19,6 +21,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -37,10 +40,21 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
             margin-top: 0;
+            font-size: clamp(1.35rem, 4vw, 1.75rem);
+        }
+
+        h2 {
+            color: var(--text-primary);
+            margin-top: 30px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         p {
             color: var(--text-secondary);
+            font-size: 0.93rem;
+            margin-top: 0;
         }
 
         .mail-address {
@@ -54,21 +68,19 @@
             text-decoration: underline;
         }
 
-        .mail-row {
+        .mail-block {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
-            margin-top: 4px;
+            margin-top: 12px;
         }
 
-        /* Primary CTA: opens default mail client */
         .mail-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 8px;
             padding: 12px 22px;
             font-size: 14px;
             font-weight: 600;
@@ -94,19 +106,56 @@
             flex-shrink: 0;
         }
 
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .topic-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 16px;
+            background: var(--surface-card, var(--card-bg));
+        }
+
+        .topic-card strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            margin-bottom: 4px;
+        }
+
+        .topic-card span {
+            color: var(--text-secondary);
+            font-size: 0.81rem;
+            line-height: 1.45;
+        }
+
+        .info-box {
+            margin-top: 24px;
+            padding: 14px 18px;
+            border-left: 3px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+        }
+
         .back-link {
             display: inline-block;
-            margin-top: 24px;
+            margin-top: 32px;
             color: var(--accent-gold);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
         .back-link:hover {
             text-decoration: underline;
         }
 
-        /* Mobile: match other static pages — comfortable padding and tap targets */
         @media (max-width: 600px) {
             body {
                 padding: 10px;
@@ -115,15 +164,17 @@
 
             .content-container {
                 padding: 24px;
-                margin: 20px auto;
+                margin: 16px auto;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
             }
 
             .mail-btn {
                 width: 100%;
-                max-width: 100%;
                 min-height: 44px;
                 box-sizing: border-box;
-                justify-content: center;
             }
         }
     </style>
@@ -131,25 +182,138 @@
 
 <body>
     <div class="content-container">
-        <h1>İletişim</h1>
-        <p>Öneri, hata bildirimi veya iş birliği talepleriniz için bize e-posta gönderebilirsiniz.</p>
-        <p class="mail-row">
-            <span>E-posta:
-                <a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a>
-            </span>
-            <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    aria-hidden="true">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                </svg>
-                E-posta gönder
-            </a>
-        </p>
-        <p>Not: Deprem verileri bilgilendirme amaçlıdır, resmi kurum duyuruları esas alınmalıdır.</p>
-        <a class="back-link" href="index.html">← Ana sayfaya dön</a>
+
+        <!-- Turkish Content -->
+        <div id="content-tr">
+            <h1>İletişim</h1>
+
+            <p>Öneri, geri bildirim veya işbirliği talepleriniz için bize e-posta gönderebilirsiniz. Tüm mesajları
+                elimizden geldiğince kısa sürede yanıtlamaya çalışıyoruz.</p>
+
+            <h2>E-posta</h2>
+
+            <div class="mail-block">
+                <span>
+                    <a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a>
+                </span>
+                <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    E-posta gönder
+                </a>
+            </div>
+
+            <h2>Hangi konularda yazabilirsiniz?</h2>
+
+            <div class="topic-grid">
+                <div class="topic-card">
+                    <strong>Hata bildirimi</strong>
+                    <span>Sayfada kırık bir özellik, hatalı görüntüleme veya beklenmeyen bir davranış fark ettiyseniz bize bildirin.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>Veri sorunu</strong>
+                    <span>Bir depremin listede hatalı büyüklük, konum veya zaman bilgisiyle göründüğünü düşünüyorsanız lütfen paylaşın.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>Öneri ve geri bildirim</strong>
+                    <span>Yeni özellik fikirleri, kullanıcı deneyimi önerileri veya genel görüşlerinizi duymaktan memnuniyet duyarız.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>İş birliği</strong>
+                    <span>Basın, akademik araştırma veya teknik entegrasyon konularında işbirliği yapmak istiyorsanız iletişime geçin.</span>
+                </div>
+            </div>
+
+            <h2>Hata bildirirken şunları ekleyin</h2>
+            <p>Daha hızlı yardımcı olabilmek için mesajınıza kullandığınız tarayıcıyı ve işletim sistemini, sorunun
+                hangi sayfada yaşandığını, varsa ekran görüntüsünü ve sorunu yeniden oluşturmak için gereken adımları
+                eklemenizi öneririz.</p>
+
+            <div class="info-box">
+                <strong>Önemli:</strong> EarthquakeTrack deprem verilerini resmi kurumlardan (USGS, EMSC, Kandilli,
+                AFAD) alır ve iletir. Veri içeriğine ilişkin sorular için ilgili kurumun resmi sitesini ziyaret
+                etmenizi öneririz. Acil durumlarda lütfen 112'yi arayın veya AFAD'ın resmi kanallarını takip edin.
+            </div>
+
+            <a class="back-link" href="/">← Ana sayfaya dön</a>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" style="display: none;">
+            <h1>Contact</h1>
+
+            <p>You can reach us by email for suggestions, feedback, or collaboration enquiries. We aim to respond to all
+                messages as quickly as possible.</p>
+
+            <h2>Email</h2>
+
+            <div class="mail-block">
+                <span>
+                    <a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a>
+                </span>
+                <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    Send email
+                </a>
+            </div>
+
+            <h2>What you can write to us about</h2>
+
+            <div class="topic-grid">
+                <div class="topic-card">
+                    <strong>Bug report</strong>
+                    <span>Found a broken feature, a display issue, or unexpected behaviour? Let us know.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>Data issue</strong>
+                    <span>If you believe an earthquake is shown with an incorrect magnitude, location, or time, please share the details.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>Suggestion &amp; feedback</strong>
+                    <span>New feature ideas, UX suggestions, or general thoughts — we'd love to hear them.</span>
+                </div>
+                <div class="topic-card">
+                    <strong>Collaboration</strong>
+                    <span>Interested in a press mention, academic research partnership, or technical integration? Get in touch.</span>
+                </div>
+            </div>
+
+            <h2>What to include in a bug report</h2>
+            <p>To help us assist you faster, please include your browser and operating system, the page where the issue
+                occurred, a screenshot if available, and steps to reproduce the problem.</p>
+
+            <div class="info-box">
+                <strong>Important:</strong> EarthquakeTrack receives and relays earthquake data from official
+                institutions (USGS, EMSC, Kandilli, AFAD). For questions about the data itself, we recommend visiting
+                the relevant institution's official website. In an emergency, call 112 or follow AFAD's official
+                channels.
+            </div>
+
+            <a class="back-link" href="/">← Back to home</a>
+        </div>
     </div>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const savedLang = localStorage.getItem('language') || 'tr';
+        if (savedLang === 'en') {
+            document.getElementById('content-tr').style.display = 'none';
+            document.getElementById('content-en').style.display = 'block';
+            document.title = 'Contact - EarthquakeTrack';
+            document.documentElement.lang = 'en';
+        }
+    </script>
     <script src="js/page-transition.js" defer></script>
 </body>
 
