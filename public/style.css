@@ -228,44 +228,29 @@ html {
     gap: 8px;
 }
 
-/* Rail Mode Adjustments for Controls */
+/* Rail Mode: hide logo area and icon-nav — show only BİLGİ MERKEZİ icons */
 .sidebar.rail-mode .logo-area {
-    flex-direction: column;
-    height: auto;
-    padding-bottom: 20px;
-    padding-top: 0;
-    /* Align to top */
+    display: none !important;
 }
 
-.sidebar.rail-mode .logo-area .controls {
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 5px;
-    /* Minimal margin */
-    width: 100%;
-    align-items: center;
+.sidebar.rail-mode .main-nav ul.icon-nav {
+    display: none !important;
 }
 
-.sidebar.rail-mode #sidebar-toggle-btn {
-    order: -1;
-    /* Move toggle to top of the stack? Or make it distinct */
-    width: 40px;
-    /* Larger hit area */
-    height: 40px;
-    border-radius: 8px;
-    background: var(--bg-dark);
-    /* Contrast */
-    border-color: var(--border-color);
+/* Hide nav-divider label in rail mode */
+.sidebar.rail-mode .nav-divider {
+    display: none !important;
 }
 
-.sidebar.rail-mode #sidebar-toggle-btn:hover {
-    background: var(--accent-gold);
-    color: #000;
+/* Center nav-link-item icons in rail mode */
+.sidebar.rail-mode .nav-link-item {
+    justify-content: center !important;
+    padding: 12px 0 !important;
 }
 
-.sidebar.rail-mode .logo-area h1 {
-    display: none;
-    /* Hide text title explicitely if not already */
+/* Collapsed sidebar clickable to expand */
+.sidebar.rail-mode {
+    cursor: pointer;
 }
 
 /* Icon Buttons */

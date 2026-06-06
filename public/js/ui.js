@@ -589,6 +589,16 @@ export function initSidebarToggle(mapInstance) {
             }, 300);
         });
     }
+
+    // Click anywhere on collapsed sidebar to expand
+    sidebar.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('rail-mode')) return;
+        if (e.target.closest('a') || e.target.closest('#sidebar-toggle-btn')) return;
+        sidebar.classList.remove('rail-mode');
+        setTimeout(() => {
+            if (mapInstance) mapInstance.invalidateSize();
+        }, 300);
+    });
 }
 
 

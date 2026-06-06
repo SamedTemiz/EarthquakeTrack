@@ -4,72 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kullanım Koşulları - EarthquakeTrack</title>
+    <title>Deprem Blogu ve Haberler - EarthquakeTrack</title>
     <meta name="description"
-        content="EarthquakeTrack Kullanım Koşulları. Hizmet kullanımı, sorumluluk reddi ve telif hakları.">
+        content="Deprem hakkında güncel haberler, fay hatları incelemeleri, depreme hazırlık rehberleri ve uzman görüşleri. EarthquakeTrack Blog.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://earthquaketrack.com.tr/terms.html">
+    <link rel="canonical" href="https://earthquaketrack.com.tr/blog.html">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="stylesheet" href="style.css?v=2029">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+    <script type="module" src="js/news.js"></script>
 
     <style>
-        /* removed body padding style */
-
-        .content-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
+        .edu-shell {
+            max-width: 820px;
+            margin: 28px auto 40px;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
         }
 
-        h1 {
+        .edu-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(197, 160, 101, 0.08) 0%, transparent 100%);
+        }
+
+        .edu-header h1 {
+            margin: 0 0 12px;
+            font-size: clamp(1.35rem, 4vw, 1.75rem);
+            font-weight: 700;
             color: var(--accent-gold);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-top: 0;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
         }
 
-        h3 {
-            color: var(--text-primary);
-            margin-top: 25px;
-            font-size: 1.1em;
-        }
-
-        p {
+        .edu-lead {
+            margin: 0;
             color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 62ch;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
+        .edu-body {
+            padding: 24px 28px;
+        }
+
+        .blog-post-card {
+            display: block;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: var(--surface-card, var(--card-bg));
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .blog-post-card:hover {
+            border-color: rgba(197, 160, 101, 0.45);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .blog-post-card h2 {
+            margin: 0 0 8px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        .blog-post-card p {
+            margin: 0 0 12px;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-post-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .blog-post-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-post-meta svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .edu-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 22px;
+            padding: 10px 0;
             color: var(--accent-gold);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s ease, opacity 0.2s ease;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
+        .edu-back:hover {
+            color: #d4b078;
         }
 
         @media (max-width: 600px) {
-            /* removed body padding style */
-
-            .content-container {
-                padding: 25px;
-                margin: 20px auto;
+            .edu-shell {
+                margin-top: 15px;
             }
+            .edu-header, .edu-body { padding: 16px; }
         }
     </style>
 </head>
@@ -168,7 +236,7 @@
                 
                 <div class="nav-divider">BİLGİ MERKEZİ</div>
                 <div class="nav-links">
-                    <a href="blog.html" class="nav-link-item">
+                    <a href="blog.html" class="nav-link-item active">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
@@ -222,64 +290,68 @@
     
 
 
-    <div class="content-container">
-        <!-- Turkish Content -->
-        <div id="content-tr">
-            <h1>Kullanım Koşulları</h1>
-            <p>Lütfen sitemizi kullanmadan önce bu koşulları okuyunuz.</p>
+    <div class="edu-shell">
+        <header class="edu-header">
+            <h1>Deprem Blogu & Haberler</h1>
+            <p class="edu-lead">
+                Sismoloji, deprem hazırlıkları, fay hattı analizleri ve güvende kalmanız için ihtiyaç duyduğunuz tüm güncel ve detaylı makaleler.
+            </p>
+        </header>
 
-            <h3>1. Hizmetin Kullanımı</h3>
-            <p>EarthquakeTrack, yalnızca bilgilendirme amaçlıdır. Deprem tahminleri yapmaz veya resmi bir uyarı sistemi
-                yerine geçmez. Doğal afet durumlarında lütfen AFAD ve yetkili mercilerin duyurularını takip ediniz.</p>
+        <div class="edu-body">
+            
+            <!-- Tabs UI -->
+            <div class="blog-tabs">
+                <button class="blog-tab-btn active" data-target="tab-articles">Makaleler</button>
+                <button class="blog-tab-btn" data-target="tab-news">Son Dakika Haberleri</button>
+            </div>
 
-            <h3>2. Sorumluluk Reddi</h3>
-            <p>Sunulan deprem verileri, sismoloji merkezlerinden otomatik olarak çekilmektedir. Verilerin doğruluğu,
-                kesinliği veya zamanlaması konusunda garanti veremeyiz. Bu verilerin kullanımından doğabilecek
-                zararlardan earthquakeTrack sorumlu tutulamaz.</p>
+            <!-- Articles Tab (Static Content) -->
+            <div id="tab-articles" class="tab-content active">
+                <!-- Blog Post 1 -->
+                <a href="blog/deprem-cantasi-hayat-kurtarir.html" class="blog-post-card">
+                    <h2>Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)</h2>
+                    <p>Olası bir deprem anında ilk 72 saat hayati önem taşır. Evinizde, iş yerinizde ve aracınızda bulundurmanız gereken acil durum çantası malzemeleri ve hayat kurtaran ipuçları.</p>
+                    <div class="blog-post-meta">
+                        <span>
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            Rehber
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            16 Mayıs 2026
+                        </span>
+                    </div>
+                </a>
 
-            <h3>3. Telif Hakları</h3>
-            <p>Sitemizin tasarımı ve kodları telif hakları ile korunmaktadır. İzinsiz kopyalanamaz.</p>
+                <!-- Blog Post 2 -->
+                <a href="blog/turkiye-fay-hatlari-tehlikesi.html" class="blog-post-card">
+                    <h2>Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak</h2>
+                    <p>Kuzey Anadolu, Doğu Anadolu ve Batı Anadolu fay hatlarının güncel sismik durumları. Uzman sismologların uyarıları ve bölgesel deprem risk analizleri.</p>
+                    <div class="blog-post-meta">
+                        <span>
+                            <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+                            Analiz
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            10 Mayıs 2026
+                        </span>
+                    </div>
+                </a>
+            </div>
 
-            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
-        </div>
+            <!-- News Tab (Dynamic Content) -->
+            <div id="tab-news" class="tab-content">
+                <div id="news-container" class="news-grid">
+                    <div class="news-loading">Güncel deprem haberleri yükleniyor...</div>
+                </div>
+            </div>
 
-        <!-- English Content -->
-        <div id="content-en" style="display: none;">
-            <h1>Terms of Use</h1>
-            <p>Please read these terms before using our site.</p>
-
-            <h3>1. Use of Service</h3>
-            <p>EarthquakeTrack is for informational purposes only. It does not make earthquake predictions or serve as
-                an official warning system. In case of natural disasters, please follow the announcements of AFAD and
-                authorized authorities.</p>
-
-            <h3>2. Disclaimer</h3>
-            <p>The earthquake data presented is automatically retrieved from seismology centers. We cannot guarantee the
-                accuracy, precision, or timing of the data. earthquakeTrack cannot be held responsible for any damages
-                arising from the use of this data.</p>
-
-            <h3>3. Copyrights</h3>
-            <p>Our site's design and code are protected by copyright. It cannot be copied without permission.</p>
-
-            <a href="/" class="back-link">&larr; Back to Home</a>
         </div>
     </div>
         </main>
     </div>
-    <script>
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        const savedLang = localStorage.getItem('language') || 'tr';
-        if (savedLang === 'en') {
-            document.getElementById('content-tr').style.display = 'none';
-            document.getElementById('content-en').style.display = 'block';
-            document.title = 'Terms of Use - EarthquakeTrack';
-            document.documentElement.lang = 'en';
-        }
-    </script>
-    <script src="js/page-transition.js" defer></script>
     <script type="module" src="js/layout.js"></script>
 </body>
-
 </html>

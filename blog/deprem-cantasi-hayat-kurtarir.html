@@ -4,72 +4,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kullanım Koşulları - EarthquakeTrack</title>
+    <title>Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi) - EarthquakeTrack Blog</title>
     <meta name="description"
-        content="EarthquakeTrack Kullanım Koşulları. Hizmet kullanımı, sorumluluk reddi ve telif hakları.">
+        content="Olası bir deprem anında ilk 72 saat hayati önem taşır. Evinizde, iş yerinizde ve aracınızda bulundurmanız gereken acil durum çantası malzemeleri.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://earthquaketrack.com.tr/terms.html">
+    <link rel="canonical" href="https://earthquaketrack.com.tr/blog/deprem-cantasi-hayat-kurtarir.html">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <link rel="stylesheet" href="style.css?v=2028">
+    <link rel="stylesheet" href="../style.css?v=2029">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
     <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
 
     <style>
-        /* removed body padding style */
+        /* removed body class padding style */
 
-        .content-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
+        .edu-shell {
+            max-width: 820px;
+            margin: 28px auto 40px;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
         }
 
-        h1 {
+        .edu-header {
+            padding: 40px 40px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(197, 160, 101, 0.08) 0%, transparent 100%);
+        }
+
+        .edu-header h1 {
+            margin: 0 0 16px;
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            font-weight: 700;
             color: var(--accent-gold);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-top: 0;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
         }
 
-        h3 {
+        .blog-post-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            margin-bottom: 15px;
+        }
+
+        .edu-body {
+            padding: 24px 28px;
+        }
+
+        .article-content h2 {
+            font-size: 1.4rem;
             color: var(--text-primary);
-            margin-top: 25px;
-            font-size: 1.1em;
+            margin: 30px 0 15px;
         }
 
-        p {
+        .article-content h3 {
+            font-size: 1.2rem;
             color: var(--text-secondary);
+            margin: 25px 0 10px;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
+        .article-content p {
+            margin: 0 0 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article-content ul {
+            margin: 0 0 25px 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article-content li {
+            margin-bottom: 10px;
+        }
+
+        .article-content strong {
+            color: var(--accent-gold);
+        }
+
+        .edu-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 40px;
+            padding: 10px 0;
             color: var(--accent-gold);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s ease, opacity 0.2s ease;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
+        .edu-back:hover {
+            color: #d4b078;
         }
 
         @media (max-width: 600px) {
-            /* removed body padding style */
-
-            .content-container {
-                padding: 25px;
-                margin: 20px auto;
-            }
+            .edu-header, .edu-body { padding: 16px; }
         }
     </style>
 </head>
@@ -128,7 +172,7 @@
 
             <nav class="main-nav">
                 <ul>
-                    <li onclick="window.location.href='index.html?view=active-issues'" style="cursor:pointer;">
+                    <li onclick="window.location.href='../index.html?view=active-issues'" style="cursor:pointer;">
 <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -138,7 +182,7 @@
                         </span>
                         <span data-i18n="activeIssues">Son Depremler</span>
 </li>
-                    <li onclick="window.location.href='index.html?view=dashboard'" style="cursor:pointer;">
+                    <li onclick="window.location.href='../index.html?view=dashboard'" style="cursor:pointer;">
 <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -150,7 +194,7 @@
                         </span>
                         <span data-i18n="dashboard">Panel</span>
 </li>
-                    <li onclick="window.location.href='index.html?view=locations'" style="cursor:pointer;">
+                    <li onclick="window.location.href='../index.html?view=locations'" style="cursor:pointer;">
 <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -168,7 +212,7 @@
                 
                 <div class="nav-divider">BİLGİ MERKEZİ</div>
                 <div class="nav-links">
-                    <a href="blog.html" class="nav-link-item">
+                    <a href="../blog.html" class="nav-link-item active">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
@@ -179,7 +223,7 @@
                         </span>
                         <span>Blog & Haberler</span>
                     </a>
-                    <a href="preparedness.html" class="nav-link-item">
+                    <a href="../preparedness.html" class="nav-link-item">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -188,7 +232,7 @@
                         </span>
                         <span>Deprem Önlemleri</span>
                     </a>
-                    <a href="education.html" class="nav-link-item">
+                    <a href="../education.html" class="nav-link-item">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m4 6 8-4 8 4"></path>
@@ -206,13 +250,13 @@
 
             <div class="sidebar-footer">
                 <div class="footer-row">
-                    <a href="about.html" data-i18n="about">Hakkında</a>
-                    <a href="faq.html" data-i18n="faq">SSS</a>
-                    <a href="contact.html" data-i18n="contact">İletişim</a>
+                    <a href="../about.html" data-i18n="about">Hakkında</a>
+                    <a href="../faq.html" data-i18n="faq">SSS</a>
+                    <a href="../contact.html" data-i18n="contact">İletişim</a>
                 </div>
                 <div class="footer-row">
-                    <a href="privacy.html" data-i18n="privacy">Gizlilik Politikası</a>
-                    <a href="terms.html" data-i18n="terms">Kullanım Koşulları</a>
+                    <a href="../privacy.html" data-i18n="privacy">Gizlilik Politikası</a>
+                    <a href="../terms.html" data-i18n="terms">Kullanım Koşulları</a>
                 </div>
             </div>
             <div id="sidebar-resizer"></div>
@@ -222,64 +266,70 @@
     
 
 
-    <div class="content-container">
-        <!-- Turkish Content -->
-        <div id="content-tr">
-            <h1>Kullanım Koşulları</h1>
-            <p>Lütfen sitemizi kullanmadan önce bu koşulları okuyunuz.</p>
+    <div class="edu-shell">
+        <header class="edu-header">
+            <div class="blog-post-meta">
+                <span>16 Mayıs 2026</span>
+                <span>•</span>
+                <span>Okuma Süresi: 5 Dk</span>
+            </div>
+            <h1>Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)</h1>
+        </header>
 
-            <h3>1. Hizmetin Kullanımı</h3>
-            <p>EarthquakeTrack, yalnızca bilgilendirme amaçlıdır. Deprem tahminleri yapmaz veya resmi bir uyarı sistemi
-                yerine geçmez. Doğal afet durumlarında lütfen AFAD ve yetkili mercilerin duyurularını takip ediniz.</p>
+        <div class="edu-body article-content">
+            <p>Türkiye'nin aktif fay hatları üzerinde yer alması, deprem gerçeğiyle yaşamayı ve her an hazırlıklı olmayı zorunlu kılıyor. Uzmanlar, olası bir afet sonrasındaki <strong>ilk 72 saatin (Altın Saatler)</strong> hayatta kalma açısından en kritik dönem olduğunu vurguluyor. Kurtarma ekiplerinin her bölgeye anında ulaşması fiziksel olarak mümkün olmayabilir. İşte tam da bu noktada, önceden hazırlanmış, erişilebilir ve eksiksiz bir "Deprem Çantası" (Acil Durum Çantası) sizin ve ailenizin hayatını kurtaracak en önemli kalkan haline gelir.</p>
 
-            <h3>2. Sorumluluk Reddi</h3>
-            <p>Sunulan deprem verileri, sismoloji merkezlerinden otomatik olarak çekilmektedir. Verilerin doğruluğu,
-                kesinliği veya zamanlaması konusunda garanti veremeyiz. Bu verilerin kullanımından doğabilecek
-                zararlardan earthquakeTrack sorumlu tutulamaz.</p>
+            <h2>Deprem Çantası Nedir ve Neden Gereklidir?</h2>
+            <p>Deprem çantası, büyük bir sarsıntı sonrasında binanızdan güvenle tahliye olduğunuzda ya da enkaz altında kalma durumunda temel yaşamsal ihtiyaçlarınızı karşılamak üzere tasarlanmış, taşınabilir bir acil durum kitidir. Afet sonrasında elektrik, su, doğalgaz ve iletişim hatları kesilebilir. Marketler ve eczaneler kapalı ya da erişilmez olabilir. Çantanızdaki malzemeler, yardım gelene dek geçecek olan kritik süre zarfında hayatta kalma şansınızı maksimize eder.</p>
 
-            <h3>3. Telif Hakları</h3>
-            <p>Sitemizin tasarımı ve kodları telif hakları ile korunmaktadır. İzinsiz kopyalanamaz.</p>
+            <h2>Çantada Mutlaka Bulunması Gerekenler</h2>
+            <p>Bir deprem çantasının içeriği mevsime, aile bireylerinin sayısına ve özel sağlık durumlarına göre değişiklik gösterebilir. Ancak her çantada olması gereken evrensel malzemeler şunlardır:</p>
 
-            <a href="/" class="back-link">&larr; Ana Sayfaya Dön</a>
-        </div>
+            <h3>1. Gıda ve Su İhtiyacı</h3>
+            <ul>
+                <li><strong>Su:</strong> Kişi başı günlük en az 2-3 litre içme suyu (Küçük şişeler taşıma kolaylığı sağlar).</li>
+                <li><strong>Gıda:</strong> Yüksek kalorili, vitamin içeren, su gerektirmeyen ve uzun süre bozulmayan yiyecekler. Konserveler (açacaklı), bisküviler, enerji barları, kuru yemişler ve kurutulmuş meyveler idealdir.</li>
+            </ul>
 
-        <!-- English Content -->
-        <div id="content-en" style="display: none;">
-            <h1>Terms of Use</h1>
-            <p>Please read these terms before using our site.</p>
+            <h3>2. İlkyardım ve Sağlık Malzemeleri</h3>
+            <ul>
+                <li><strong>İlk Yardım Kiti:</strong> Sargı bezi, yara bandı, antiseptik solüsyon, steril gazlı bez, ağrı kesiciler, makas ve cımbız.</li>
+                <li><strong>Sürekli Kullanılan İlaçlar:</strong> Aile bireylerinin düzenli kullandığı (kalp, tansiyon, astım, diyabet vb.) ilaçların yedekleri ve varsa reçetelerin bir kopyası.</li>
+                <li><strong>Hijyen Malzemeleri:</strong> Islak mendil, tuvalet kağıdı, el dezenfektanı, sabun, kadın pedi ve diş fırçası/macunu.</li>
+            </ul>
 
-            <h3>1. Use of Service</h3>
-            <p>EarthquakeTrack is for informational purposes only. It does not make earthquake predictions or serve as
-                an official warning system. In case of natural disasters, please follow the announcements of AFAD and
-                authorized authorities.</p>
+            <h3>3. İletişim, Aydınlatma ve Alet Edavat</h3>
+            <ul>
+                <li><strong>Aydınlatma:</strong> El feneri ve kafa lambası (Yedek pilleriyle birlikte).</li>
+                <li><strong>Radyo:</strong> Pille çalışan veya kranklı el radyosu (Afet anında tek bilgi kaynağı olabilir).</li>
+                <li><strong>Düdük:</strong> Enkaz altında veya karanlıkta sesinizi duyurmanın en az enerji gerektiren ve en etkili yoludur.</li>
+                <li><strong>Çok Amaçlı Çakı:</strong> Çeşitli kesme ve açma işlemleri için.</li>
+                <li><strong>Powerbank:</strong> Şarj edilmiş, yüksek kapasiteli taşınabilir şarj cihazı ve uyumlu kablolar.</li>
+            </ul>
 
-            <h3>2. Disclaimer</h3>
-            <p>The earthquake data presented is automatically retrieved from seismology centers. We cannot guarantee the
-                accuracy, precision, or timing of the data. earthquakeTrack cannot be held responsible for any damages
-                arising from the use of this data.</p>
+            <h3>4. Önemli Belgeler</h3>
+            <p>Kimlik kartları, pasaportlar, tapu belgeleri, zorunlu deprem poliçeleri (DASK), banka cüzdanları ve iletişim rehberinin fotokopilerini su geçirmez bir dosya içerisinde çantada bulundurun. USB bellek içerisine de bu belgelerin taranmış hallerini koyabilirsiniz.</p>
 
-            <h3>3. Copyrights</h3>
-            <p>Our site's design and code are protected by copyright. It cannot be copied without permission.</p>
+            <h3>5. Giyecek ve Diğer İhtiyaçlar</h3>
+            <ul>
+                <li><strong>Giysi:</strong> İklime uygun, koruyucu giysiler. Yağmurluk, kalın çorap, bere ve sağlam tabanlı yürüyüş ayakkabıları.</li>
+                <li><strong>Battaniye:</strong> Katlanabilir ince termal (alüminyum) battaniyeler (vücut ısısını %90'a kadar korur).</li>
+                <li><strong>Nakit Para:</strong> Elektronik ödeme sistemleri çökeceğinden bir miktar küçük banknotlar halinde nakit para.</li>
+            </ul>
 
-            <a href="/" class="back-link">&larr; Back to Home</a>
+            <h2>Çantanın Konumu ve Periyodik Kontrolü</h2>
+            <p>Deprem çantası hazırlamak tek başına yeterli değildir. Çantanın ulaşımı çok kolay bir yerde, örneğin dış kapıya yakın sağlam bir dolapta veya yatağınızın hemen başucunda bulunması gerekir. Çıkış yolunuzu kapatmayacak şekilde konumlandırılmalıdır.</p>
+            <p>Ayrıca çantanızın "yaşayan bir kit" olduğunu unutmayın. Altı ayda bir (örneğin kış ve yaz başlangıcında) çantanızı açarak gıdaların son kullanma tarihlerini kontrol etmeli, suları yenilemeli, pilleri test etmeli ve kıyafetleri mevsime uygun hale getirmelisiniz.</p>
+
+            <h2>Sonuç</h2>
+            <p>Deprem, ne zaman olacağı bilinemeyen ancak sonuçları öngörülebilir bir doğa olayıdır. Paniği önlemenin ve zararı en aza indirmenin tek yolu bilinçli bir hazırlıktan geçer. Bugün ayıracağınız birkaç saatlik çaba, yarın sizin veya sevdiklerinizin hayatını kurtarabilir. Deprem çantanızı hazırlamayı ertelemeyin.</p>
+
+            
+
         </div>
     </div>
         </main>
     </div>
-    <script>
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        const savedLang = localStorage.getItem('language') || 'tr';
-        if (savedLang === 'en') {
-            document.getElementById('content-tr').style.display = 'none';
-            document.getElementById('content-en').style.display = 'block';
-            document.title = 'Terms of Use - EarthquakeTrack';
-            document.documentElement.lang = 'en';
-        }
-    </script>
-    <script src="js/page-transition.js" defer></script>
-    <script type="module" src="js/layout.js"></script>
+    <script type="module" src="../js/layout.js"></script>
 </body>
-
 </html>

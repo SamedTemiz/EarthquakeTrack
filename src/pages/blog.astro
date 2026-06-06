@@ -1,0 +1,90 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="Deprem Blogu ve Haberler - EarthquakeTrack"
+  description="Deprem hakkında güncel haberler, fay hatları incelemeleri, depreme hazırlık rehberleri ve uzman görüşleri. EarthquakeTrack Blog."
+  canonical="https://earthquaketrack.com.tr/blog.html"
+  activePage="blog"
+>
+  <Fragment slot="head">
+    <style>
+      .edu-shell { display:flex; flex-direction:column; min-height:100%; }
+      .edu-header { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .edu-header h1 { margin:0 0 12px; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .edu-lead { margin:0; color:var(--text-secondary); font-size:.97rem; max-width:70ch; line-height:1.65; }
+      .edu-body { padding:28px 48px 56px; flex:1; }
+      /* Tabs */
+      .blog-tabs { display:flex; gap:8px; margin-bottom:24px; }
+      .blog-tab-btn { padding:9px 20px; border:1px solid var(--border-color); border-radius:8px; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:.9rem; font-weight:500; transition:all .15s; font-family:inherit; }
+      .blog-tab-btn.active { background:var(--accent-gold); color:#000; border-color:var(--accent-gold); font-weight:600; }
+      .blog-tab-btn:hover:not(.active) { border-color:rgba(197,160,101,.5); color:var(--text-primary); }
+      /* Tab panels */
+      .tab-content { display:none; }
+      .tab-content.active { display:block; }
+      #tab-articles.tab-content.active { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+      /* Blog cards */
+      .blog-post-card { display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:12px; padding:22px; background:var(--surface-card,var(--card-bg)); transition:border-color .2s,box-shadow .2s,transform .15s; text-decoration:none; color:inherit; }
+      .blog-post-card:hover { border-color:rgba(197,160,101,.45); box-shadow:0 6px 24px rgba(0,0,0,.14); transform:translateY(-3px); }
+      .blog-post-card h2 { margin:0 0 10px; font-size:1.05rem; font-weight:600; color:var(--text-primary); line-height:1.4; }
+      .blog-post-card p { margin:0 0 14px; color:var(--text-secondary); font-size:.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; flex:1; }
+      .blog-post-meta { display:flex; align-items:center; gap:12px; font-size:.78rem; color:var(--text-tertiary); margin-top:auto; }
+      .blog-post-meta span { display:inline-flex; align-items:center; gap:5px; }
+      .blog-post-meta svg { width:13px; height:13px; fill:currentColor; }
+      /* News grid */
+      .news-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+      .news-card { display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:12px; overflow:hidden; background:var(--surface-card,var(--card-bg)); text-decoration:none; color:inherit; transition:border-color .2s,transform .15s; }
+      .news-card:hover { border-color:rgba(197,160,101,.4); transform:translateY(-2px); }
+      .news-image { height:148px; background-size:cover; background-position:center; background-color:rgba(255,255,255,.04); }
+      .news-placeholder { display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-tertiary); font-size:.8rem; }
+      .news-content { padding:14px 16px; flex:1; display:flex; flex-direction:column; }
+      .news-source { font-size:.7rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--accent-gold); opacity:.7; margin-bottom:6px; }
+      .news-title { margin:0 0 10px; font-size:.91rem; font-weight:600; color:var(--text-primary); line-height:1.45; flex:1; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+      .news-meta { display:flex; align-items:center; gap:5px; font-size:.76rem; color:var(--text-tertiary); margin-top:auto; }
+      .news-meta svg { width:13px; height:13px; fill:currentColor; }
+      .news-loading { padding:40px; text-align:center; color:var(--text-secondary); font-size:.95rem; }
+      @media (max-width:900px) { .edu-header { padding:24px 28px 20px; } .edu-body { padding:20px 28px 40px; } }
+      @media (max-width:600px) { .edu-header { padding:16px; } .edu-body { padding:16px; } #tab-articles.tab-content.active { grid-template-columns:1fr; } .news-grid { grid-template-columns:1fr; } }
+    </style>
+  </Fragment>
+
+  <div class="edu-shell">
+    <header class="edu-header">
+      <h1>Deprem Blogu &amp; Haberler</h1>
+      <p class="edu-lead">Sismoloji, deprem hazırlıkları, fay hattı analizleri ve güvende kalmanız için ihtiyaç duyduğunuz tüm güncel ve detaylı makaleler.</p>
+    </header>
+    <div class="edu-body">
+      <div class="blog-tabs">
+        <button class="blog-tab-btn active" data-target="tab-articles">Makaleler</button>
+        <button class="blog-tab-btn" data-target="tab-news">Son Dakika Haberleri</button>
+      </div>
+      <div id="tab-articles" class="tab-content active">
+        <a href="/blog/deprem-cantasi-hayat-kurtarir.html" class="blog-post-card">
+          <h2>Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)</h2>
+          <p>Olası bir deprem anında ilk 72 saat hayati önem taşır. Evinizde, iş yerinizde ve aracınızda bulundurmanız gereken acil durum çantası malzemeleri ve hayat kurtaran ipuçları.</p>
+          <div class="blog-post-meta">
+            <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Rehber</span>
+            <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>16 Mayıs 2026</span>
+          </div>
+        </a>
+        <a href="/blog/turkiye-fay-hatlari-tehlikesi.html" class="blog-post-card">
+          <h2>Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak</h2>
+          <p>Kuzey Anadolu, Doğu Anadolu ve Batı Anadolu fay hatlarının güncel sismik durumları. Uzman sismologların uyarıları ve bölgesel deprem risk analizleri.</p>
+          <div class="blog-post-meta">
+            <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Analiz</span>
+            <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>10 Mayıs 2026</span>
+          </div>
+        </a>
+      </div>
+      <div id="tab-news" class="tab-content">
+        <div id="news-container" class="news-grid">
+          <div class="news-loading">Güncel deprem haberleri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Fragment slot="scripts">
+    <script is:inline type="module">import('/js/news.js');</script>
+  </Fragment>
+</PageLayout>

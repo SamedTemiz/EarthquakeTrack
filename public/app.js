@@ -112,6 +112,24 @@ async function initApp() {
         // 3. Initial Fetch
         await refreshData();
 
+        // Focus earthquake if navigated from a content page sidebar card
+        const focusJson = sessionStorage.getItem('eq_focus');
+        if (focusJson) {
+            sessionStorage.removeItem('eq_focus');
+            try {
+                const { lat, lon } = JSON.parse(focusJson);
+                if (typeof lat === 'number' && typeof lon === 'number') {
+                    map.flyTo([lat, lon], 10, { animate: true, duration: 1.5 });
+                    const matched = globalEarthquakes.find(q =>
+                        Math.abs(q.lat - lat) < 0.001 && Math.abs(q.lon - lon) < 0.001
+                    );
+                    if (matched?.marker) {
+                        map.once('moveend', () => matched.marker.openPopup());
+                    }
+                }
+            } catch {}
+        }
+
         // 4. Init SPA Router (early — must run before tabs so nav links are intercepted)
         initRouter();
 

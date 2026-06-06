@@ -1,0 +1,158 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="Sıkça Sorulan Sorular - EarthquakeTrack"
+  description="EarthquakeTrack hakkında sıkça sorulan sorular. Veri kaynakları, deprem büyüklüğü, filtreleme, güvenlik ve Türkiye'nin sismik yapısı hakkında bilgiler."
+  canonical="https://earthquaketrack.com.tr/faq.html"
+>
+  <Fragment slot="head">
+    <style>
+      .content-container { display:flex; flex-direction:column; min-height:100%; }
+      .ct-head { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .ct-head h1 { margin:0; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .ct-body { padding:32px 48px 56px; max-width:860px; }
+      .faq-category { margin-top:32px; margin-bottom:4px; font-size:.72rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-gold); opacity:.75; }
+      .faq-divider { border:none; border-top:1px solid var(--border-color); margin:0 0 20px; }
+      .ct-body h3 { color:var(--text-primary); margin:20px 0 6px; font-size:1rem; font-weight:600; line-height:1.4; }
+      .ct-body p { color:var(--text-secondary); margin:0 0 14px; font-size:.93rem; line-height:1.65; }
+      .ct-body a { color:var(--accent-blue); }
+      @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
+      @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } }
+    </style>
+  </Fragment>
+
+  <div class="content-container">
+    <div id="content-tr">
+      <header class="ct-head"><h1>Sıkça Sorulan Sorular</h1></header>
+      <div class="ct-body">
+      <p class="faq-category">Uygulama Kullanımı</p>
+      <hr class="faq-divider">
+
+      <h3>Haritada bir depreme tıkladığımda ne görebilirim?</h3>
+      <p>Haritadaki herhangi bir deprem noktasına tıklayarak o depreme ait büyüklük, derinlik, tarih-saat ve konum bilgilerine ulaşabilirsiniz. Aynı bilgiler soldaki listeye tıklandığında da görüntülenir; harita otomatik olarak o bölgeye odaklanır.</p>
+
+      <h3>Ülke ve şehir filtresi nasıl çalışır?</h3>
+      <p>Kenar çubuğundaki "Ülke" ve "Şehir" açılır listelerinden seçim yaparak deprem listesini ve haritayı belirli bir bölgeyle sınırlayabilirsiniz. "Konumum" butonuna tıklarsanız tarayıcı konum izni ister ve bulunduğunuz şehre otomatik olarak odaklanır.</p>
+
+      <h3>Karanlık ve aydınlık mod nasıl değiştirilir?</h3>
+      <p>Sayfanın üst kısmındaki tema simgesine (güneş/ay ikonu) tıklayarak karanlık ve aydınlık mod arasında geçiş yapabilirsiniz. Tercihiniz tarayıcınıza kaydedilir ve bir sonraki ziyaretinizde otomatik uygulanır.</p>
+
+      <h3>Site mobil cihazlarda düzgün çalışıyor mu?</h3>
+      <p>Evet. EarthquakeTrack akıllı telefon ve tablet ekranları için optimize edilmiştir. Mobil görünümde harita ve deprem listesi ayrı sekmeler arasında geçiş yaparak kullanılabilir. Sayfanın altındaki sekme çubuğuyla harita, liste ve filtreler arasında kolayca geçiş sağlanır.</p>
+
+      <h3>Dil nasıl değiştirilir?</h3>
+      <p>Üst çubukta yer alan "TR / EN" düğmesine basarak Türkçe ve İngilizce arasında geçiş yapabilirsiniz. Seçtiğiniz dil, sitenin tüm sayfaları için kaydedilir.</p>
+
+      <p class="faq-category">Deprem Verileri ve Kaynaklar</p>
+      <hr class="faq-divider">
+
+      <h3>Veriler ne sıklıkla güncelleniyor?</h3>
+      <p>Veriler, sismoloji merkezlerinden (USGS, EMSC, Kandilli, AFAD) yayınlandığı anda sistemimize düşer. Genellikle deprem gerçekleştikten birkaç dakika sonra listede görebilirsiniz. Büyük depremler genellikle 2–5 dakika içinde görünür hale gelir; küçük yerel depremler ise veri sağlayıcıların işlem süresine bağlı olarak biraz daha geç gelebilir.</p>
+
+      <h3>Neden bazı depremleri listede göremiyorum?</h3>
+      <p>Uygulamamız varsayılan olarak son 24 saatteki ve belirli bir büyüklük eşiğinin (genellikle 2.5+) üzerindeki depremleri listeler. Çok küçük sarsıntılar (örneğin 1.0–2.0 arası) veri sağlayıcılar tarafından zaman zaman gecikmeli yayınlanabilir veya hiç yayınlanmayabilir.</p>
+
+      <h3>USGS, EMSC, Kandilli ve AFAD arasındaki fark nedir?</h3>
+      <p><strong>USGS</strong> (ABD Jeoloji Araştırmaları Kurumu), dünya genelinde depremleri izleyen küresel bir referans kaynağıdır. <strong>EMSC</strong> (Avrupa-Akdeniz Sismoloji Merkezi) Avrupa ve Akdeniz bölgesine odaklanır. <strong>Kandilli Rasathanesi</strong> (Boğaziçi Üniversitesi bünyesindedir), Türkiye'deki depremleri en ayrıntılı şekilde izleyen kurumlardan biridir. <strong>AFAD</strong> ise Türkiye Afet ve Acil Durum Yönetimi Başkanlığı olup resmi acil durum uyarılarını yayımlar.</p>
+
+      <h3>Neden aynı deprem için farklı büyüklük değerleri görüyorum?</h3>
+      <p>Her sismoloji merkezi, kendi istasyon ağından aldığı verileri farklı algoritmalarla işler. İlk yayınlanan değer ön hesaplamaya dayanır; kurumlar birkaç dakika ile birkaç saat içinde bu değeri revize edebilir. Bu nedenle büyük depremlerde başlangıç büyüklüğü ile son raporlanan değer arasında 0.1–0.3 birim fark olması normaldir.</p>
+
+      <p class="faq-category">Deprem Bilgisi</p>
+      <hr class="faq-divider">
+
+      <h3>"Büyüklük" (magnitude) ne anlama geliyor?</h3>
+      <p>Depremin odakta açığa çıkardığı enerjinin ölçüsüdür. Logaritmik bir ölçek olduğu için her bir tam sayı adımı, bir öncekine kıyasla yaklaşık 10 kat daha fazla yer sarsıntısına ve 32 kat daha fazla enerji açığa çıkmasına karşılık gelir.</p>
+
+      <h3>Odak derinliği neden önemli?</h3>
+      <p>Derinlik, depremin yerin kaç kilometre altında gerçekleştiğini gösterir. Sığ depremler (0–70 km) daha dar bir alanda etkili olsa da yüzeye yakın oldukları için yıkıcılıkları yüksek olabilir. Derin depremler (300 km üzeri) ise çok daha geniş bir alanda hissedilir ancak enerji yüzeye ulaşana kadar önemli ölçüde azalır.</p>
+
+      <h3>Türkiye neden bu kadar sık deprem yaşıyor?</h3>
+      <p>Türkiye, Avrasya, Afrika ve Arap levhalarının kesiştiği aktif bir tektonik bölgede yer almaktadır. Kuzey Anadolu Fayı (KAF) ve Doğu Anadolu Fayı (DAF) bu iki ana fay sistemi, ülkemizin deprem riskinin temel nedenidir.</p>
+
+      <h3>Deprem tahmini mümkün mü?</h3>
+      <p>Günümüz bilim dünyasında herhangi bir depremin tam tarih, saat ve büyüklüğünü önceden tahmin etmek mümkün değildir. Sismologlar, belirli bir bölgenin uzun vadeli deprem tehlikesini ve olasılığını istatistiksel yöntemlerle değerlendirebilir; ancak bu olasılık haritaları, yıllık veya on yıllık zaman ölçeklerinde anlam taşır.</p>
+
+      <p class="faq-category">Güvenlik ve Hazırlık</p>
+      <hr class="faq-divider">
+
+      <h3>Deprem anında ne yapmalıyım?</h3>
+      <p>Kapalı alanda iseniz hemen çöküp bir masanın altına ya da sağlam bir duvarın yanına sığının, başınızı ve ensanizi koruyun, sarsıntı geçene kadar bekleyin. Camdan, raflardan ve sarkan nesnelerden uzak durun. Kesinlikle deprem sırasında merdiven veya asansör kullanmaya kalkmayın.</p>
+
+      <h3>Büyük bir deprem sonrasında ne yapmalıyım?</h3>
+      <p>Önce kendinizin ve yanınızdakilerin güvende olduğundan emin olun. Yaralılar için 112'yi arayın. Bina hasar görmüşse tekrar girmeden önce yetkililerin onayını bekleyin. Resmi kanal ve uyarıları (AFAD, yerel yönetim bildirimleri) takip edin.</p>
+
+      <h3>Deprem çantasında neler bulunmalı?</h3>
+      <p>Deprem çantanız en az 72 saatlik su (kişi başı günde 2 litre), bozulmayan yiyecek, ilk yardım seti, el feneri ve yedek pil, düdük, yedeği olan cep telefonu şarj cihazı, önemli belgelerin kopyaları, acil ilaçlar ve sıcak bir battaniye içermelidir. Detaylı liste için <a href="/preparedness.html">Deprem Önlemleri</a> sayfamızı inceleyebilirsiniz.</p>
+
+      </div>
+    </div>
+
+    <div id="content-en" style="display:none;">
+      <header class="ct-head"><h1>Frequently Asked Questions</h1></header>
+      <div class="ct-body">
+      <p class="faq-category">Using the App</p>
+      <hr class="faq-divider">
+
+      <h3>What can I see when I click on an earthquake on the map?</h3>
+      <p>Clicking any point on the map reveals that earthquake's magnitude, depth, date/time, and location. The same information appears when you click a row in the sidebar list; the map automatically zooms to that area.</p>
+
+      <h3>How does the country and city filter work?</h3>
+      <p>Use the "Country" and "City" dropdowns in the sidebar to narrow the list and map to a specific region. Tapping "My Location" prompts for browser location permission and automatically focuses the map on your city.</p>
+
+      <h3>How do I switch between dark and light mode?</h3>
+      <p>Click the theme icon (sun/moon) at the top of the page to toggle between dark and light mode. Your preference is saved in your browser and applied automatically on your next visit.</p>
+
+      <h3>Does the site work on mobile devices?</h3>
+      <p>Yes. EarthquakeTrack is optimised for smartphones and tablets. On mobile, the map and earthquake list are accessible through separate tabs at the bottom of the screen, making it easy to switch between the map, list, and filters.</p>
+
+      <h3>How do I change the language?</h3>
+      <p>Press the "TR / EN" button in the top bar to switch between Turkish and English. Your choice is saved across all pages of the site.</p>
+
+      <p class="faq-category">Earthquake Data &amp; Sources</p>
+      <hr class="faq-divider">
+
+      <h3>How often is data updated?</h3>
+      <p>Data arrives as soon as it is published by seismology centres (USGS, EMSC, Kandilli, AFAD). Large earthquakes typically appear within 2–5 minutes. Smaller local events may take a little longer depending on how quickly the data provider processes and releases the information.</p>
+
+      <h3>Why can't I see some earthquakes in the list?</h3>
+      <p>By default, the app shows earthquakes from the last 24 hours above a magnitude threshold (typically 2.5+). Very small events (1.0–2.0) may be published late or not at all by international networks, especially in regions without dense local seismic monitoring.</p>
+
+      <h3>What is the difference between USGS, EMSC, Kandilli, and AFAD?</h3>
+      <p><strong>USGS</strong> (United States Geological Survey) is a global reference for worldwide earthquake monitoring. <strong>EMSC</strong> (European-Mediterranean Seismological Centre) focuses on the European and Mediterranean region. <strong>Kandilli Observatory</strong> (Boğaziçi University) is one of Turkey's primary seismic monitoring institutions. <strong>AFAD</strong> is Turkey's Disaster and Emergency Management Authority, which issues official emergency alerts.</p>
+
+      <h3>Why do I see different magnitude values for the same earthquake?</h3>
+      <p>Each seismological centre processes data from its own station network using different algorithms. The first published value is a preliminary estimate; agencies typically revise it within minutes to hours. A difference of 0.1–0.3 magnitude units between initial and final reports is common for significant events.</p>
+
+      <p class="faq-category">Earthquake Science</p>
+      <hr class="faq-divider">
+
+      <h3>What does "magnitude" mean?</h3>
+      <p>Magnitude measures the energy released at the earthquake's source. Because the scale is logarithmic, each whole-number step represents roughly 10 times more ground shaking and about 32 times more energy release than the previous level.</p>
+
+      <h3>Why does focal depth matter?</h3>
+      <p>Depth shows how far below the surface the earthquake occurred. Shallow earthquakes (0–70 km) affect a smaller area but can be highly destructive. Deep earthquakes (300 km+) are felt across a much wider area, but the energy dissipates significantly before reaching the surface.</p>
+
+      <h3>Why does Turkey experience so many earthquakes?</h3>
+      <p>Turkey sits at the junction of the Eurasian, African, and Arabian tectonic plates. The North Anatolian Fault (NAF) and the East Anatolian Fault (EAF) are the two primary fault systems responsible for Turkey's high seismic activity.</p>
+
+      <h3>Can earthquakes be predicted?</h3>
+      <p>With current science, it is not possible to predict the exact date, time, and magnitude of an earthquake. Seismologists can estimate long-term hazard and probability for a region using statistical methods, but these assessments work on yearly or decade-long time scales.</p>
+
+      <p class="faq-category">Safety &amp; Preparedness</p>
+      <hr class="faq-divider">
+
+      <h3>What should I do during an earthquake?</h3>
+      <p>If indoors, immediately drop, take cover under a sturdy table or against an interior wall, and hold on until shaking stops. Stay away from windows, shelves, and hanging objects. Never use stairs or an elevator during shaking.</p>
+
+      <h3>What should I do after a major earthquake?</h3>
+      <p>First check yourself and those around you for injuries; call 112 for emergencies. Do not re-enter a damaged building without official clearance. If you suspect a gas leak, do not use electrical switches or open flames. Follow official channels (AFAD, local authority broadcasts).</p>
+
+      <h3>What should be in an earthquake kit?</h3>
+      <p>Your kit should include at least 72 hours of water (2 litres per person per day), non-perishable food, a first-aid kit, a torch with spare batteries, a whistle, a backup phone charger, copies of important documents, essential medication, and a warm blanket. See our <a href="/preparedness.html">Preparedness</a> page for a full checklist.</p>
+
+      </div>
+    </div>
+  </div>
+</PageLayout>
