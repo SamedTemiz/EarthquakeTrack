@@ -118,71 +118,105 @@ html {
 /* For secondary pages where content should scroll */
 .main-content.scrollable {
     overflow-y: auto;
+    /* Reserve scrollbar gutter so switching between short/tall tab content
+       (e.g. Makaleler ↔ Son Dakika Haberleri) doesn't reflow the responsive grid. */
+    scrollbar-gutter: stable;
 }
 
-/* Rail Mode */
+/* ===== RAIL MODE ===== */
 .sidebar.rail-mode {
     width: var(--rail-width) !important;
     min-width: var(--rail-width) !important;
-    padding: 20px 0;
-    /* Remove horizontal padding */
-}
-
-/* Children Transition Logic */
-/* We target specific text/content elements to fade them out */
-.sidebar .logo-area h1,
-.sidebar .main-nav span:not(.icon),
-.sidebar .earthquake-list-container,
-.sidebar #lang-toggle,
-.sidebar #sidebar-resizer {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    /* Delay the fade-in slightly so sidebar expands first? No, fade quick. */
-}
-
-/* When in rail mode, fade them out */
-.sidebar.rail-mode .logo-area h1,
-.sidebar.rail-mode .main-nav span:not(.icon),
-.sidebar.rail-mode .earthquake-list-container,
-.sidebar.rail-mode #lang-toggle,
-.sidebar.rail-mode #sidebar-resizer {
-    opacity: 0;
-    transform: translateX(-10px);
-    pointer-events: none;
-    /* Ensure they don't block clicks */
-    position: absolute;
-    /* Remove from flow so width collapses */
-    visibility: hidden;
-    /* Ensure completely gone after transition */
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-    /* Visibility delay to wait for opacity */
-}
-
-/* Ensure list container collapses fully */
-.sidebar.rail-mode .earthquake-list-container {
-    flex: 0;
     padding: 0;
+    overflow: visible; /* allow tooltips to escape */
+    cursor: default;
 }
 
-.sidebar.rail-mode .sidebar-footer {
-    display: none !important;
+/* Smooth text/content fade for expand ↔ collapse */
+.sidebar .logo-area h1,
+.sidebar .main-nav span:not(.icon) {
+    transition: opacity 0.2s ease;
 }
 
-/* Layout adjustments for Rail Mode */
+/* ── Rail header: toggle button only ── */
 .sidebar.rail-mode .logo-area {
-    justify-content: center !important;
-    padding-bottom: 20px;
-}
-
-.sidebar.rail-mode .main-nav li {
+    display: flex !important;
+    align-items: center;
     justify-content: center;
-    padding: 15px 0;
+    padding: 12px 0 !important;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.sidebar.rail-mode .main-nav .icon {
-    font-size: 24px;
-    margin: 0;
+.sidebar.rail-mode .logo-area > div:first-child {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    gap: 0 !important;
+}
+
+/* Toggle button: subtle gold tint → signals "expand" */
+.sidebar.rail-mode #sidebar-toggle-btn {
+    background: color-mix(in srgb, var(--accent-gold) 8%, transparent);
+    border-color: color-mix(in srgb, var(--accent-gold) 30%, var(--border-color));
+    color: var(--accent-gold);
+}
+
+.sidebar.rail-mode #sidebar-toggle-btn:hover {
+    background: var(--accent-gold);
+    color: #000;
+    border-color: var(--accent-gold);
+}
+
+/* ── Rail nav: centered icons with tooltips ── */
+.sidebar.rail-mode .main-nav {
+    padding: 8px 0;
+}
+
+.sidebar.rail-mode .nav-link-item {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 14px 0 !important;
+    margin: 2px 8px;
+    border-radius: 8px;
+    position: relative;
+}
+
+/* Tooltip */
+.sidebar.rail-mode .nav-link-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+}
+
+.sidebar.rail-mode .nav-link-item:hover::after {
+    opacity: 1;
+}
+
+/* Active nav item */
+.sidebar.rail-mode .nav-link-item.active {
+    background: color-mix(in srgb, var(--accent-gold) 10%, transparent);
+}
+
+.sidebar.rail-mode .nav-link-item.active .icon {
+    color: var(--accent-gold);
 }
 
 /* Sidebar Resizer */
@@ -199,6 +233,20 @@ html {
 
 #sidebar-resizer:hover {
     background-color: var(--accent-gold);
+}
+
+/* Mobile sidebar backdrop — shown when sidebar is expanded on mobile */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.sidebar-backdrop.visible {
+    opacity: 1;
 }
 
 /* Logo Area */
@@ -228,29 +276,19 @@ html {
     gap: 8px;
 }
 
-/* Rail Mode: hide logo area and icon-nav — show only BİLGİ MERKEZİ icons */
-.sidebar.rail-mode .logo-area {
+/* Rail mode: hide everything except toggle btn and nav icons */
+.sidebar.rail-mode .logo-area h1,
+.sidebar.rail-mode #theme-toggle-btn,
+.sidebar.rail-mode .theme-switch-wrapper,
+.sidebar.rail-mode #lang-toggle,
+.sidebar.rail-mode #mobile-toggle-icon,
+.sidebar.rail-mode .main-nav ul.icon-nav,
+.sidebar.rail-mode .nav-divider,
+.sidebar.rail-mode .main-nav span:not(.icon),
+.sidebar.rail-mode .sidebar-footer,
+.sidebar.rail-mode .earthquake-list-container,
+.sidebar.rail-mode #sidebar-resizer {
     display: none !important;
-}
-
-.sidebar.rail-mode .main-nav ul.icon-nav {
-    display: none !important;
-}
-
-/* Hide nav-divider label in rail mode */
-.sidebar.rail-mode .nav-divider {
-    display: none !important;
-}
-
-/* Center nav-link-item icons in rail mode */
-.sidebar.rail-mode .nav-link-item {
-    justify-content: center !important;
-    padding: 12px 0 !important;
-}
-
-/* Collapsed sidebar clickable to expand */
-.sidebar.rail-mode {
-    cursor: pointer;
 }
 
 /* Icon Buttons */
@@ -282,6 +320,12 @@ html {
     color: var(--accent-gold);
     background: rgba(197, 160, 101, 0.1);
 }
+
+/* Theme toggle icon: switch sun/moon based on data-theme on <html> */
+#theme-toggle-btn .icon-sun { display: none; }
+#theme-toggle-btn .icon-moon { display: block; }
+[data-theme="dark"] #theme-toggle-btn .icon-sun { display: block; }
+[data-theme="dark"] #theme-toggle-btn .icon-moon { display: none; }
 
 #refresh-btn {
     width: 28px;
@@ -482,6 +526,27 @@ html {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     opacity: 0.7;
+}
+
+.sidebar:not(.rail-mode) .nav-primary-section {
+    display: none;
+}
+
+.nav-primary-section {
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-link-primary .icon svg {
+    color: var(--accent-gold);
+}
+
+/* In rail mode, primary section keeps its separator */
+.sidebar.rail-mode .nav-primary-section {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 .main-nav li,
@@ -1386,55 +1451,58 @@ input:checked+.slider:before {
         display: none !important;
     }
 
-    /* Resizer useless on mobile vertical */
+    /* Resizer not needed on mobile — toggle via chevron, tapping the bar, or backdrop */
     #sidebar-resizer {
-        display: block;
-        width: 100%;
-        height: 30px;
-        /* Grabbable area - increased */
-        top: -15px;
-        /* Position slightly above to overlap border */
-        left: 0;
-        bottom: auto;
-        right: auto;
-        cursor: row-resize;
-        /* Visual indicator */
-        background: transparent;
-        z-index: 1005;
+        display: none !important;
     }
 
-    #sidebar-resizer::after {
-        content: "";
-        display: block;
-        width: 50px;
-        height: 5px;
-        background: #444;
-        border-radius: 3px;
-        margin: 12px auto 4px auto;
-    }
-
-    /* Mobile Toggle Icon */
+    /* Mobile Toggle Icon — circular chevron button */
     .mobile-toggle-icon {
         display: none;
-        font-size: 16px;
-        color: #C5A065;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--accent-gold) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--accent-gold) 35%, var(--border-color));
+        color: var(--accent-gold);
         cursor: pointer;
         user-select: none;
-        line-height: 1;
-        vertical-align: middle;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+    }
+
+    .mobile-toggle-icon:hover {
+        background: color-mix(in srgb, var(--accent-gold) 20%, transparent);
+        border-color: var(--accent-gold);
+    }
+
+    .mobile-toggle-icon:active {
+        transform: scale(0.9);
     }
 
     @media (max-width: 768px) {
         .mobile-toggle-icon {
-            display: inline-block;
+            display: flex;
         }
 
         .mobile-toggle-icon::before {
-            content: "▼";
+            content: '';
+            display: block;
+            width: 7px;
+            height: 7px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            border-radius: 1px;
+            /* OPEN (default): chevron points DOWN → tap to close */
+            transform: translateY(-1.5px) rotate(45deg);
+            transition: transform 0.3s ease;
         }
 
         .sidebar.minimized .mobile-toggle-icon::before {
-            content: "▲";
+            /* CLOSED: chevron points UP → tap to open */
+            transform: translateY(1.5px) rotate(225deg);
         }
     }
 
@@ -1460,6 +1528,7 @@ input:checked+.slider:before {
         justify-content: center;
         align-items: stretch;
         min-height: 0;
+        cursor: pointer;
     }
 
     .sidebar.minimized .logo-area {
@@ -1498,6 +1567,81 @@ input:checked+.slider:before {
         padding: 24px 18px !important;
         min-height: 100%;
         box-sizing: border-box;
+    }
+}
+
+/* ── Content pages (static-layout): left rail at 601-768px instead of bottom bar ── */
+@media (min-width: 601px) and (max-width: 768px) {
+    .dashboard-container.static-layout {
+        flex-direction: row !important;
+    }
+
+    /* Undo mobile bottom-bar positioning for content page sidebar */
+    .dashboard-container.static-layout .sidebar,
+    .dashboard-container.static-layout .sidebar.rail-mode {
+        order: 1 !important;
+        width: var(--rail-width) !important;
+        min-width: var(--rail-width) !important;
+        max-width: var(--rail-width) !important;
+        height: 100% !important;
+        border-right: 1px solid var(--border-color) !important;
+        border-top: none !important;
+        position: static !important;
+        padding: 15px 8px !important;
+        flex: none !important;
+        overflow: hidden !important;
+    }
+
+    .dashboard-container.static-layout .main-content {
+        order: 2 !important;
+        flex: 1 !important;
+        height: 100% !important;
+        padding-bottom: 0 !important;
+        min-height: 0 !important;
+        width: 0 !important; /* flex will size it */
+    }
+
+    /* Rail-mode visuals: hide text/footer/eq-list, show only icons */
+    .dashboard-container.static-layout .sidebar .nav-divider,
+    .dashboard-container.static-layout .sidebar .sidebar-footer,
+    .dashboard-container.static-layout .sidebar .earthquake-list-container,
+    .dashboard-container.static-layout .sidebar .logo-area h1,
+    .dashboard-container.static-layout .sidebar .logo-area .controls,
+    .dashboard-container.static-layout .sidebar .main-nav span:not(.icon),
+    .dashboard-container.static-layout .sidebar .mobile-toggle-icon,
+    .dashboard-container.static-layout .sidebar #sidebar-resizer {
+        display: none !important;
+    }
+
+    .dashboard-container.static-layout .sidebar #sidebar-toggle-btn {
+        display: flex !important;
+    }
+
+    .dashboard-container.static-layout .sidebar .main-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+        overflow: unset !important;
+        margin-bottom: 0 !important;
+    }
+
+    .dashboard-container.static-layout .sidebar .main-nav .nav-link-item {
+        justify-content: center !important;
+        padding: 12px 0 !important;
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 8px !important;
+    }
+
+    .dashboard-container.static-layout .sidebar .logo-area {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 8px !important;
     }
 }
 

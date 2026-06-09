@@ -9,15 +9,21 @@ export function initTheme(mapInstance, onThemeChange) {
 
     applyTheme(theme, mapInstance, onThemeChange);
 
-    // Toggle Button Listener
-    const toggleBtn = document.getElementById('theme-toggle');
-    if (toggleBtn) {
-        // Set initial state
-        toggleBtn.checked = (theme === 'dark');
+    // Checkbox toggle (map/index.html)
+    const toggleCheckbox = document.getElementById('theme-toggle');
+    if (toggleCheckbox && toggleCheckbox.type === 'checkbox') {
+        toggleCheckbox.checked = (theme === 'dark');
+        toggleCheckbox.addEventListener('change', () => {
+            applyTheme(toggleCheckbox.checked ? 'dark' : 'light', mapInstance, onThemeChange);
+        });
+    }
 
-        toggleBtn.addEventListener('change', () => {
-            const newTheme = toggleBtn.checked ? 'dark' : 'light';
-            applyTheme(newTheme, mapInstance, onThemeChange);
+    // Icon button toggle (Astro content pages)
+    const toggleIconBtn = document.getElementById('theme-toggle-btn');
+    if (toggleIconBtn) {
+        toggleIconBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark', mapInstance, onThemeChange);
         });
     }
 }

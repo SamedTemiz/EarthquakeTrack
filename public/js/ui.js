@@ -312,9 +312,28 @@ export function initSidebarResize(mapInstance) {
      * `handleMove` used to set `isExpanded` from drag math without updating `.minimized`, so the next
      * toggle could run the wrong branch and leave `.minimized` stuck (footer stays `display:none`).
      */
-    const toggleSidebar = () => {
-        if (window.innerWidth > 768) return; // Only for mobile
+    const mobileBreak = mapInstance ? 768 : 600;
 
+    // Backdrop overlay. On Astro ClientRouter navigations the <body> is swapped and elements not
+    // marked transition:persist are dropped — so a cached backdrop detaches while the persisted
+    // sidebar (and this closure) live on. Recreate + rebind on demand instead of caching once.
+    const ensureBackdrop = () => {
+        let bd = document.querySelector('.sidebar-backdrop');
+        if (!bd) {
+            bd = document.createElement('div');
+            bd.className = 'sidebar-backdrop';
+            bd.addEventListener('click', () => {
+                if (!sidebar.classList.contains('minimized')) toggleSidebar();
+            });
+            document.body.appendChild(bd);
+        }
+        return bd;
+    };
+
+    const toggleSidebar = () => {
+        if (window.innerWidth > mobileBreak) return;
+
+        const backdrop = ensureBackdrop();
         const isCollapsed = sidebar.classList.contains('minimized');
 
         if (!isCollapsed) {
@@ -340,18 +359,23 @@ export function initSidebarResize(mapInstance) {
             const sidebarStyles = window.getComputedStyle(sidebar);
             const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
             const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
-            const targetHeight = paddingTop + logoHeight + resizerHeight + paddingBottom;
+            // Same 56px floor as the initial mobile state — keeps the collapsed bar from clipping the chevron.
+            const targetHeight = Math.max(paddingTop + logoHeight + resizerHeight + paddingBottom, 56);
 
             // Yüksekliği sabit tut, sonra hesaplanan hedef yüksekliğe anime et
             sidebar.style.height = `${startHeight}px`;
-            
+
             // Tarayıcıya layout'u tekrar hesaplat (Animasyonun tetiklenmesi için)
-            sidebar.offsetHeight; 
+            sidebar.offsetHeight;
 
             sidebar.style.height = `${targetHeight}px`;
             mainContent.style.paddingBottom = `${targetHeight}px`;
             // Ensure main content fills the space above minimized sidebar
             mainContent.style.minHeight = `calc(100dvh - ${targetHeight}px)`;
+
+            // Hide backdrop
+            backdrop.classList.remove('visible');
+            setTimeout(() => { backdrop.style.display = 'none'; }, 260);
 
         } else {
             // Animasyon başlangıç yüksekliğini al
@@ -378,21 +402,36 @@ export function initSidebarResize(mapInstance) {
                 mainContent.style.flex = '1';
                 mainContent.style.minHeight = '0';
             }
-            
+
             mainContent.style.paddingBottom = '';
 
             // Yüksekliği sabit tut, sonra 75vh'ye anime et
             sidebar.style.height = `${startHeight}px`;
-            
+
             // Tarayıcıya layout'u tekrar hesaplat
-            sidebar.offsetHeight; 
+            sidebar.offsetHeight;
 
             sidebar.style.height = '75dvh';
+
+            // Show backdrop
+            backdrop.style.display = 'block';
+            requestAnimationFrame(() => backdrop.classList.add('visible'));
         }
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 320); // After height transition (~240ms) + buffer
     };
+
+    // Tap anywhere on minimized bar to expand (backdrop click closes — wired in ensureBackdrop)
+    sidebar.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('minimized')) return;
+        if (window.innerWidth > mobileBreak) return;
+        if (e.target.closest('#sidebar-resizer, button, a, select, input')) return;
+        toggleSidebar();
+    });
+
+    // Prevent resizer tap from double-triggering the sidebar click handler above
+    resizer.addEventListener('click', (e) => e.stopPropagation());
 
     // Mouse Events (Desktop)
     resizer.addEventListener('mousedown', (e) => {
@@ -402,7 +441,7 @@ export function initSidebarResize(mapInstance) {
         resizer.classList.add('resizing');
         document.body.style.userSelect = 'none';
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= mobileBreak) {
             document.body.style.cursor = 'row-resize';
         } else {
             document.body.style.cursor = 'col-resize';
@@ -423,7 +462,7 @@ export function initSidebarResize(mapInstance) {
     const handleMove = (clientX, clientY) => {
         if (!isResizing) return;
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= mobileBreak) {
             // Mobile: Vertical Resize — only when the sheet is expanded (not `.minimized`).
             // Dragging while collapsed would fight toggleSidebar() and desync footer visibility.
             if (sidebar.classList.contains('minimized')) {
@@ -468,7 +507,7 @@ export function initSidebarResize(mapInstance) {
             if (
                 pointerDownOnResizer &&
                 Math.abs(clientY - startY) < 5 &&
-                window.innerWidth <= 768
+                window.innerWidth <= mobileBreak
             ) {
                 toggleSidebar();
             }
@@ -496,8 +535,9 @@ export function initSidebarResize(mapInstance) {
     // Mobile Toggle Icon Click
     const mobileToggleIcon = document.getElementById('mobile-toggle-icon');
     if (mobileToggleIcon) {
-        mobileToggleIcon.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
+        mobileToggleIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= mobileBreak) {
                 toggleSidebar();
             }
         });
@@ -512,16 +552,19 @@ export function initSidebarToggle(mapInstance) {
     // .sidebar.rail-mode .sidebar-footer { display:none } cannot hide the footer after resize from tablet.
     const checkResponsiveSidebar = () => {
         const w = window.innerWidth;
-        if (w <= 768) {
+        const mobileBreak = mapInstance ? 768 : 600;
+        if (w <= mobileBreak) {
             sidebar.classList.remove('rail-mode');
             
             // Set initial mobile state: minimized by default
             if (!sidebar.dataset.initMobile) {
                 sidebar.classList.add('minimized');
-                
+
                 const logoArea = document.querySelector('.logo-area');
-                const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 60;
-                const targetHeight = logoHeight + 20; 
+                const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 44;
+                // Floor at 56px so the bar always fits the logo row + round chevron button,
+                // even when logo-area is measured before first-paint layout settles.
+                const targetHeight = Math.max(logoHeight + 16, 56);
                 
                 sidebar.style.position = 'fixed';
                 sidebar.style.bottom = '0';
@@ -557,11 +600,12 @@ export function initSidebarToggle(mapInstance) {
                 mainContent.style.height = '';
             }
             
+            sidebar.classList.remove('minimized');
             if (sidebar.dataset.initMobile) {
                 delete sidebar.dataset.initMobile;
             }
 
-            if (w >= 769 && w <= 1200) {
+            if (w > mobileBreak && w <= 1200) {
                 sidebar.classList.add('rail-mode');
             } else {
                 sidebar.classList.remove('rail-mode');

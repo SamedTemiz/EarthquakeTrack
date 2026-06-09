@@ -1,120 +1,399 @@
-// Called both from DOMContentLoaded (direct page visit) and from router (SPA inject)
-function initBlog(root = document) {
-    const tabBtns = root.querySelectorAll('.blog-tab-btn');
-    const tabContents = root.querySelectorAll('.tab-content');
-    const newsContainer = root.querySelector('#news-container');
+/**
+ * Multi-provider news fetcher with automatic fallback.
+ *
+ * Provider priority (highest → lowest):
+ *   1. /api/news       — our Cloudflare Pages Function (Google News RSS, no key, no limit)
+ *   2. GNews API       — 100 req/day free, enable by setting GNEWS_KEY
+ *   3. NewsData.io     — 200 req/day free (12 h delay), enable by setting NEWSDATA_KEY
+ *
+ * When a provider fails (network error, rate-limit, bad response) it is marked
+ * in localStorage and skipped for FAILURE_TTL_MS. After that window it is retried.
+ *
+ * Successful responses are cached in localStorage for CACHE_TTL_MS.
+ */
 
-    if (!tabBtns.length) return;
+// ── Config ────────────────────────────────────────────────────────────
+const CACHE_TTL_MS       = 30 * 60 * 1000;
+const FAILURE_TTL_MS     = 60 * 60 * 1000;
+const LOCATION_CACHE_MS  = 24 * 60 * 60 * 1000; // country re-check every 24h
+const CACHE_KEY          = 'eq_news_cache';
+const FAILURES_KEY       = 'eq_news_failures';
+const LOCATION_KEY       = 'eq_user_location';
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+// Add API keys here when available:
+const GNEWS_KEY    = 'b65afdaf6d3c22ccb5665448278a826e';   // https://gnews.io  — free: 100 req/day
+const NEWSDATA_KEY = 'pub_357035f2d9a34c33a57a3b501a7e83c1';   // https://newsdata.io — free: 200 req/day
 
-            btn.classList.add('active');
-            const targetId = btn.getAttribute('data-target');
-            const targetTab = root.querySelector('#' + targetId);
-            if (targetTab) targetTab.classList.add('active');
+// ── Location detection ────────────────────────────────────────────────
 
-            if (targetId === 'tab-news' && newsContainer && newsContainer.innerHTML.includes('news-loading')) {
-                fetchNews(newsContainer);
-            }
-        });
-    });
+async function getUserCountry() {
+  // 1. Cache check
+  try {
+    const cached = JSON.parse(localStorage.getItem(LOCATION_KEY) || 'null');
+    if (cached && Date.now() - cached.at < LOCATION_CACHE_MS) return cached.country;
+  } catch {}
+
+  // 2. IP geolocation — no user permission needed
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+    const data = await res.json();
+    const country = data.country_name;
+    if (country) {
+      try { localStorage.setItem(LOCATION_KEY, JSON.stringify({ at: Date.now(), country })); } catch {}
+      console.log(`[news] Location detected: ${country}`);
+      return country;
+    }
+  } catch {}
+
+  // 3. Sidebar country filter as last resort
+  const select = document.getElementById('country-select');
+  if (select?.value) {
+    const map = { Turkey: 'Turkey', Greece: 'Greece', Italy: 'Italy', Japan: 'Japan' };
+    return map[select.value] || null;
+  }
+
+  return null; // global fallback
 }
 
-const CACHE_KEY = 'eq_news_cache';
-const CACHE_TIME_MS = 60 * 60 * 1000;
+// IP geolocation often returns local-language country names — normalize to English for API queries
+const COUNTRY_EN = {
+  'Türkiye': 'Turkey', 'Almanya': 'Germany', 'Fransa': 'France', 'İtalya': 'Italy',
+  'Yunanistan': 'Greece', 'Japonya': 'Japan', 'Amerika Birleşik Devletleri': 'United States',
+  'İspanya': 'Spain', 'Portekiz': 'Portugal', 'Romanya': 'Romania', 'Bulgaristan': 'Bulgaria',
+};
 
-async function fetchNews(newsContainer) {
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    if (cachedData) {
-        const parsed = JSON.parse(cachedData);
-        if (Date.now() - parsed.timestamp < CACHE_TIME_MS) {
-            renderNews(newsContainer, parsed.articles);
-            return;
-        }
+function buildQuery(country) {
+  if (!country) return { gnews: 'earthquake', newsdata: 'earthquake', label: 'Dünya geneli' };
+  const en = COUNTRY_EN[country] || country;
+  const isTurkey = en === 'Turkey';
+  return {
+    gnews:    `earthquake ${en}`,
+    newsdata: isTurkey ? 'deprem' : `earthquake ${en}`,
+    label:    en,
+  };
+}
+
+// ── Provider definitions ──────────────────────────────────────────────
+
+class RateLimitError extends Error {}
+
+const PROVIDERS = [
+  {
+    id: 'cloudflare-rss',
+    name: 'Google Haberler (RSS)',
+    enabled: true,
+    async fetch(query) {
+      const q = encodeURIComponent(query.gnews);
+      const res = await fetch(`/api/news?q=${q}`, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'RSS proxy error');
+      return data.articles;
+    },
+  },
+  {
+    id: 'gnews',
+    name: 'GNews',
+    get enabled() { return !!GNEWS_KEY; },
+    async fetch(query) {
+      const q = encodeURIComponent(query.gnews);
+      const url = `https://gnews.io/api/v4/search?q=${q}&lang=en&max=12&apikey=${GNEWS_KEY}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (res.status === 429) throw new RateLimitError('GNews rate limit');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.articles?.length) throw new Error('No articles returned');
+      return data.articles.map(a => ({
+        title:     a.title || '',
+        link:      a.url || '#',
+        pubDate:   a.publishedAt || null,
+        source_id: a.source?.name || 'GNews',
+        image_url: a.image || null,
+        description: a.description || '',
+      }));
+    },
+  },
+  {
+    id: 'newsdata',
+    name: 'NewsData.io',
+    get enabled() { return !!NEWSDATA_KEY; },
+    async fetch(query) {
+      const q = encodeURIComponent(query.newsdata);
+      const url = `https://newsdata.io/api/1/news?apikey=${NEWSDATA_KEY}&q=${q}&language=tr,en`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (res.status === 429) throw new RateLimitError('NewsData rate limit');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.results?.length) throw new Error('No results returned');
+      return data.results.map(a => ({
+        title:     a.title || '',
+        link:      a.link || '#',
+        pubDate:   a.pubDate || null,
+        source_id: a.source_id || 'NewsData',
+        image_url: a.image_url || null,
+        description: a.description || '',
+      }));
+    },
+  },
+];
+
+// ── Failure tracking ──────────────────────────────────────────────────
+
+function getFailures() {
+  try { return JSON.parse(localStorage.getItem(FAILURES_KEY) || '{}'); } catch { return {}; }
+}
+
+function markFailed(id, reason) {
+  const f = getFailures();
+  f[id] = { at: Date.now(), reason };
+  try { localStorage.setItem(FAILURES_KEY, JSON.stringify(f)); } catch {}
+  console.warn(`[news] Provider "${id}" marked failed: ${reason}`);
+}
+
+function isAvailable(provider) {
+  if (!provider.enabled) return false;
+  const f = getFailures()[provider.id];
+  if (!f) return true;
+  return Date.now() - f.at > FAILURE_TTL_MS;
+}
+
+// ── Cache ─────────────────────────────────────────────────────────────
+
+function readCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (c && Date.now() - c.at < CACHE_TTL_MS) return c;
+  } catch {}
+  return null;
+}
+
+function writeCache(articles, source, label) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), articles, source, label })); } catch {}
+}
+
+// ── Main fetch orchestrator ───────────────────────────────────────────
+
+async function fetchNews() {
+  const cached = readCache();
+  if (cached) {
+    console.log(`[news] Cache hit (source: ${cached.source}, location: ${cached.label})`);
+    return cached;
+  }
+
+  const country = await getUserCountry();
+  const query   = buildQuery(country);
+  console.log(`[news] Query for "${query.label}":`, query);
+
+  for (const provider of PROVIDERS) {
+    if (!isAvailable(provider)) {
+      console.log(`[news] Skipping "${provider.name}"`);
+      continue;
     }
-
     try {
-        const apiKey = 'YOUR_API_KEY';
-
-        if (apiKey === 'YOUR_API_KEY') {
-            setTimeout(() => {
-                renderNews(newsContainer, getMockNews());
-                console.log('UYARI: Lütfen news.js içindeki apiKey değişkenini doldurun.');
-            }, 800);
-            return;
-        }
-
-        const response = await fetch(`https://newsdata.io/api/1/news?apikey=${apiKey}&q=earthquake%20OR%20deprem&language=tr,en`);
-        const data = await response.json();
-
-        if (data.status === 'success' && data.results) {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), articles: data.results }));
-            renderNews(newsContainer, data.results);
-        } else {
-            showError(newsContainer, 'Haberler alınırken bir sorun oluştu.');
-        }
-    } catch (error) {
-        console.error('News fetch error:', error);
-        showError(newsContainer, 'Bağlantı hatası: Haberler yüklenemedi.');
+      console.log(`[news] Trying "${provider.name}"...`);
+      const articles = await provider.fetch(query);
+      writeCache(articles, provider.name, query.label);
+      console.log(`[news] ✓ "${provider.name}" → ${articles.length} articles`);
+      return { articles, source: provider.name, label: query.label };
+    } catch (err) {
+      markFailed(provider.id, err.message);
     }
+  }
+
+  console.warn('[news] All providers failed, using mock data.');
+  return { articles: getMockArticles(), source: 'Demo', label: query.label };
 }
 
-function renderNews(newsContainer, articles) {
-    if (!articles || articles.length === 0) {
-        newsContainer.innerHTML = '<div class="news-loading">Şu an için yeni deprem haberi bulunmuyor.</div>';
-        return;
-    }
+// ── Rendering ─────────────────────────────────────────────────────────
 
-    newsContainer.innerHTML = '';
-    articles.slice(0, 10).forEach(article => {
-        const card = document.createElement('a');
-        card.href = article.link;
-        card.target = '_blank';
-        card.className = 'news-card';
+const CARD_GRADIENTS = [
+  'linear-gradient(135deg,#1a1a2e,#16213e)',
+  'linear-gradient(135deg,#2d1b0e,#4a2c0a)',
+  'linear-gradient(135deg,#0d2137,#1a3a5c)',
+  'linear-gradient(135deg,#2a0d1a,#4a1a2e)',
+  'linear-gradient(135deg,#0d1a0d,#1a3a1a)',
+  'linear-gradient(135deg,#1a1a0d,#3a3a1a)',
+  'linear-gradient(135deg,#0d0d2d,#1a1a4a)',
+];
 
-        const imageHtml = article.image_url
-            ? `<div class="news-image" style="background-image: url('${article.image_url}')"></div>`
-            : `<div class="news-image"><div class="news-placeholder">Görsel Yok</div></div>`;
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 2) return 'Az önce';
+    if (m < 60) return `${m} dk önce`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h} sa önce`;
+    const d = Math.floor(h / 24);
+    if (d === 1) return 'Dün';
+    if (d < 7) return `${d} gün önce`;
+    return new Date(dateStr).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+  } catch { return ''; }
+}
 
-        let dateStr = article.pubDate;
-        try {
-            dateStr = new Date(article.pubDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-        } catch (e) {}
+const EXT_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
-        card.innerHTML = `
-            ${imageHtml}
-            <div class="news-content">
-                <div class="news-source">${article.source_id || 'Haber Kaynağı'}</div>
-                <h3 class="news-title">${article.title}</h3>
-                <div class="news-meta">
-                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                    ${dateStr}
-                </div>
-            </div>
-        `;
-        newsContainer.appendChild(card);
+// Article titles/sources come from external news providers (Google News RSS, GNews, NewsData)
+// and are injected via innerHTML — escape them to prevent XSS from a malicious headline.
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Only allow plain http(s) image URLs; reject anything that could break out of the CSS url('…') context.
+function safeImageUrl(u) {
+  if (typeof u !== 'string' || !/^https?:\/\//i.test(u)) return null;
+  if (/["'()\\\s]/.test(u)) return null;
+  return u;
+}
+
+function renderNews(container, articles, source, label) {
+  if (!articles?.length) {
+    container.innerHTML = '<div class="news-loading">Şu an için güncel haber bulunmuyor.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  // Location badge
+  if (label) {
+    const badge = document.createElement('div');
+    badge.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-tertiary);margin-bottom:14px;';
+    const icon = label === 'Dünya geneli'
+      ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+      : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+    badge.innerHTML = `${icon} ${esc(label)} deprem haberleri`;
+    container.appendChild(badge);
+  }
+
+  const list = articles.slice(0, 13);
+  const [hero, ...rest] = list;
+
+  // ── Hero (featured) card ──
+  const heroEl = document.createElement('a');
+  heroEl.href = hero.link || '#';
+  heroEl.target = '_blank';
+  heroEl.rel = 'noopener noreferrer';
+  heroEl.className = 'news-hero';
+
+  const heroImg = safeImageUrl(hero.image_url);
+  const heroBg = heroImg
+    ? `background-image:url('${heroImg}')`
+    : `background:${CARD_GRADIENTS[0]}`;
+
+  heroEl.innerHTML = `
+    <div class="news-hero-bg" style="${heroBg}"></div>
+    <div class="news-hero-overlay"></div>
+    <div class="news-hero-body">
+      <div class="news-hero-source">${esc(hero.source_id || source)}</div>
+      <h2 class="news-hero-title">${esc(hero.title)}</h2>
+      <div class="news-hero-time">${timeAgo(hero.pubDate)}</div>
+    </div>
+    <div class="news-hero-ext">${EXT_ICON}</div>
+  `;
+  container.appendChild(heroEl);
+
+  // ── Grid of remaining cards ──
+  if (rest.length) {
+    const grid = document.createElement('div');
+    grid.className = 'news-grid-v2';
+
+    rest.forEach((a, i) => {
+      const card = document.createElement('a');
+      card.href = a.link || '#';
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.className = 'news-card-v2';
+
+      const cardImg = safeImageUrl(a.image_url);
+      const imgHtml = cardImg
+        ? `<div class="news-card-v2-img" style="background-image:url('${cardImg}')"></div>`
+        : `<div class="news-card-v2-img" style="background:${CARD_GRADIENTS[(i + 1) % CARD_GRADIENTS.length]}">
+             <span class="news-card-v2-initial">${esc((a.source_id || 'N').charAt(0).toUpperCase())}</span>
+           </div>`;
+
+      card.innerHTML = `
+        ${imgHtml}
+        <div class="news-card-v2-body">
+          <div class="news-card-v2-source">${esc(a.source_id || source)}</div>
+          <h3 class="news-card-v2-title">${esc(a.title)}</h3>
+          <div class="news-card-v2-time">${timeAgo(a.pubDate)}</div>
+        </div>
+      `;
+      grid.appendChild(card);
     });
+
+    container.appendChild(grid);
+  }
 }
 
-function showError(newsContainer, msg) {
-    newsContainer.innerHTML = `<div class="news-loading" style="color:#ff6b6b">${msg}</div>`;
+function showLoading(container) {
+  container.innerHTML = '<div class="news-loading">Güncel deprem haberleri yükleniyor…</div>';
 }
 
-function getMockNews() {
-    return [
-        { title: "AFAD'dan Son Dakika Deprem Açıklaması: Ege Denizi'nde Korkutan Sarsıntı", link: '#', image_url: 'https://images.unsplash.com/photo-1527018263309-8d19760a927a?w=500&auto=format&fit=crop&q=60', source_id: 'Haber Ajansı', pubDate: new Date().toISOString() },
-        { title: "Uzmanlardan Uyarı: Beklenen İstanbul Depremi İçin Hazırlıklar Hızlandırılmalı", link: '#', image_url: 'https://images.unsplash.com/photo-1506544777-64cfbea112ea?w=500&auto=format&fit=crop&q=60', source_id: 'Bilim & Teknik', pubDate: new Date(Date.now() - 3600000).toISOString() },
-        { title: "Dünya Genelinde Sismik Hareketlilik Artıyor: Pasifik Ateş Çemberi Aktif", link: '#', image_url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&auto=format&fit=crop&q=60', source_id: 'Global News', pubDate: new Date(Date.now() - 7200000).toISOString() },
-        { title: "Yeni Nesil Deprem İzolatörleri Türkiye'deki Binalarda Yaygınlaşıyor", link: '#', image_url: 'https://images.unsplash.com/photo-1541888078519-216a69fb20b8?w=500&auto=format&fit=crop&q=60', source_id: 'İnşaat Dünyası', pubDate: new Date(Date.now() - 86400000).toISOString() }
-    ];
+function showError(container, msg) {
+  container.innerHTML = `<div class="news-loading" style="color:#ff6b6b">⚠️ ${msg}</div>`;
 }
 
-// Dinamik import ile yüklendiğinde DOMContentLoaded çoktan geçmiş olur
+// ── Tab & init logic ──────────────────────────────────────────────────
+
+function initBlog() {
+  const tabBtns     = document.querySelectorAll('.blog-tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  const container   = document.getElementById('news-container');
+
+  if (!tabBtns.length) return;
+
+  // On first load both the immediate call and astro:page-load can fire initBlog;
+  // mark the (fresh-per-navigation) buttons so listeners bind only once.
+  if (tabBtns[0].dataset.bound) return;
+  tabBtns[0].dataset.bound = '1';
+
+  let newsLoaded = false;
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+
+      btn.classList.add('active');
+      const panel = document.getElementById(btn.dataset.target);
+      if (panel) panel.classList.add('active');
+
+      if (btn.dataset.target === 'tab-news' && container && !newsLoaded) {
+        newsLoaded = true;
+        showLoading(container);
+        fetchNews()
+          .then(({ articles, source, label }) => renderNews(container, articles, source, label))
+          .catch(err => showError(container, err.message));
+      }
+    });
+  });
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────
+// Handles both first load and ClientRouter (astro:page-load) navigations.
+
+function tryInit() {
+  if (document.querySelector('.blog-tab-btn')) initBlog();
+}
+
+document.addEventListener('astro:page-load', tryInit);
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initBlog(document));
+  document.addEventListener('DOMContentLoaded', tryInit);
 } else {
-    initBlog(document);
+  tryInit();
+}
+
+// ── Mock data (fallback when all providers fail) ───────────────────────
+
+function getMockArticles() {
+  const now = Date.now();
+  return [
+    { title: "AFAD: Ege Denizi'nde 4.2 büyüklüğünde deprem", link: '#', pubDate: new Date(now - 3600000).toISOString(), source_id: 'AFAD', image_url: null },
+    { title: "Uzmanlar İstanbul deprem riskini değerlendirdi", link: '#', pubDate: new Date(now - 7200000).toISOString(), source_id: 'Bilim & Teknik', image_url: null },
+    { title: "Depreme dayanıklı bina yönetmeliği güncellendi", link: '#', pubDate: new Date(now - 86400000).toISOString(), source_id: 'İnşaat Dünyası', image_url: null },
+  ];
 }
