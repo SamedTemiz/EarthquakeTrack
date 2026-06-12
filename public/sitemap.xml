@@ -13,6 +13,30 @@
         <changefreq>daily</changefreq>
     </url>
     <url>
+        <loc>https://earthquaketrack.com.tr/blog/deprem-sonrasi-ilk-24-saat.html</loc>
+        <lastmod>2026-06-13</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/deprem-aninda-dogru-davranis.html</loc>
+        <lastmod>2026-06-13</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/turkiye-deprem-tarihi.html</loc>
+        <lastmod>2026-06-13</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/deprem-buyuklugu-ve-siddeti.html</loc>
+        <lastmod>2026-06-13</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
         <loc>https://earthquaketrack.com.tr/blog/deprem-cantasi-hayat-kurtarir.html</loc>
         <lastmod>2026-05-16</lastmod>
         <priority>0.7</priority>
