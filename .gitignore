@@ -9,3 +9,4 @@ dist/
 
 # UI/UX Pro Max (https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) — local Cursor skill install
 .cursor/skills/ui-ux-pro-max/
+.wrangler/

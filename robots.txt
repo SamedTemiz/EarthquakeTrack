@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://earthquaketrack.com.tr/sitemap.xml

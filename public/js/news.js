@@ -338,7 +338,7 @@ function showError(container, msg) {
 
 // ── Tab & init logic ──────────────────────────────────────────────────
 
-function initBlog() {
+export function initBlog() {
   const tabBtns     = document.querySelectorAll('.blog-tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
   const container   = document.getElementById('news-container');

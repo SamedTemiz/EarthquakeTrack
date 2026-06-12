@@ -79,6 +79,21 @@ async function loadContent(url) {
             document.head.appendChild(tag);
         });
 
+        // Astro extracts page styles into external /_astro/*.css files — bring those in too.
+        // Keep previously added ones (they're content-hashed, so caching them is harmless).
+        const cssLoads = [];
+        doc.querySelectorAll('head link[rel="stylesheet"]').forEach(l => {
+            const href = l.getAttribute('href');
+            if (!href || !href.includes('/_astro/')) return;
+            if (document.querySelector(`link[href="${href}"]`)) return;
+            const tag = document.createElement('link');
+            tag.rel = 'stylesheet';
+            tag.href = href;
+            cssLoads.push(new Promise(r => { tag.onload = tag.onerror = r; }));
+            document.head.appendChild(tag);
+        });
+        if (cssLoads.length) await Promise.all(cssLoads);
+
         const main = doc.querySelector('main.main-content')
                   || doc.querySelector('main')
                   || doc.querySelector('.main-content');
@@ -87,8 +102,15 @@ async function loadContent(url) {
 
         panel.innerHTML = main.innerHTML;
 
-        // Blog: init tabs/news manually (no import dependency)
-        if (url.includes('blog')) initBlogInPanel(panel);
+        // Blog: real tab + news logic lives in news.js (shared with the standalone page)
+        if (url.includes('blog')) {
+            try {
+                const mod = await import('/js/news.js');
+                mod.initBlog();
+            } catch (err) {
+                console.error('[router] news init failed:', err);
+            }
+        }
 
         // Intercept links inside loaded content
         panel.querySelectorAll('a[href]').forEach(a => {
@@ -107,62 +129,6 @@ async function loadContent(url) {
         const loader = document.getElementById('page-transition-loader');
         if (loader) loader.classList.add('is-hidden');
     }
-}
-
-// Self-contained blog tab + news init (no import needed)
-function initBlogInPanel(root) {
-    const tabBtns = root.querySelectorAll('.blog-tab-btn');
-    const newsContainer = root.querySelector('#news-container');
-    if (!tabBtns.length) return;
-
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            root.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            const target = root.querySelector('#' + btn.dataset.target);
-            if (target) target.classList.add('active');
-            if (btn.dataset.target === 'tab-news' && newsContainer?.innerHTML.includes('news-loading')) {
-                fetchNewsInto(newsContainer);
-            }
-        });
-    });
-}
-
-async function fetchNewsInto(container) {
-    const CACHE_KEY = 'eq_news_cache';
-    const CACHE_MS = 3600000;
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-        const p = JSON.parse(cached);
-        if (Date.now() - p.timestamp < CACHE_MS) { renderNews(container, p.articles); return; }
-    }
-    // Mock data (replace apiKey to use real API)
-    setTimeout(() => renderNews(container, getMockNews()), 800);
-}
-
-function renderNews(container, articles) {
-    container.innerHTML = '';
-    articles.slice(0, 10).forEach(a => {
-        const card = document.createElement('a');
-        card.href = a.link; card.target = '_blank'; card.className = 'news-card';
-        const img = a.image_url
-            ? `<div class="news-image" style="background-image:url('${a.image_url}')"></div>`
-            : `<div class="news-image"><div class="news-placeholder">Görsel Yok</div></div>`;
-        let date = a.pubDate;
-        try { date = new Date(a.pubDate).toLocaleDateString('tr-TR', { day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }); } catch(_){}
-        card.innerHTML = `${img}<div class="news-content"><div class="news-source">${a.source_id||'Kaynak'}</div><h3 class="news-title">${a.title}</h3><div class="news-meta">${date}</div></div>`;
-        container.appendChild(card);
-    });
-}
-
-function getMockNews() {
-    return [
-        { title:"AFAD'dan Son Dakika: Ege'de Korkutan Sarsıntı", link:'#', image_url:'https://images.unsplash.com/photo-1527018263309-8d19760a927a?w=500&q=60', source_id:'Haber Ajansı', pubDate:new Date().toISOString() },
-        { title:"Uzmanlar Uyardı: İstanbul Depremi İçin Hazırlıklar Hızlandırılmalı", link:'#', image_url:'https://images.unsplash.com/photo-1506544777-64cfbea112ea?w=500&q=60', source_id:'Bilim & Teknik', pubDate:new Date(Date.now()-3600000).toISOString() },
-        { title:"Pasifik Ateş Çemberi'nde Sismik Hareketlilik Artıyor", link:'#', image_url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&q=60', source_id:'Global News', pubDate:new Date(Date.now()-7200000).toISOString() },
-        { title:"Yeni Deprem İzolatörleri Türkiye'de Yaygınlaşıyor", link:'#', image_url:'https://images.unsplash.com/photo-1541888078519-216a69fb20b8?w=500&q=60', source_id:'İnşaat Dünyası', pubDate:new Date(Date.now()-86400000).toISOString() }
-    ];
 }
 
 function setActiveLink(url) {
