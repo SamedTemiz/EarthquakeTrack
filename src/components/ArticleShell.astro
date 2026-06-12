@@ -27,7 +27,9 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
   <Fragment slot="head">
     <style is:global>
       /* ── Article shell ─────────────────────────────────────────── */
-      .edu-shell { max-width:860px; margin:28px auto 40px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.12); overflow:hidden; }
+      /* flex-shrink:0 — .main-content is a fixed-height column flex container; without it the
+         card gets squeezed to the viewport height and overflow:hidden clips the article. */
+      .edu-shell { flex-shrink:0; width:100%; max-width:860px; margin:28px auto 40px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.12); overflow:hidden; }
       .edu-header { padding:40px 40px 20px; border-bottom:1px solid var(--border-color); background:linear-gradient(180deg,rgba(197,160,101,.08) 0%,transparent 100%); }
       .edu-header h1 { margin:0 0 16px; font-size:clamp(1.8rem,4vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.02em; line-height:1.25; }
       .blog-post-meta { display:flex; align-items:center; gap:15px; font-size:.9rem; color:var(--text-tertiary); margin-bottom:15px; }
