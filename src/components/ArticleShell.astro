@@ -28,8 +28,9 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
     <style is:global>
       /* ── Article shell ─────────────────────────────────────────── */
       /* flex-shrink:0 — .main-content is a fixed-height column flex container; without it the
-         card gets squeezed to the viewport height and overflow:hidden clips the article. */
-      .edu-shell { flex-shrink:0; width:100%; max-width:860px; margin:28px auto 40px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.12); overflow:hidden; }
+         card gets squeezed to the viewport height and overflow:hidden clips the article.
+         width keeps a 16px side gutter at every viewport until the <=600px full-bleed override. */
+      .edu-shell { flex-shrink:0; width:min(860px, calc(100% - 32px)); margin:28px auto 40px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.12); overflow:hidden; }
       .edu-header { padding:40px 40px 20px; border-bottom:1px solid var(--border-color); background:linear-gradient(180deg,rgba(197,160,101,.08) 0%,transparent 100%); }
       .edu-header h1 { margin:0 0 16px; font-size:clamp(1.8rem,4vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.02em; line-height:1.25; }
       .blog-post-meta { display:flex; align-items:center; gap:15px; font-size:.9rem; color:var(--text-tertiary); margin-bottom:15px; }
@@ -75,8 +76,11 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
         60%  { box-shadow:0 0 0 14px rgba(197,160,101,0); }
         100% { box-shadow:0 0 0 0 rgba(197,160,101,0); }
       }
-      .roadmap-time { font-size:.72rem; font-weight:700; letter-spacing:.04em; color:var(--accent-gold); text-align:center; white-space:nowrap; }
-      .roadmap-body h3 { margin:4px 0 8px !important; font-size:1.08rem !important; color:var(--text-primary) !important; }
+      /* Pill with a solid background so the connector line never shows through the label */
+      .roadmap-time { position:relative; z-index:1; font-size:.68rem; font-weight:700; letter-spacing:.03em; color:var(--accent-gold); text-align:center; white-space:nowrap; background:var(--card-bg); border:1px solid rgba(197,160,101,.35); border-radius:10px; padding:3px 8px; }
+      .roadmap-step.final .roadmap-time { color:#5dc97a; border-color:rgba(80,200,120,.35); }
+      .roadmap-body { flex:1; min-width:0; padding-top:6px; }
+      .roadmap-body h3 { margin:0 0 8px !important; font-size:1.08rem !important; color:var(--text-primary) !important; }
       .roadmap-body p { margin-bottom:10px !important; font-size:.93rem; }
       .roadmap-body ul { margin:0 0 6px 18px !important; font-size:.92rem; }
       .roadmap-body li { margin-bottom:6px !important; }
@@ -153,10 +157,30 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
 
       @media (max-width:600px) {
         .edu-header, .edu-body { padding:16px; }
-        .roadmap::before { left:27px; }
-        .roadmap-marker { width:40px; }
-        .roadmap-icon { width:40px; height:40px; }
-        .roadmap-icon svg { width:18px; height:18px; }
+        /* Browser default list padding (40px) is too deep on small screens */
+        .article-content ul, .article-content ol { margin-left:0; padding-left:20px; }
+        .roadmap-body ul { margin-left:0 !important; padding-left:16px; }
+        /* Roadmap: smaller markers, line stays centered under them */
+        .roadmap { padding-left:0; }
+        .roadmap::before { left:21px; }
+        .roadmap-step { gap:14px; padding-bottom:26px; }
+        .roadmap-marker { width:44px; }
+        .roadmap-icon { width:44px; height:44px; }
+        .roadmap-icon svg { width:19px; height:19px; }
+        .roadmap-time { font-size:.62rem; padding:2px 6px; }
+        /* History timeline: narrower year pills */
+        .htl { padding-left:0; }
+        .htl::before { left:30px; }
+        .htl-item { gap:14px; }
+        .htl-year { width:62px; height:30px; font-size:.78rem; }
+        /* Magnitude bars: tighter labels, smaller in-bar text */
+        .mag-label { width:46px; font-size:.74rem; }
+        .mag-bar { font-size:.6rem; padding-left:6px; }
+        /* Tables scroll horizontally instead of overflowing */
+        .article-content table { display:block; overflow-x:auto; white-space:nowrap; }
+        .stat-band { gap:10px; }
+        .stat { min-width:calc(50% - 10px); padding:14px 10px; }
+        .stat-num { font-size:1.4rem; }
       }
       @media (prefers-reduced-motion: reduce) {
         .roadmap-icon, .mag-bar { animation:none !important; }
