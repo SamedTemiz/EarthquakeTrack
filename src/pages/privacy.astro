@@ -1,0 +1,52 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="Gizlilik Politikası - EarthquakeTrack"
+  description="EarthquakeTrack Gizlilik Politikası. Kişisel veri toplama, çerezler ve kullanıcı hakları hakkında bilgi."
+  canonical="https://earthquaketrack.com.tr/privacy.html"
+>
+  <Fragment slot="head">
+    <style>
+      .content-container { display:flex; flex-direction:column; min-height:100%; }
+      .ct-head { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .ct-head h1 { margin:0; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .ct-body { padding:32px 48px 56px; max-width:820px; }
+      .ct-body h3 { color:var(--text-primary); margin:24px 0 6px; font-size:1rem; font-weight:600; }
+      .ct-body p { color:var(--text-secondary); margin:0 0 14px; font-size:.93rem; line-height:1.65; }
+      @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
+      @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } }
+    </style>
+  </Fragment>
+
+  <div class="content-container">
+    <div id="content-tr">
+      <header class="ct-head"><h1>Gizlilik Politikası</h1></header>
+      <div class="ct-body">
+        <p>Son Güncelleme: 12 Şubat 2026</p>
+        <h3>1. Toplanan Veriler</h3>
+        <p>EarthquakeTrack olarak gizliliğinize önem veriyoruz. Sitemizi ziyaret ettiğinizde herhangi bir kişisel verinizi kaydetmiyoruz. Üyelik sistemi bulunmamaktadır.</p>
+        <h3>2. Çerezler ve Yerel Depolama</h3>
+        <p>Sitemiz, kullanıcı deneyimini iyileştirmek için tarayıcınızın "Local Storage" özelliğini kullanabilir (örneğin: tema tercihinizi hatırlamak için). Ayrıca Google AdSense ve Google Analytics gibi üçüncü taraf hizmetler çerez kullanabilir.</p>
+        <h3>3. Konum Bilgisi</h3>
+        <p>Harita üzerinde konumunuzu görmek isterseniz, tarayıcınız konum izni isteyecektir. Bu veri sadece cihazınızda işlenir ve sunucularımıza kaydedilmez.</p>
+        <h3>4. Üçüncü Taraf Bağlantılar</h3>
+        <p>Sitemizdeki dış bağlantıların gizlilik politikalarından sorumlu değiliz.</p>
+      </div>
+    </div>
+    <div id="content-en" style="display:none;">
+      <header class="ct-head"><h1>Privacy Policy</h1></header>
+      <div class="ct-body">
+        <p>Last Update: February 12, 2026</p>
+        <h3>1. Collected Data</h3>
+        <p>We value your privacy at EarthquakeTrack. We do not record any of your personal data when you visit our site. There is no membership system.</p>
+        <h3>2. Cookies and Local Storage</h3>
+        <p>Our site may use your browser's "Local Storage" feature to improve user experience. Additionally, third-party services such as Google AdSense and Google Analytics may use cookies.</p>
+        <h3>3. Location Information</h3>
+        <p>If you wish to see your location on the map, your browser will request location permission. This data is only processed on your device and is not saved to our servers.</p>
+        <h3>4. Third Party Links</h3>
+        <p>We are not responsible for the privacy policies of external links on our site.</p>
+      </div>
+    </div>
+  </div>
+</PageLayout>

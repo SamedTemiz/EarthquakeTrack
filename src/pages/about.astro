@@ -1,0 +1,81 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="Hakkında - EarthquakeTrack"
+  description="EarthquakeTrack nedir, nasıl çalışır? USGS, EMSC, Kandilli ve AFAD'dan anlık deprem verileri. Amacımız, teknolojimiz ve veri doğruluğu hakkında bilgi edinin."
+  canonical="https://earthquaketrack.com.tr/about.html"
+>
+  <Fragment slot="head">
+    <style>
+      .content-container { display:flex; flex-direction:column; min-height:100%; }
+      .ct-head { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .ct-head h1 { margin:0; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .ct-body { padding:32px 48px 56px; max-width:960px; }
+      .ct-body h2 { color:var(--text-primary); margin:28px 0 8px; font-size:1.05rem; font-weight:600; }
+      .ct-body p { color:var(--text-secondary); margin:0 0 14px; font-size:.93rem; line-height:1.65; }
+      .ct-body a { color:var(--accent-blue); text-decoration:none; }
+      .ct-body a:hover { text-decoration:underline; }
+      .ct-body ul { padding-left:20px; color:var(--text-secondary); font-size:.93rem; margin:0 0 14px; }
+      .ct-body li { margin-bottom:10px; line-height:1.55; }
+      .source-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin-top:12px; }
+      .source-card { border:1px solid var(--border-color); border-radius:10px; padding:16px; background:var(--surface-card,var(--card-bg)); transition:border-color .2s; }
+      .source-card:hover { border-color:rgba(197,160,101,.4); }
+      .source-card strong { display:block; color:var(--text-primary); font-size:.9rem; margin-bottom:5px; }
+      .source-card span { color:var(--text-secondary); font-size:.82rem; line-height:1.5; }
+      .disclaimer-box { margin-top:24px; padding:14px 18px; border-left:3px solid var(--accent-gold); background:rgba(197,160,101,.07); border-radius:0 8px 8px 0; font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
+      @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
+      @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } .source-grid { grid-template-columns:1fr; } }
+    </style>
+  </Fragment>
+
+  <div class="content-container">
+    <div id="content-tr">
+      <header class="ct-head"><h1>Hakkında</h1></header>
+      <div class="ct-body">
+      <p>EarthquakeTrack, Türkiye ve dünya genelindeki depremleri anlık olarak izlemenizi sağlayan, tamamen ücretsiz bir web uygulamasıdır. Harita üzerinde görselleştirme, büyüklük ve zaman filtresi, konum bazlı sorgulama ve çoklu veri kaynağı desteği sunar.</p>
+      <h2>Neden geliştirdik?</h2>
+      <p>Türkiye, dünyanın en aktif sismik bölgelerinden birinde yer almaktadır. 1999 yılında yaşanan Kocaeli depremi ve 2023 Kahramanmaraş depremleri, güvenilir ve hızlı deprem bilgisine erişimin ne denli hayati olduğunu bir kez daha ortaya koymuştur. Mevcut kaynaklar dağınık, arayüzler ise çoğu zaman teknik kullanıcılara yöneliktir.</p>
+      <p>EarthquakeTrack'i hem teknik hem de teknik olmayan kullanıcıların kolayca okuyabileceği, mobil uyumlu, hızlı yüklenen ve reklamlardan arındırılmış bir platform olarak tasarladık.</p>
+      <h2>Nasıl çalışır?</h2>
+      <p>Uygulama, birden fazla güvenilir sismoloji kurumunun halka açık API'larından veri alır. Gelen veriler standart bir formata dönüştürülür ve ön bellekleme mekanizmaları aracılığıyla hızla kullanıcıya iletilir.</p>
+      <h2>Veri kaynakları</h2>
+      <div class="source-grid">
+        <div class="source-card"><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong><span>ABD Jeoloji Araştırmaları Kurumu. Dünya genelindeki büyük depremler için küresel referans kaynağı.</span></div>
+        <div class="source-card"><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a></strong><span>Avrupa-Akdeniz Sismoloji Merkezi. Avrupa ve Akdeniz bölgesine odaklanan önemli veri sağlayıcısı.</span></div>
+        <div class="source-card"><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Rasathanesi</a></strong><span>Boğaziçi Üniversitesi bünyesinde; Türkiye'deki depremleri en ayrıntılı izleyen kurumlardan biri.</span></div>
+        <div class="source-card"><strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong><span>Afet ve Acil Durum Yönetimi Başkanlığı. Türkiye'nin resmi deprem ve erken uyarı otoritesi.</span></div>
+      </div>
+      <h2>Veri doğruluğu hakkında</h2>
+      <p>Veri sağlayıcı kurumlar, büyük depremler için ilk büyüklük değerini genellikle 2–5 dakika içinde yayımlar. Ancak bu ön hesaplamalar birkaç dakika ile birkaç saat içinde revize edilebilir.</p>
+      <p>EarthquakeTrack, ham verileri yalnızca iletir ve görselleştirir. Olağanüstü durumlarda AFAD ve yerel yönetimlerin resmi açıklamalarını esas alınız.</p>
+      <h2>Özellikler</h2>
+      <ul>
+        <li><strong>Anlık harita görünümü:</strong> Tüm depremleri büyüklüklerine göre renkli noktalarla harita üzerinde görüntüleyin.</li>
+        <li><strong>Ülke ve şehir filtresi:</strong> İstediğiniz bölgeye odaklanın.</li>
+        <li><strong>Konum bazlı arama:</strong> Tarayıcı konum izni ile bulunduğunuz şehre anında odaklanın.</li>
+        <li><strong>Karanlık / aydınlık tema:</strong> Tercihlerinize göre görsel deneyimi özelleştirin.</li>
+        <li><strong>Türkçe / İngilizce dil desteği:</strong> Tüm arayüz ve içerik iki dilde sunulmaktadır.</li>
+        <li><strong>Tam mobil uyum:</strong> Akıllı telefon ve tablette rahat kullanım.</li>
+      </ul>
+      </div>
+    </div>
+    <div id="content-en" style="display:none;">
+      <header class="ct-head"><h1>About</h1></header>
+      <div class="ct-body">
+      <p>EarthquakeTrack is a completely free web application that allows you to monitor earthquakes in Turkey and around the world in real time.</p>
+      <h2>Why We Built It</h2>
+      <p>Turkey is located in one of the world's most active seismic regions. The 1999 Kocaeli and 2023 Kahramanmaraş earthquakes demonstrated how vital access to reliable, fast earthquake information is.</p>
+      <h2>How It Works</h2>
+      <p>The application retrieves data from the public APIs of multiple reliable seismology institutions, converts them to a standard format, and delivers them quickly through caching mechanisms.</p>
+      <h2>Data Sources</h2>
+      <div class="source-grid">
+        <div class="source-card"><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong><span>United States Geological Survey. The global reference source for major earthquakes worldwide.</span></div>
+        <div class="source-card"><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a></strong><span>Euro-Mediterranean Seismological Centre. An important data provider focused on Europe and the Mediterranean.</span></div>
+        <div class="source-card"><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Observatory</a></strong><span>Under Boğaziçi University; one of the institutions that most closely monitors earthquakes in Turkey.</span></div>
+        <div class="source-card"><strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong><span>Disaster and Emergency Management Authority. Turkey's official earthquake and early warning authority.</span></div>
+      </div>
+      </div>
+    </div>
+  </div>
+</PageLayout>

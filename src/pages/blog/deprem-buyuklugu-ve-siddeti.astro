@@ -1,0 +1,118 @@
+---
+import ArticleShell from '../../components/ArticleShell.astro';
+---
+<ArticleShell
+  title="Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli - EarthquakeTrack Blog"
+  description="Richter ölçeği, moment büyüklüğü (Mw) ve Mercalli şiddet ölçeği arasındaki farklar. 6 ile 7 büyüklüğündeki deprem arasında neden 32 kat enerji farkı var?"
+  canonical="https://earthquaketrack.com.tr/blog/deprem-buyuklugu-ve-siddeti.html"
+  heading="Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli"
+  date="25 Mayıs 2026"
+  readTime="7 Dk"
+  related={[
+    { href: '/blog/turkiye-deprem-tarihi.html', title: "Türkiye'nin Deprem Tarihi: 1939 Erzincan'dan 2023 Kahramanmaraş'a" },
+    { href: '/blog/turkiye-fay-hatlari-tehlikesi.html', title: "Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak" },
+    { href: '/blog/deprem-aninda-dogru-davranis.html', title: 'Deprem Anında Nerede Ne Yapmalı? Ortama Göre Doğru Davranış Rehberi' },
+  ]}
+>
+  <p>Her depremden sonra aynı tartışma yaşanır: AFAD 6,6 dedi, Kandilli 6,8 ölçtü, USGS 6,7 duyurdu — "hangisi doğru?" Ya da haberlerde "7 şiddetinde deprem" ifadesi geçer, oysa <strong>şiddet ve büyüklük tamamen farklı iki kavramdır</strong>. Bu yazıda deprem ölçümünün arkasındaki bilimi sade bir dille anlatıyor; Richter, moment büyüklüğü (Mw) ve Mercalli ölçeklerinin ne anlama geldiğini açıklıyoruz.</p>
+
+  <h2>Büyüklük (Magnitude): Depremin Kaynağındaki Enerji</h2>
+  <p>Büyüklük, depremin <strong>kaynağında açığa çıkan enerjiyi</strong> ifade eden tek bir sayıdır. Nerede ölçerseniz ölçün değişmez: 7,8 büyüklüğündeki Kahramanmaraş depremi, İstanbul'dan da Tokyo'dan da ölçülse 7,8'dir. Günümüzde sismologlar büyük depremler için Richter ölçeğini değil, onun modern halefi olan <strong>moment büyüklüğünü (Mw)</strong> kullanır; çünkü Richter ölçeği 7 üzerindeki depremlerde doygunluğa ulaşır ve enerjiyi olduğundan küçük gösterir.</p>
+
+  <p>Büyüklük ölçeğinin en yanıltıcı yanı <strong>logaritmik</strong> olmasıdır. Ölçekteki her 1 birimlik artış, yer hareketinde 10 kat, açığa çıkan enerjide ise yaklaşık <strong>32 kat</strong> artış demektir:</p>
+
+  <div class="mag-scale">
+    <div class="mag-row">
+      <span class="mag-label">M 4,0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:8%; background:linear-gradient(90deg,#5dc97a,#8fd99f);"></div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 5,0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:18%; background:linear-gradient(90deg,#a8c75a,#cdd97a);">32×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 6,0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:38%; background:linear-gradient(90deg,#d9b04a,#e6c96a);">1.000×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 7,0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:66%; background:linear-gradient(90deg,#e0884a,#e8a76a);">32.000×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 7,8</span>
+      <div class="mag-track"><div class="mag-bar" style="width:100%; background:linear-gradient(90deg,#dd5c5c,#e88080);">~500.000× (M 4'e göre)</div></div>
+    </div>
+  </div>
+  <p style="font-size:.82rem; color:var(--text-tertiary); margin-top:-16px;">Çubuklar, M 4,0'a kıyasla açığa çıkan enerjiyi logaritmik ölçekte temsil eder.</p>
+
+  <p>Yani 6 büyüklüğündeki bir deprem, 5 büyüklüğündeki depremin "biraz büyüğü" değil; <strong>32 katı enerji</strong> taşıyan bambaşka bir olaydır. 2023 Kahramanmaraş depremi (7,8), 1999 Gölcük depreminin (7,6) yaklaşık iki katı enerji açığa çıkarmıştır — sadece 0,2'lik farkla.</p>
+
+  <h2>Şiddet (Intensity): Depremin Yüzeydeki Etkisi</h2>
+  <p>Şiddet ise depremin <strong>belirli bir noktada hissedilen etkisini</strong> ölçer ve yerden yere değişir. Aynı deprem, merkez üssünde XI (on bir) şiddetinde yıkım yaratırken 300 km uzaktaki bir şehirde yalnızca IV (dört) şiddetinde, "avizelerin sallanması" düzeyinde hissedilebilir. Şiddet, Roma rakamlarıyla yazılan <strong>Değiştirilmiş Mercalli Ölçeği (MMI)</strong> ile I'den XII'ye kadar derecelendirilir:</p>
+
+  <table>
+    <thead>
+      <tr><th>Şiddet (MMI)</th><th>Hissedilen Etki</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>I – III</td><td>Çoğu insan hissetmez; hassas cihazlar kaydeder, asılı eşyalar hafifçe sallanır.</td></tr>
+      <tr><td>IV – V</td><td>Herkes hisseder; kapı ve pencereler takırdar, raflardan küçük eşyalar düşebilir.</td></tr>
+      <tr><td>VI – VII</td><td>Yürümek zorlaşır; sıvalar çatlar, zayıf yapılarda orta düzey hasar başlar.</td></tr>
+      <tr><td>VIII – IX</td><td>Panik geneldir; kalitesiz binalarda ağır hasar ve kısmi çökmeler görülür.</td></tr>
+      <tr><td>X – XII</td><td>Yaygın yıkım; sağlam yapılar bile hasar alır, zeminde kalıcı deformasyon oluşur.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p>"7 şiddetinde deprem oldu" ifadesi teknik olarak yanlıştır. Doğrusu: <strong>"7 büyüklüğünde"</strong> deprem olur; şiddet ise her yerleşimde farklı ölçülür ve Roma rakamıyla yazılır.</p>
+  </div>
+
+  <h2>Aynı Deprem, Neden Farklı Büyüklükler?</h2>
+  <p>Deprem sonrası AFAD, Kandilli ve USGS'in farklı değerler açıklaması bir hata değil, yöntem farkıdır:</p>
+  <ul>
+    <li><strong>Farklı ölçek türleri:</strong> Kurumlardan biri yerel büyüklük (ML), diğeri moment büyüklüğü (Mw) yayınlıyor olabilir. İki ölçek aynı deprem için doğal olarak farklı sayılar üretir.</li>
+    <li><strong>Farklı istasyon ağları:</strong> Her kurum kendi sismometre ağının verisini kullanır; depreme uzaklık ve istasyon dağılımı sonucu etkiler.</li>
+    <li><strong>İlk dakikalar tahminidir:</strong> Otomatik sistemlerin ilk duyurduğu değer, analistler veriyi inceledikçe güncellenir. Büyük depremlerde kesinleşmiş büyüklük saatler sonra netleşebilir.</li>
+  </ul>
+
+  <h2>Hasarı Belirleyen Sadece Büyüklük Değil</h2>
+  <p>Bir depremin yıkıcılığını dört ana faktör birlikte belirler:</p>
+
+  <div class="vis-grid">
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l3-9 4 18 3-9h3"/><circle cx="20" cy="12" r="2"/></svg>
+      </div>
+      <h3>Büyüklük ve Süre</h3>
+      <p>Açığa çıkan toplam enerji ve sarsıntının kaç saniye sürdüğü. Uzun süreli sarsıntı, yapıları yorularak göçertir.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M12 18v4"/><circle cx="12" cy="14" r="4"/></svg>
+      </div>
+      <h3>Odak Derinliği</h3>
+      <p>Sığ depremler (0–20 km) enerjiyi yüzeye çok daha güçlü iletir. Türkiye'deki yıkıcı depremlerin çoğu sığ odaklıdır.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M3 22V8l4-2v16"/><path d="M10 22V4l4-2v20"/><path d="M17 22V9l4 2v11"/></svg>
+      </div>
+      <h3>Zemin Koşulları</h3>
+      <p>Alüvyon ve dolgu zeminler sarsıntıyı büyütür (zemin büyütmesi). 2020 İzmir depreminde Bayraklı'daki yıkımın ana nedeni buydu.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      </div>
+      <h3>Yapı Kalitesi</h3>
+      <p>En belirleyici faktör. Aynı şiddete maruz kalan iki binadan yönetmeliğe uygun olanı ayakta kalır, denetimsiz olanı çöker.</p>
+    </div>
+  </div>
+
+  <h2>Canlı Veride Bu Sayıları Okumak</h2>
+  <p><a href="/index.html">EarthquakeTrack canlı haritasında</a> gördüğünüz her kaydın yanındaki sayı, ilgili kurumun (USGS, Kandilli, EMSC) duyurduğu <strong>büyüklük</strong> değeridir. Haritadaki dairelerin boyutu ve rengi de büyüklüğe göre ölçeklenir. Aynı depremi farklı kaynaklarda küçük farklarla görmeniz, yukarıda anlattığımız yöntem farklarından kaynaklanır — ikisi de "doğrudur".</p>
+
+  <h2>Sonuç</h2>
+  <p>Özetle: <strong>büyüklük depremin kimliği, şiddet ise sizin yaşadığınız deneyimdir</strong>. Büyüklük tek bir sayıdır ve kaynaktaki enerjiyi anlatır; şiddet yerden yere değişir ve yapı kalitesiyle zemin koşullarına göre şekillenir. Bu ayrımı bilmek, deprem haberlerini doğru okumanın ve riskinizi gerçekçi değerlendirmenin ilk adımıdır.</p>
+</ArticleShell>

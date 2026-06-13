@@ -1,0 +1,247 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="Deprem Blogu ve Haberler - EarthquakeTrack"
+  description="Deprem hakkında güncel haberler, fay hatları incelemeleri, depreme hazırlık rehberleri ve uzman görüşleri. EarthquakeTrack Blog."
+  canonical="https://earthquaketrack.com.tr/blog.html"
+  activePage="blog"
+>
+  <Fragment slot="head">
+    <style is:global>
+      .edu-shell { display:flex; flex-direction:column; min-height:100%; }
+      .edu-header { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .edu-header h1 { margin:0 0 12px; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .edu-lead { margin:0; color:var(--text-secondary); font-size:.97rem; max-width:70ch; line-height:1.65; }
+      .edu-body { padding:28px 48px 56px; flex:1; }
+      /* Tabs */
+      .blog-tabs { display:flex; gap:8px; margin-bottom:24px; }
+      .blog-tab-btn { padding:9px 20px; border:1px solid var(--border-color); border-radius:8px; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:.9rem; font-weight:500; transition:all .15s; font-family:inherit; white-space:nowrap; }
+      .blog-tab-btn.active { background:var(--accent-gold); color:#000; border-color:var(--accent-gold); font-weight:600; }
+      .blog-tab-btn:hover:not(.active) { border-color:rgba(197,160,101,.5); color:var(--text-primary); }
+      /* Tab panels */
+      .tab-content { display:none; }
+      .tab-content.active { display:block; }
+      #tab-articles.tab-content.active { display:block; }
+      #tab-articles #content-tr, #tab-articles #content-en { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+      /* Blog cards */
+      .blog-post-card { display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:12px; padding:22px; background:var(--surface-card,var(--card-bg)); transition:border-color .2s,box-shadow .2s,transform .15s; text-decoration:none; color:inherit; }
+      .blog-post-card:hover { border-color:rgba(197,160,101,.45); box-shadow:0 6px 24px rgba(0,0,0,.14); transform:translateY(-3px); }
+      .blog-post-card h2 { margin:0 0 10px; font-size:1.05rem; font-weight:600; color:var(--text-primary); line-height:1.4; }
+      .blog-post-card p { margin:0 0 14px; color:var(--text-secondary); font-size:.9rem; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; flex:1; }
+      .blog-post-meta { display:flex; align-items:center; gap:12px; font-size:.78rem; color:var(--text-tertiary); margin-top:auto; }
+      .blog-post-meta span { display:inline-flex; align-items:center; gap:5px; }
+      .blog-post-meta svg { width:13px; height:13px; fill:currentColor; }
+      /* News container reset */
+      #news-container { display: block !important; }
+      /* ── News: hero + side stack ── */
+      .news-wrap { display:grid; grid-template-columns:1fr 290px; gap:12px; margin-bottom:14px; }
+      .news-hero {
+        position:relative; display:block; border-radius:14px; overflow:hidden;
+        text-decoration:none; color:inherit; min-height:280px;
+        transition:transform .2s,box-shadow .2s;
+      }
+      .news-hero:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,0,0,.35); }
+      .news-hero-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+      .news-hero-overlay {
+        position:absolute; inset:0;
+        background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.08) 100%);
+      }
+      .news-hero-body {
+        position:relative; z-index:1; display:flex; flex-direction:column;
+        justify-content:flex-end; padding:24px 26px; min-height:280px;
+      }
+      .news-hero-source { font-size:.67rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-gold); margin-bottom:8px; }
+      .news-hero-title { margin:0 0 10px; font-size:clamp(1.05rem,1.8vw,1.3rem); font-weight:700; line-height:1.35; color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.6); }
+      .news-hero-time { font-size:.72rem; color:rgba(255,255,255,.6); }
+      .news-hero-ext {
+        position:absolute; top:12px; right:12px; width:28px; height:28px;
+        background:rgba(255,255,255,.14); backdrop-filter:blur(6px);
+        border-radius:50%; display:flex; align-items:center; justify-content:center;
+        color:rgba(255,255,255,.85);
+      }
+      /* ── Side stack ── */
+      .news-side { display:flex; flex-direction:column; gap:8px; }
+      .news-side-card {
+        display:flex; gap:10px; padding:11px; flex:1;
+        border:1px solid var(--border-color); border-radius:10px;
+        background:var(--card-bg); text-decoration:none; color:inherit;
+        transition:border-color .18s,background .18s;
+      }
+      .news-side-card:hover { border-color:rgba(197,160,101,.45); background:color-mix(in srgb,var(--border-color) 20%,transparent); }
+      .news-side-img { width:68px; height:68px; border-radius:7px; background-size:cover; background-position:center; flex-shrink:0; }
+      .news-side-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+      .news-side-source { font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-gold); }
+      .news-side-title { font-size:.84rem; font-weight:600; line-height:1.4; color:var(--text-primary); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+      .news-side-time { font-size:.7rem; color:var(--text-tertiary); margin-top:auto; }
+      /* ── Mid grid (4 even columns) ── */
+      .news-mid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
+      .news-mid-card {
+        display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:10px;
+        background:var(--card-bg); overflow:hidden; text-decoration:none; color:inherit;
+        transition:transform .2s,border-color .2s,box-shadow .18s;
+      }
+      .news-mid-card:hover { transform:translateY(-2px); border-color:rgba(197,160,101,.45); box-shadow:0 6px 20px rgba(0,0,0,.16); }
+      .news-mid-img { height:104px; background-size:cover; background-position:center; flex-shrink:0; }
+      .news-mid-body { padding:10px 11px; flex:1; display:flex; flex-direction:column; gap:4px; }
+      .news-mid-source { font-size:.63rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-gold); }
+      .news-mid-title { font-size:.82rem; font-weight:600; line-height:1.4; color:var(--text-primary); flex:1; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+      .news-mid-time { font-size:.68rem; color:var(--text-tertiary); }
+      /* ── Compact list ── */
+      .news-list { display:flex; flex-direction:column; }
+      .news-list-item {
+        display:flex; align-items:flex-start; gap:10px; padding:11px 0;
+        border-bottom:1px solid var(--border-color); text-decoration:none; color:inherit;
+      }
+      .news-list-item:last-child { border-bottom:none; }
+      .news-list-item:hover .news-list-title { color:var(--accent-gold); }
+      .news-list-dot { flex-shrink:0; width:5px; height:5px; border-radius:50%; background:var(--accent-gold); margin-top:8px; }
+      .news-list-body { flex:1; min-width:0; }
+      .news-list-source { font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-gold); margin-bottom:3px; }
+      .news-list-title { font-size:.88rem; font-weight:500; line-height:1.45; color:var(--text-primary); transition:color .15s; }
+      .news-list-time { font-size:.7rem; color:var(--text-tertiary); flex-shrink:0; white-space:nowrap; padding-top:5px; }
+      .news-loading { padding:40px; text-align:center; color:var(--text-secondary); font-size:.95rem; }
+      @media (max-width:900px) {
+        .news-wrap { grid-template-columns:1fr; }
+        .news-mid { grid-template-columns:repeat(2,1fr); }
+        .edu-header { padding:24px 28px 20px; }
+        .edu-body { padding:20px 28px 40px; }
+      }
+      @media (max-width:600px) {
+        .news-mid { grid-template-columns:1fr; }
+        .news-wrap { gap:8px; }
+        .edu-header { padding:20px 16px 16px; }
+        .edu-body { padding:16px; }
+        #tab-articles #content-tr, #tab-articles #content-en { grid-template-columns:1fr; gap:12px; }
+        .blog-tab-btn { padding:8px 14px; font-size:.82rem; }
+        .blog-post-card { padding:16px; }
+      }
+    </style>
+  </Fragment>
+
+  <div class="edu-shell">
+    <header class="edu-header">
+      <h1 data-i18n="blogTitle">Deprem Blogu &amp; Haberler</h1>
+      <p class="edu-lead" data-i18n="blogLead">Sismoloji, deprem hazırlıkları, fay hattı analizleri ve güvende kalmanız için ihtiyaç duyduğunuz tüm güncel ve detaylı makaleler.</p>
+    </header>
+    <div class="edu-body">
+      <div class="blog-tabs">
+        <button class="blog-tab-btn active" data-target="tab-articles" data-i18n="blogTabArticles">Makaleler</button>
+        <button class="blog-tab-btn" data-target="tab-news" data-i18n="blogTabNews">Son Dakika Haberleri</button>
+      </div>
+      <div id="tab-articles" class="tab-content active">
+        <!-- ── TÜRKÇE makaleler ── -->
+        <div id="content-tr">
+          <a href="/blog/deprem-sonrasi-ilk-24-saat.html" class="blog-post-card">
+            <h2>Deprem Sonrası İlk 24 Saat: Saat Saat Hayatta Kalma Yol Haritası</h2>
+            <p>Sarsıntı durduğunda asıl sınav başlar. İlk 2 dakikadan 24 saate kadar tahliye, haberleşme, artçılar ve güvenli barınma için adım adım görsel yol haritası.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Rehber</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>13 Haziran 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-aninda-dogru-davranis.html" class="blog-post-card">
+            <h2>Deprem Anında Nerede Ne Yapmalı? Ortama Göre Davranış Rehberi</h2>
+            <p>Deprem sizi evde, yatakta, okulda, araçta veya AVM'de yakalarsa ne yapmalısınız? Çök-Kapan-Tutun tekniği ve yedi farklı ortam için doğru davranış kalıpları.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Rehber</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>8 Haziran 2026</span>
+            </div>
+          </a>
+          <a href="/blog/turkiye-deprem-tarihi.html" class="blog-post-card">
+            <h2>Türkiye'nin Deprem Tarihi: 1939 Erzincan'dan 2023 Kahramanmaraş'a</h2>
+            <p>Türkiye'yi şekillendiren büyük depremlerin zaman çizelgesi: her felaketin ardından değişen yönetmelikler ve bir asırlık deprem tarihinden çıkarılan üç büyük ders.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Analiz</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>1 Haziran 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-buyuklugu-ve-siddeti.html" class="blog-post-card">
+            <h2>Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli</h2>
+            <p>6 ile 7 büyüklüğündeki deprem arasında neden 32 kat enerji farkı var? Kurumlar aynı deprem için neden farklı değerler açıklıyor? Deprem ölçümünün bilimi.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Bilim</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>25 Mayıs 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-cantasi-hayat-kurtarir.html" class="blog-post-card">
+            <h2>Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)</h2>
+            <p>Olası bir deprem anında ilk 72 saat hayati önem taşır. Evinizde, iş yerinizde ve aracınızda bulundurmanız gereken acil durum çantası malzemeleri ve hayat kurtaran ipuçları.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Rehber</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>16 Mayıs 2026</span>
+            </div>
+          </a>
+          <a href="/blog/turkiye-fay-hatlari-tehlikesi.html" class="blog-post-card">
+            <h2>Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak</h2>
+            <p>Kuzey Anadolu, Doğu Anadolu ve Batı Anadolu fay hatlarının güncel sismik durumları. Uzman sismologların uyarıları ve bölgesel deprem risk analizleri.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Analiz</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>10 Mayıs 2026</span>
+            </div>
+          </a>
+        </div>
+        <!-- ── ENGLISH articles ── -->
+        <div id="content-en" style="display:none">
+          <a href="/blog/deprem-sonrasi-ilk-24-saat.html" class="blog-post-card">
+            <h2>The First 24 Hours After an Earthquake: An Hour-by-Hour Survival Roadmap</h2>
+            <p>When shaking stops, the real challenge begins. A step-by-step visual roadmap covering evacuation, communication, aftershocks, and safe shelter from the first 2 minutes through 24 hours.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Guide</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>Jun 13, 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-aninda-dogru-davranis.html" class="blog-post-card">
+            <h2>What to Do During an Earthquake? A Behavior Guide by Environment</h2>
+            <p>Caught at home, in bed, at school, in your car, or in a shopping mall? Drop-Cover-Hold On techniques and the right behavior patterns for seven different environments.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Guide</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>Jun 8, 2026</span>
+            </div>
+          </a>
+          <a href="/blog/turkiye-deprem-tarihi.html" class="blog-post-card">
+            <h2>Turkey's Earthquake History: From 1939 Erzincan to the 2023 Kahramanmaraş Disaster</h2>
+            <p>A timeline of the major earthquakes that shaped Turkey: building codes revised after each disaster and three key lessons drawn from a century of seismic history.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Analysis</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>Jun 1, 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-buyuklugu-ve-siddeti.html" class="blog-post-card">
+            <h2>Earthquake Magnitude vs. Intensity Are Not the Same: Richter, Mw, and Mercalli</h2>
+            <p>Why is there 32× more energy between a M6 and M7 earthquake? Why do agencies report different values for the same quake? The science of measuring earthquakes.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Science</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>May 25, 2026</span>
+            </div>
+          </a>
+          <a href="/blog/deprem-cantasi-hayat-kurtarir.html" class="blog-post-card">
+            <h2>Why Does an Earthquake Kit Save Lives? (Detailed Preparedness Guide)</h2>
+            <p>The first 72 hours after a disaster are critical. Emergency supplies to keep at home, at work, and in your vehicle — plus life-saving tips.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Guide</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>May 16, 2026</span>
+            </div>
+          </a>
+          <a href="/blog/turkiye-fay-hatlari-tehlikesi.html" class="blog-post-card">
+            <h2>Turkey's Active Fault Lines: Understanding the NAF, EAF, and West Anatolian Systems</h2>
+            <p>Current seismic status of the North Anatolian, East Anatolian, and West Anatolian fault systems. Expert seismologist warnings and regional earthquake risk analyses.</p>
+            <div class="blog-post-meta">
+              <span><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Analysis</span>
+              <span><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>May 10, 2026</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div id="tab-news" class="tab-content">
+        <div id="news-container" class="news-grid">
+          <div class="news-loading" data-i18n="newsLoading">Güncel deprem haberleri yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Fragment slot="scripts">
+    <script is:inline type="module">import('/js/news.js');</script>
+  </Fragment>
+</PageLayout>

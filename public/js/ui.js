@@ -1,5 +1,21 @@
 import { t, localizeLocation, getCountryDisplayName, getCurrentLang } from './language.js';
 
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function computeMinimizedHeight(sidebar) {
+    const logoArea = document.querySelector('.logo-area');
+    const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
+    const resizer = document.getElementById('sidebar-resizer');
+    const resizerHeight = resizer ? resizer.offsetHeight : 0;
+    const styles = window.getComputedStyle(sidebar);
+    const paddingBottom = parseFloat(styles.paddingBottom) || 0;
+    const paddingTop = parseFloat(styles.paddingTop) || 0;
+    return Math.max(paddingTop + logoHeight + resizerHeight + paddingBottom, 56);
+}
+
 let currentQuakes = []; // Store data internally to avoid stale closures
 let currentCountryFilter = '';
 let currentCityFilter = '';
@@ -106,13 +122,16 @@ export function initLocationSelector(earthquakes, mapInstance) {
     refreshCities();
 
     const countryClone = countrySelect.cloneNode(true);
+    countryClone.value = currentCountryFilter;
     const cityClone = citySelect.cloneNode(true);
+    cityClone.value = currentCityFilter;
     countrySelect.replaceWith(countryClone);
     citySelect.replaceWith(cityClone);
 
     countryClone.addEventListener('change', (e) => {
         currentCountryFilter = countryClone.value;
         currentCityFilter = '';
+        try { sessionStorage.setItem('eq_location_filter', JSON.stringify({ country: countryClone.value, city: '' })); } catch {}
         const fresh = buildLocationOptions(currentQuakes);
         cityClone.innerHTML = `<option value="">${t('allCities')}</option>`;
         if (countryClone.value === 'Turkey') {
@@ -137,6 +156,7 @@ export function initLocationSelector(earthquakes, mapInstance) {
 
     cityClone.addEventListener('change', (e) => {
         currentCityFilter = cityClone.value;
+        try { sessionStorage.setItem('eq_location_filter', JSON.stringify({ country: countryClone.value, city: cityClone.value })); } catch {}
         updateSidebar(currentQuakes, mapInstance);
         const fresh = buildLocationOptions(currentQuakes);
         const shouldFocusMap = typeof e.isTrusted !== 'boolean' || e.isTrusted;
@@ -157,6 +177,7 @@ const DEFAULT_MAP_ZOOM = 6;
 export function resetLocationFiltersAndMap(mapInstance) {
     currentCountryFilter = '';
     currentCityFilter = '';
+    try { sessionStorage.removeItem('eq_location_filter'); } catch {}
     const countrySelect = document.getElementById('country-select');
     if (countrySelect) {
         countrySelect.value = '';
@@ -222,7 +243,7 @@ export function showSidebarError(message) {
     listContainer.innerHTML = `
         <div class="error-state" style="padding: 20px; text-align: center; color: var(--text-secondary);">
             <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
-            <p>${message || t('error_data_access')}</p>
+            <p>${esc(message || t('error_data_access'))}</p>
             <p style="font-size: 12px; margin-top: 5px;">${t('error_check_connection')}</p>
         </div>
     `;
@@ -263,14 +284,11 @@ export function updateSidebar(earthquakes, mapInstance) {
         const card = document.createElement('div');
         card.className = 'quake-card';
         card.innerHTML = `
-            <div class="card-header">
-                <span class="source-badge">${quake.source}</span>
-                <span class="mag-badge ${magClass}">M ${mag}</span>
-            </div>
-            <div class="card-location">📍 ${localizeLocation(quake.place)}</div>
+            <span class="mag-badge ${magClass}">M ${mag}</span>
+            <span class="card-location">${esc(localizeLocation(quake.place))}</span>
             <div class="card-stats">
-                <span>🕒 ${timeStr}</span>
-                <span>${t('depth')}: ${Math.max(0, quake.depth)}km</span>
+                <span>${timeStr}</span>
+                <span>${Math.max(0, quake.depth)}km</span>
             </div>
         `;
 
@@ -279,6 +297,13 @@ export function updateSidebar(earthquakes, mapInstance) {
                 animate: true,
                 duration: 1.5
             });
+
+            // Odaklanma bitince popup'ı otomatik aç
+            if (quake.marker) {
+                mapInstance.once('moveend', () => {
+                    quake.marker.openPopup();
+                });
+            }
 
             // Auto-close sidebar on mobile
             if (window.innerWidth <= 768) {
@@ -308,61 +333,118 @@ export function initSidebarResize(mapInstance) {
      * `handleMove` used to set `isExpanded` from drag math without updating `.minimized`, so the next
      * toggle could run the wrong branch and leave `.minimized` stuck (footer stays `display:none`).
      */
-    const toggleSidebar = () => {
-        if (window.innerWidth > 768) return; // Only for mobile
+    const mobileBreak = mapInstance ? 768 : 600;
 
+    // Backdrop overlay. On Astro ClientRouter navigations the <body> is swapped and elements not
+    // marked transition:persist are dropped — so a cached backdrop detaches while the persisted
+    // sidebar (and this closure) live on. Recreate + rebind on demand instead of caching once.
+    const ensureBackdrop = () => {
+        let bd = document.querySelector('.sidebar-backdrop');
+        if (!bd) {
+            bd = document.createElement('div');
+            bd.className = 'sidebar-backdrop';
+            bd.addEventListener('click', () => {
+                if (!sidebar.classList.contains('minimized')) toggleSidebar();
+            });
+            document.body.appendChild(bd);
+        }
+        return bd;
+    };
+
+    const toggleSidebar = () => {
+        if (window.innerWidth > mobileBreak) return;
+
+        const backdrop = ensureBackdrop();
         const isCollapsed = sidebar.classList.contains('minimized');
 
         if (!isCollapsed) {
-            // Minimize: only logo-area + handle visible, fixed at viewport bottom (safe-area aware).
-            // Apply .minimized before measuring padding — expanded state uses padding-bottom fallback (e.g. 20px)
-            // which must not be baked into the collapsed bar height or content sits high with empty space below.
+            // Animasyon başlangıç yüksekliğini al
+            const startHeight = sidebar.offsetHeight;
+
             sidebar.classList.add('minimized');
             sidebar.style.position = 'fixed';
             sidebar.style.bottom = '0';
             sidebar.style.left = '0';
             sidebar.style.right = '0';
             sidebar.style.width = '100%';
-            sidebar.style.height = 'auto';
             sidebar.style.flex = 'none';
             sidebar.style.overflow = 'hidden';
 
-            mainContent.style.height = 'auto';
+            mainContent.style.height = '';
             mainContent.style.flex = '1';
 
-            const applyCollapsedHeight = () => {
-                const logoArea = document.querySelector('.logo-area');
-                const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
-                const resizerHeight = resizer.offsetHeight;
-                const sidebarStyles = window.getComputedStyle(sidebar);
-                const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
-                const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
-                const totalHeight = paddingTop + logoHeight + resizerHeight + paddingBottom;
-                sidebar.style.height = `${totalHeight}px`;
-                mainContent.style.paddingBottom = `${totalHeight}px`;
-            };
+            const targetHeight = computeMinimizedHeight(sidebar);
 
-            requestAnimationFrame(() => {
-                requestAnimationFrame(applyCollapsedHeight);
-            });
+            // Yüksekliği sabit tut, sonra hesaplanan hedef yüksekliğe anime et
+            sidebar.style.height = `${startHeight}px`;
+
+            // Tarayıcıya layout'u tekrar hesaplat (Animasyonun tetiklenmesi için)
+            sidebar.offsetHeight;
+
+            sidebar.style.height = `${targetHeight}px`;
+            mainContent.style.paddingBottom = `${targetHeight}px`;
+            // Ensure main content fills the space above minimized sidebar
+            mainContent.style.minHeight = `calc(100dvh - ${targetHeight}px)`;
+
+            // Hide backdrop
+            backdrop.classList.remove('visible');
+            setTimeout(() => { backdrop.style.display = 'none'; }, 260);
+
         } else {
-            // Maximize (default open): clear .minimized first so footer display:none rules drop immediately.
+            // Animasyon başlangıç yüksekliğini al
+            const startHeight = sidebar.offsetHeight;
+
             sidebar.classList.remove('minimized');
             sidebar.style.position = '';
             sidebar.style.bottom = '';
             sidebar.style.left = '';
             sidebar.style.right = '';
             sidebar.style.width = '';
-            sidebar.style.height = '75vh';
             sidebar.style.flex = 'none';
             sidebar.style.overflow = '';
 
-            mainContent.style.height = '25vh';
-            mainContent.style.flex = 'none';
+            // If it's a map page, we use 25vh for map, otherwise for static pages we might want it full?
+            // Actually, for map index.html, mainContent is the map.
+            // For others, it's the scrollable content.
+            const isMapPage = document.getElementById('map') !== null;
+            mainContent.style.minHeight = '0';
+            if (isMapPage) {
+                mainContent.style.height = '25dvh';
+                mainContent.style.flex = 'none';
+            } else {
+                mainContent.style.height = 'auto';
+                mainContent.style.flex = '1';
+            }
+
             mainContent.style.paddingBottom = '';
+
+            // Yüksekliği sabit tut, sonra 75vh'ye anime et
+            sidebar.style.height = `${startHeight}px`;
+
+            // Tarayıcıya layout'u tekrar hesaplat
+            sidebar.offsetHeight;
+
+            sidebar.style.height = '75dvh';
+
+            // Show backdrop
+            backdrop.style.display = 'block';
+            requestAnimationFrame(() => backdrop.classList.add('visible'));
         }
-        setTimeout(() => mapInstance.invalidateSize(), 320); // After height transition (~240ms) + buffer
+        setTimeout(() => {
+            if (mapInstance) mapInstance.invalidateSize();
+        }, 320); // After height transition (~240ms) + buffer
     };
+
+    // Tap anywhere on minimized bar to expand (backdrop click closes — wired in ensureBackdrop)
+    sidebar.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('minimized')) return;
+        if (window.innerWidth > mobileBreak) return;
+        if (e.target.closest('#sidebar-resizer, button, a, select, input')) return;
+        toggleSidebar();
+    });
+
+    // Prevent resizer tap from double-triggering the sidebar click handler above
+    resizer.addEventListener('click', (e) => e.stopPropagation());
 
     // Mouse Events (Desktop)
     resizer.addEventListener('mousedown', (e) => {
@@ -372,7 +454,7 @@ export function initSidebarResize(mapInstance) {
         resizer.classList.add('resizing');
         document.body.style.userSelect = 'none';
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= mobileBreak) {
             document.body.style.cursor = 'row-resize';
         } else {
             document.body.style.cursor = 'col-resize';
@@ -393,7 +475,7 @@ export function initSidebarResize(mapInstance) {
     const handleMove = (clientX, clientY) => {
         if (!isResizing) return;
 
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= mobileBreak) {
             // Mobile: Vertical Resize — only when the sheet is expanded (not `.minimized`).
             // Dragging while collapsed would fight toggleSidebar() and desync footer visibility.
             if (sidebar.classList.contains('minimized')) {
@@ -428,7 +510,7 @@ export function initSidebarResize(mapInstance) {
             sidebar.style.width = `${newWidth}px`;
         }
 
-        mapInstance.invalidateSize();
+        if (mapInstance) mapInstance.invalidateSize();
     };
 
     const handleEnd = (e) => {
@@ -438,7 +520,7 @@ export function initSidebarResize(mapInstance) {
             if (
                 pointerDownOnResizer &&
                 Math.abs(clientY - startY) < 5 &&
-                window.innerWidth <= 768
+                window.innerWidth <= mobileBreak
             ) {
                 toggleSidebar();
             }
@@ -448,7 +530,7 @@ export function initSidebarResize(mapInstance) {
             resizer.classList.remove('resizing');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
-            mapInstance.invalidateSize();
+            if (mapInstance) mapInstance.invalidateSize();
         }
     };
 
@@ -466,8 +548,9 @@ export function initSidebarResize(mapInstance) {
     // Mobile Toggle Icon Click
     const mobileToggleIcon = document.getElementById('mobile-toggle-icon');
     if (mobileToggleIcon) {
-        mobileToggleIcon.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
+        mobileToggleIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= mobileBreak) {
                 toggleSidebar();
             }
         });
@@ -482,14 +565,64 @@ export function initSidebarToggle(mapInstance) {
     // .sidebar.rail-mode .sidebar-footer { display:none } cannot hide the footer after resize from tablet.
     const checkResponsiveSidebar = () => {
         const w = window.innerWidth;
-        if (w <= 768) {
+        const mobileBreak = mapInstance ? 768 : 600;
+        if (w <= mobileBreak) {
             sidebar.classList.remove('rail-mode');
-        } else if (w >= 769 && w <= 1200) {
-            sidebar.classList.add('rail-mode');
-        } else if (w > 1200) {
-            sidebar.classList.remove('rail-mode');
+            
+            // Set initial mobile state: minimized by default
+            if (!sidebar.dataset.initMobile) {
+                sidebar.classList.add('minimized');
+
+                const targetHeight = computeMinimizedHeight(sidebar);
+                
+                sidebar.style.position = 'fixed';
+                sidebar.style.bottom = '0';
+                sidebar.style.left = '0';
+                sidebar.style.right = '0';
+                sidebar.style.width = '100%';
+                sidebar.style.height = `${targetHeight}px`;
+                sidebar.style.flex = 'none';
+                
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent) {
+                    mainContent.style.paddingBottom = `${targetHeight}px`;
+                    mainContent.style.minHeight = `calc(100dvh - ${targetHeight}px)`;
+                    mainContent.style.flex = '1';
+                }
+                
+                sidebar.dataset.initMobile = 'true';
+            }
+        } else {
+            // Desktop reset
+            sidebar.style.position = '';
+            sidebar.style.bottom = '';
+            sidebar.style.left = '';
+            sidebar.style.right = '';
+            sidebar.style.width = '';
+            sidebar.style.height = '';
+            sidebar.style.flex = '';
+            
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.style.paddingBottom = '';
+                mainContent.style.minHeight = '';
+                mainContent.style.height = '';
+            }
+            
+            sidebar.classList.remove('minimized');
+            if (sidebar.dataset.initMobile) {
+                delete sidebar.dataset.initMobile;
+            }
+
+            if (w > mobileBreak && w <= 1200) {
+                sidebar.classList.add('rail-mode');
+            } else {
+                sidebar.classList.remove('rail-mode');
+            }
         }
-        setTimeout(() => mapInstance.invalidateSize(), 300);
+        setTimeout(() => {
+            if (mapInstance) mapInstance.invalidateSize();
+        }, 300);
     };
 
     // Initial check
@@ -505,10 +638,27 @@ export function initSidebarToggle(mapInstance) {
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('rail-mode');
             setTimeout(() => {
-                mapInstance.invalidateSize();
+                if (mapInstance) mapInstance.invalidateSize();
             }, 300);
         });
     }
+
+    // Click anywhere on collapsed sidebar to expand
+    sidebar.addEventListener('click', (e) => {
+        if (!sidebar.classList.contains('rail-mode')) return;
+        if (e.target.closest('a') || e.target.closest('#sidebar-toggle-btn')) return;
+        sidebar.classList.remove('rail-mode');
+        setTimeout(() => {
+            if (mapInstance) mapInstance.invalidateSize();
+        }, 300);
+    });
+
+    // On Astro ClientRouter navigation the sidebar persists (transition:persist) but the page
+    // content changes — reset the mobile init guard so checkResponsiveSidebar re-runs.
+    document.addEventListener('astro:page-load', () => {
+        delete sidebar.dataset.initMobile;
+        checkResponsiveSidebar();
+    });
 }
 
 
@@ -609,7 +759,7 @@ export function renderDashboard(earthquakes, mapInstance) {
         maxCard.title = 'Haritada Göster'; // Tooltip
         maxCard.innerHTML = `
             <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">${t('largest_earthquake')}</div>
-            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${localizeLocation(maxQuake.place)}</div>
+            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${esc(localizeLocation(maxQuake.place))}</div>
             <div style="margin-top:5px; font-size:12px; color:var(--text-tertiary);">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
         `;
 
@@ -664,7 +814,7 @@ export function renderLocations(earthquakes, mapInstance) {
         item.style.padding = '12px';
 
         item.innerHTML = `
-            <span class="text-truncate" style="font-weight:500; color:var(--text-primary); flex:1; margin-right:10px;">${region}</span>
+            <span class="text-truncate" style="font-weight:500; color:var(--text-primary); flex:1; margin-right:10px;">${esc(region)}</span>
             <span class="badge">${data.count}</span>
         `;
 

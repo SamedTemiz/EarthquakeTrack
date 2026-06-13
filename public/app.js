@@ -4,6 +4,10 @@ import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarth
 import { initLanguage, toggleLanguage } from './js/language.js';
 import { initTheme } from './js/theme.js';
 import { initModal } from './js/modal.js';
+import { initRouter, showMap } from './js/router.js?v=2';
+
+// Save site root before any pushState changes it
+window._routerBase = location.origin + location.pathname.replace(/[^/]*$/, '');
 
 let globalEarthquakes = [];
 let globalMap = null;
@@ -108,7 +112,33 @@ async function initApp() {
         // 3. Initial Fetch
         await refreshData();
 
-        // 4. Init Tabs (Initial)
+        // Focus earthquake if navigated from a content page sidebar card
+        const focusJson = sessionStorage.getItem('eq_focus');
+        if (focusJson) {
+            sessionStorage.removeItem('eq_focus');
+            try {
+                const { lat, lon } = JSON.parse(focusJson);
+                if (typeof lat === 'number' && typeof lon === 'number') {
+                    map.flyTo([lat, lon], 10, { animate: true, duration: 1.5 });
+                    const matched = globalEarthquakes.find(q =>
+                        Math.abs(q.lat - lat) < 0.001 && Math.abs(q.lon - lon) < 0.001
+                    );
+                    if (matched?.marker) {
+                        map.once('moveend', () => matched.marker.openPopup());
+                    }
+                }
+            } catch {}
+        }
+
+        // 4. Init SPA Router (early — must run before tabs so nav links are intercepted)
+        initRouter();
+
+        // When icon-nav (map views) clicked, show map and hide content panel
+        document.querySelectorAll('.main-nav ul.icon-nav li').forEach(li => {
+            li.addEventListener('click', () => showMap());
+        });
+
+        // 5. Init Tabs (Initial)
         initTabs(globalEarthquakes, map);
 
         // On load: if we have saved location, set country selector from it (after options exist — same for mobile and web)
@@ -153,8 +183,13 @@ async function initApp() {
                 updateTitle();
                 refreshCooldownIntervalId = setInterval(updateTitle, 1000);
             }
-            // Manual refresh: clear country/city filters and reset map focus, then fetch fresh data.
-            resetLocationFiltersAndMap(map);
+            // Only reset location filter and recenter map when the map view is visible.
+            // When in a content view (SPA panel open), preserve the active country filter.
+            const mapContainer = document.getElementById('map-container');
+            const isMapVisible = mapContainer && mapContainer.style.display !== 'none';
+            if (isMapVisible) {
+                resetLocationFiltersAndMap(map);
+            }
             refreshData(false);
         };
         document.getElementById('refresh-btn')?.addEventListener('click', manualRefresh);

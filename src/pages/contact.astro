@@ -1,0 +1,106 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+<PageLayout
+  title="İletişim - EarthquakeTrack"
+  description="EarthquakeTrack iletişim sayfası. Hata bildirimi, veri sorunu, öneri ve iş birliği için bize ulaşın."
+  canonical="https://earthquaketrack.com.tr/contact.html"
+>
+  <Fragment slot="head">
+    <style>
+      .content-container { display:flex; flex-direction:column; min-height:100%; }
+      .ct-head { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
+      .ct-head h1 { margin:0; font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.025em; line-height:1.2; }
+      .ct-body { padding:32px 48px 56px; max-width:920px; }
+      .ct-body h2 { color:var(--text-primary); margin:28px 0 8px; font-size:1rem; font-weight:600; }
+      .ct-body p { color:var(--text-secondary); font-size:.93rem; margin:0 0 14px; line-height:1.65; }
+      .mail-address { color:var(--accent-blue); font-weight:600; text-decoration:none; word-break:break-all; }
+      .mail-address:hover { text-decoration:underline; }
+      .mail-block { display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin-top:12px; }
+      .mail-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 24px; font-size:14px; font-weight:600; font-family:inherit; color:#000; background:var(--accent-gold); border:none; border-radius:8px; text-decoration:none; cursor:pointer; transition:background .2s,transform .1s; }
+      .mail-btn:hover { background:#d4b078; }
+      .mail-btn:active { transform:scale(.98); }
+      .mail-btn svg { flex-shrink:0; }
+      .topic-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; margin-top:12px; }
+      .topic-card { border:1px solid var(--border-color); border-radius:10px; padding:16px; background:var(--surface-card,var(--card-bg)); transition:border-color .2s; }
+      .topic-card:hover { border-color:rgba(197,160,101,.4); }
+      .topic-card strong { display:block; color:var(--text-primary); font-size:.88rem; margin-bottom:5px; }
+      .topic-card span { color:var(--text-secondary); font-size:.81rem; line-height:1.5; }
+      .info-box { margin-top:24px; padding:14px 18px; border-left:3px solid var(--border-color); background:color-mix(in srgb, var(--border-color) 40%, transparent); border-radius:0 8px 8px 0; font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
+      @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
+      @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } .topic-grid { grid-template-columns:1fr; } .mail-btn { width:100%; min-height:44px; box-sizing:border-box; } }
+    </style>
+  </Fragment>
+
+  <div class="content-container">
+    <div id="content-tr">
+      <header class="ct-head"><h1>İletişim</h1></header>
+      <div class="ct-body">
+      <p>Öneri, geri bildirim veya işbirliği talepleriniz için bize e-posta gönderebilirsiniz. Tüm mesajları elimizden geldiğince kısa sürede yanıtlamaya çalışıyoruz.</p>
+
+      <h2>E-posta</h2>
+      <div class="mail-block">
+        <span><a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></span>
+        <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          E-posta gönder
+        </a>
+      </div>
+
+      <h2>Hangi konularda yazabilirsiniz?</h2>
+      <div class="topic-grid">
+        <div class="topic-card"><strong>Hata bildirimi</strong><span>Sayfada kırık bir özellik, hatalı görüntüleme veya beklenmeyen bir davranış fark ettiyseniz bize bildirin.</span></div>
+        <div class="topic-card"><strong>Veri sorunu</strong><span>Bir depremin listede hatalı büyüklük, konum veya zaman bilgisiyle göründüğünü düşünüyorsanız lütfen paylaşın.</span></div>
+        <div class="topic-card"><strong>Öneri ve geri bildirim</strong><span>Yeni özellik fikirleri, kullanıcı deneyimi önerileri veya genel görüşlerinizi duymaktan memnuniyet duyarız.</span></div>
+        <div class="topic-card"><strong>İş birliği</strong><span>Basın, akademik araştırma veya teknik entegrasyon konularında işbirliği yapmak istiyorsanız iletişime geçin.</span></div>
+      </div>
+
+      <h2>Hata bildirirken şunları ekleyin</h2>
+      <p>Daha hızlı yardımcı olabilmek için mesajınıza kullandığınız tarayıcıyı ve işletim sistemini, sorunun hangi sayfada yaşandığını, varsa ekran görüntüsünü ve sorunu yeniden oluşturmak için gereken adımları eklemenizi öneririz.</p>
+
+      <div class="info-box">
+        <strong>Önemli:</strong> EarthquakeTrack deprem verilerini resmi kurumlardan (USGS, EMSC, Kandilli, AFAD) alır ve iletir. Veri içeriğine ilişkin sorular için ilgili kurumun resmi sitesini ziyaret etmenizi öneririz. Acil durumlarda lütfen 112'yi arayın veya AFAD'ın resmi kanallarını takip edin.
+      </div>
+
+      </div>
+    </div>
+
+    <div id="content-en" style="display:none;">
+      <header class="ct-head"><h1>Contact</h1></header>
+      <div class="ct-body">
+      <p>You can reach us by email for suggestions, feedback, or collaboration enquiries. We aim to respond to all messages as quickly as possible.</p>
+
+      <h2>Email</h2>
+      <div class="mail-block">
+        <span><a class="mail-address" href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></span>
+        <a class="mail-btn" href="mailto:info@earthquaketrack.com.tr" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Send email
+        </a>
+      </div>
+
+      <h2>What you can write to us about</h2>
+      <div class="topic-grid">
+        <div class="topic-card"><strong>Bug report</strong><span>Found a broken feature, a display issue, or unexpected behaviour? Let us know.</span></div>
+        <div class="topic-card"><strong>Data issue</strong><span>If you believe an earthquake is shown with an incorrect magnitude, location, or time, please share the details.</span></div>
+        <div class="topic-card"><strong>Suggestion &amp; feedback</strong><span>New feature ideas, UX suggestions, or general thoughts — we'd love to hear them.</span></div>
+        <div class="topic-card"><strong>Collaboration</strong><span>Interested in a press mention, academic research partnership, or technical integration? Get in touch.</span></div>
+      </div>
+
+      <h2>What to include in a bug report</h2>
+      <p>To help us assist you faster, please include your browser and operating system, the page where the issue occurred, a screenshot if available, and steps to reproduce the problem.</p>
+
+      <div class="info-box">
+        <strong>Important:</strong> EarthquakeTrack receives and relays earthquake data from official institutions (USGS, EMSC, Kandilli, AFAD). For questions about the data itself, we recommend visiting the relevant institution's official website. In an emergency, call 112 or follow AFAD's official channels.
+      </div>
+
+      </div>
+    </div>
+  </div>
+</PageLayout>

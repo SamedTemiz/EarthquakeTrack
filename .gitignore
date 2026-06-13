@@ -3,6 +3,10 @@ node_modules/
 design/
 dist/
 *.log
+.astro/
+.claude/settings.local.json
+*.csv
 
 # UI/UX Pro Max (https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) — local Cursor skill install
 .cursor/skills/ui-ux-pro-max/
+.wrangler/
