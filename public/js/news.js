@@ -408,12 +408,12 @@ export function initBlog() {
   const tabContents = document.querySelectorAll('.tab-content');
   const container   = document.getElementById('news-container');
 
-  if (!tabBtns.length) return;
+  if (!tabBtns.length || !container) return;
 
-  // On first load both the immediate call and astro:page-load can fire initBlog;
-  // mark the (fresh-per-navigation) buttons so listeners bind only once.
-  if (tabBtns[0].dataset.bound) return;
-  tabBtns[0].dataset.bound = '1';
+  // Guard against double-binding — keyed on the container, not on a specific button,
+  // so button order changes or re-creation don't break the guard.
+  if (container.dataset.bound) return;
+  container.dataset.bound = '1';
 
   let newsLoaded = false;
 

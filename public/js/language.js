@@ -115,7 +115,7 @@ export function toggleLanguage() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
     localStorage.setItem('language', currentLang); // Save preference
     updateStaticText();
-    languageChangeCallbacks.forEach(fn => { try { fn(); } catch (_) {} });
+    languageChangeCallbacks.forEach(fn => { try { fn(); } catch (e) { console.error('[language] callback error:', e); } });
     return currentLang;
 }
 
