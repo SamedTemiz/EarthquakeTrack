@@ -35,6 +35,11 @@ async function loadQuakes() {
     }
 }
 
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function magClass(mag) {
     if (mag >= 6.0) return 'mag-severe';
     if (mag >= 5.0) return 'mag-high';
@@ -55,7 +60,7 @@ function buildCard(quake) {
     card.className = 'quake-card';
     card.innerHTML = `
         <span class="mag-badge ${magClass(quake.mag)}">M ${mag}</span>
-        <span class="card-location">${quake.place || 'Bilinmeyen'}</span>
+        <span class="card-location">${esc(quake.place || 'Bilinmeyen')}</span>
         <div class="card-stats">
             <span>${timeStr(quake.time)}</span>
             <span>${Math.max(0, quake.depth || 0)}km</span>
@@ -76,13 +81,35 @@ function renderList(quakes, listEl) {
     sorted.slice(0, 60).forEach(q => listEl.appendChild(buildCard(q)));
 }
 
+const FILTER_KEY = 'eq_location_filter';
+let autoRefreshInterval = null;
+
 function buildFilters(quakes, listEl, countrySelect, citySelect) {
+    // Clear stale country options from previous render (keep the default "all" first option)
+    while (countrySelect.options.length > 1) countrySelect.remove(1);
+
     const countries = [...new Set(quakes.map(q => q.countryName).filter(Boolean))].sort();
     countries.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c; opt.textContent = c;
         countrySelect.appendChild(opt);
     });
+
+    function populateCities() {
+        if (!citySelect) return;
+        citySelect.innerHTML = '<option value="">Tüm şehirler</option>';
+        if (countrySelect.value === 'Turkey') {
+            const cities = [...new Set(quakes.filter(q => q.countryName === 'Turkey').map(q => q.cityName).filter(Boolean))].sort();
+            cities.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c; opt.textContent = c;
+                citySelect.appendChild(opt);
+            });
+            citySelect.disabled = false;
+        } else {
+            citySelect.disabled = true;
+        }
+    }
 
     function applyFilter() {
         const country = countrySelect.value;
@@ -93,25 +120,39 @@ function buildFilters(quakes, listEl, countrySelect, citySelect) {
         renderList(filtered, listEl);
     }
 
-    countrySelect.addEventListener('change', () => {
-        if (citySelect) {
-            citySelect.innerHTML = '<option value="">Tüm şehirler</option>';
-            if (countrySelect.value === 'Turkey') {
-                const cities = [...new Set(quakes.filter(q => q.countryName === 'Turkey').map(q => q.cityName).filter(Boolean))].sort();
-                cities.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c; opt.textContent = c;
-                    citySelect.appendChild(opt);
-                });
-                citySelect.disabled = false;
-            } else {
-                citySelect.disabled = true;
+    function saveFilter() {
+        try {
+            sessionStorage.setItem(FILTER_KEY, JSON.stringify({
+                country: countrySelect.value,
+                city: citySelect ? citySelect.value : ''
+            }));
+        } catch {}
+    }
+
+    // Restore filter state from previous navigation (set by map page or a prior content page)
+    try {
+        const saved = JSON.parse(sessionStorage.getItem(FILTER_KEY) || 'null');
+        if (saved?.country && countries.includes(saved.country)) {
+            countrySelect.value = saved.country;
+            populateCities();
+            if (citySelect && saved.city) {
+                const cityExists = [...citySelect.options].some(o => o.value === saved.city);
+                if (cityExists) citySelect.value = saved.city;
             }
+            applyFilter();
         }
+    } catch {}
+
+    countrySelect.addEventListener('change', () => {
+        populateCities();
+        saveFilter();
         applyFilter();
     });
 
-    if (citySelect) citySelect.addEventListener('change', applyFilter);
+    if (citySelect) citySelect.addEventListener('change', () => {
+        saveFilter();
+        applyFilter();
+    });
 }
 
 async function init() {
@@ -150,7 +191,8 @@ async function init() {
     }
 
     // Auto-refresh every 60 seconds (silent)
-    setInterval(async () => {
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    autoRefreshInterval = setInterval(async () => {
         clearSessionCache();
         const fresh = await loadQuakes();
         if (!fresh.length) return;

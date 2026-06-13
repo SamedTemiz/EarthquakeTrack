@@ -1,3 +1,10 @@
+import { getCurrentLang } from './language.js';
+
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 const CONTENT_ROUTES = [
     'blog.html', 'preparedness.html', 'education.html',
     'about.html', 'faq.html', 'contact.html', 'privacy.html', 'terms.html'
@@ -112,6 +119,13 @@ async function loadContent(url) {
             }
         }
 
+        // Sync content language for dual-language pages (TR/EN)
+        const lang = getCurrentLang();
+        const trEl = panel.querySelector('#content-tr');
+        const enEl = panel.querySelector('#content-en');
+        if (trEl) trEl.style.display = lang === 'tr' ? '' : 'none';
+        if (enEl) enEl.style.display = lang === 'en' ? '' : 'none';
+
         // Intercept links inside loaded content
         panel.querySelectorAll('a[href]').forEach(a => {
             const href = a.getAttribute('href');
@@ -124,7 +138,7 @@ async function loadContent(url) {
 
     } catch (err) {
         console.error('[router] failed:', err);
-        panel.innerHTML = `<p style="padding:32px;color:var(--text-secondary)">Hata: ${err.message}</p>`;
+        panel.innerHTML = `<p style="padding:32px;color:var(--text-secondary)">Hata: ${esc(err.message)}</p>`;
     } finally {
         const loader = document.getElementById('page-transition-loader');
         if (loader) loader.classList.add('is-hidden');

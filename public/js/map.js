@@ -95,9 +95,66 @@ function showLocationErrorDialog(e) {
 /** Distinguishes automatic page-load locate from the manual control (error dialog only for control). */
 const LOCATION_SOURCE_INITIAL = 'initial';
 const LOCATION_SOURCE_CONTROL = 'control';
+const USER_LOCATION_KEY = 'userLocation';
 
 /** City-scale zoom when focusing on the user's position (aligned with `focusMapToSelection` city level in ui.js). */
 const LOCATION_FOCUS_ZOOM = 8;
+
+// ── IP geolocation fallback (when GPS is unavailable or denied) ────────────
+const IP_LOCATION_CACHE_KEY = 'eq_ip_loc';
+const IP_LOCATION_CACHE_MS  = 24 * 60 * 60 * 1000;
+const IP_FALLBACK_ZOOM = 5;
+
+const COUNTRY_CENTERS = {
+    TR: [39.0, 35.0], GR: [39.0, 22.0], IT: [42.5, 12.5], DE: [51.2, 10.5],
+    FR: [46.2,  2.2], ES: [40.0, -4.0], PT: [39.5, -8.0], GB: [54.0, -2.0],
+    US: [39.5,-98.5], CA: [56.0,-96.0], MX: [23.0,-102.0],BR: [-15.0,-53.0],
+    AR: [-34.0,-64.0],RU: [55.0, 37.0], UA: [49.0, 32.0], PL: [52.0, 20.0],
+    NL: [52.4,  5.3], BE: [50.8,  4.5], CH: [46.8,  8.2], AT: [47.5, 14.5],
+    SE: [62.0, 15.0], NO: [64.0, 11.0], DK: [56.0, 10.0], FI: [64.0, 26.0],
+    JP: [36.5,138.0], CN: [35.0,105.0], IN: [20.0, 78.0], AU: [-25.0,133.0],
+    NZ: [-40.0,175.0],SA: [24.0, 45.0], AE: [24.0, 54.0], IL: [31.5, 35.0],
+    IR: [32.0, 53.0], SY: [35.0, 38.0], IQ: [33.0, 44.0], EG: [26.0, 30.0],
+    MA: [32.0, -6.0], ZA: [-29.0,25.0], ID: [-5.0,120.0],  PH: [12.0,123.0],
+    KR: [36.5,127.5], TW: [23.5,121.0], PK: [30.0, 70.0],  AZ: [40.5, 47.5],
+    GE: [42.0, 44.0], AM: [40.0, 45.0], RO: [45.9, 24.9],  BG: [42.7, 25.5],
+    RS: [44.0, 21.0], HR: [45.1, 15.2], AL: [41.0, 20.0],  CY: [35.0, 33.0],
+    LB: [33.8, 35.9], JO: [31.0, 36.5], KZ: [48.0, 68.0],  UZ: [41.0, 64.0],
+    SG: [ 1.3,103.8], TH: [15.0,101.0], MY: [ 4.0,109.0],  VN: [16.0,107.5],
+};
+
+async function ipFallbackFocus(map) {
+    try {
+        let code;
+        try {
+            const cached = JSON.parse(localStorage.getItem(IP_LOCATION_CACHE_KEY) || 'null');
+            if (cached && Date.now() - cached.at < IP_LOCATION_CACHE_MS) code = cached.code;
+        } catch (_) {}
+
+        if (!code) {
+            const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+            if (!res.ok) return;
+            const data = await res.json();
+            code = data.country_code;
+            try { localStorage.setItem(IP_LOCATION_CACHE_KEY, JSON.stringify({ at: Date.now(), code })); } catch (_) {}
+        }
+
+        const center = COUNTRY_CENTERS[code];
+        if (!center) return;
+        map.flyTo(center, IP_FALLBACK_ZOOM, { animate: true, duration: 1.5 });
+    } catch (_) { /* silently fail — default map view stays */ }
+}
+
+function flyToSavedOrIp(map) {
+    const saved = localStorage.getItem(USER_LOCATION_KEY);
+    if (saved) {
+        try {
+            map.flyTo(JSON.parse(saved), LOCATION_FOCUS_ZOOM, { animate: true, duration: 1.5 });
+            return;
+        } catch (_) {}
+    }
+    ipFallbackFocus(map);
+}
 
 /**
  * Uses the Geolocation API directly (not map.locate) so each request has a monotonic id.
@@ -170,7 +227,10 @@ function scheduleInitialLocate(map) {
         try {
             if (navigator.permissions?.query) {
                 const result = await navigator.permissions.query({ name: 'geolocation' });
-                if (result.state === 'denied') return;
+                if (result.state === 'denied') {
+                    flyToSavedOrIp(map);
+                    return;
+                }
             }
         } catch (_) {
             // Permissions API unsupported or "geolocation" not queryable — proceed with locate.
@@ -181,10 +241,13 @@ function scheduleInitialLocate(map) {
 
 export function initMap() {
     const map = L.map('map', {
-        zoomControl: false, // Disable default top-left
-        attributionControl: false, // Disable attribution text
-        preferCanvas: true // Use Canvas rendering for better performance
-    }).setView([39.0, 35.0], 6); // Turkey centered view
+        zoomControl: false,
+        attributionControl: false,
+        preferCanvas: true,
+        minZoom: 3,
+        maxBounds: [[-85, -Infinity], [85, Infinity]],
+        maxBoundsViscosity: 0.8,
+    }).setView([39.0, 35.0], 6);
 
     // Add Zoom Control to Bottom Right
     L.control.zoom({
@@ -240,7 +303,7 @@ export function initMap() {
     }
 
     // Check for saved location on init
-    const savedLocation = localStorage.getItem('userLocation');
+    const savedLocation = localStorage.getItem(USER_LOCATION_KEY);
     if (savedLocation) {
         try {
             const latlng = JSON.parse(savedLocation);
@@ -258,7 +321,7 @@ export function initMap() {
         showUserLocation(e.latlng);
 
         // Save to localStorage
-        localStorage.setItem('userLocation', JSON.stringify(e.latlng));
+        localStorage.setItem(USER_LOCATION_KEY, JSON.stringify(e.latlng));
 
         const lat = e.latlng.lat;
         const lng = e.latlng.lng;
@@ -284,6 +347,8 @@ export function initMap() {
         delete map._locationRequestSource;
         if (source === LOCATION_SOURCE_CONTROL) {
             showLocationErrorDialog(e);
+        } else if (source === LOCATION_SOURCE_INITIAL) {
+            flyToSavedOrIp(map);
         }
     });
 

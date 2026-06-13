@@ -1,5 +1,21 @@
 import { t, localizeLocation, getCountryDisplayName, getCurrentLang } from './language.js';
 
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function computeMinimizedHeight(sidebar) {
+    const logoArea = document.querySelector('.logo-area');
+    const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
+    const resizer = document.getElementById('sidebar-resizer');
+    const resizerHeight = resizer ? resizer.offsetHeight : 0;
+    const styles = window.getComputedStyle(sidebar);
+    const paddingBottom = parseFloat(styles.paddingBottom) || 0;
+    const paddingTop = parseFloat(styles.paddingTop) || 0;
+    return Math.max(paddingTop + logoHeight + resizerHeight + paddingBottom, 56);
+}
+
 let currentQuakes = []; // Store data internally to avoid stale closures
 let currentCountryFilter = '';
 let currentCityFilter = '';
@@ -106,13 +122,16 @@ export function initLocationSelector(earthquakes, mapInstance) {
     refreshCities();
 
     const countryClone = countrySelect.cloneNode(true);
+    countryClone.value = currentCountryFilter;
     const cityClone = citySelect.cloneNode(true);
+    cityClone.value = currentCityFilter;
     countrySelect.replaceWith(countryClone);
     citySelect.replaceWith(cityClone);
 
     countryClone.addEventListener('change', (e) => {
         currentCountryFilter = countryClone.value;
         currentCityFilter = '';
+        try { sessionStorage.setItem('eq_location_filter', JSON.stringify({ country: countryClone.value, city: '' })); } catch {}
         const fresh = buildLocationOptions(currentQuakes);
         cityClone.innerHTML = `<option value="">${t('allCities')}</option>`;
         if (countryClone.value === 'Turkey') {
@@ -137,6 +156,7 @@ export function initLocationSelector(earthquakes, mapInstance) {
 
     cityClone.addEventListener('change', (e) => {
         currentCityFilter = cityClone.value;
+        try { sessionStorage.setItem('eq_location_filter', JSON.stringify({ country: countryClone.value, city: cityClone.value })); } catch {}
         updateSidebar(currentQuakes, mapInstance);
         const fresh = buildLocationOptions(currentQuakes);
         const shouldFocusMap = typeof e.isTrusted !== 'boolean' || e.isTrusted;
@@ -157,6 +177,7 @@ const DEFAULT_MAP_ZOOM = 6;
 export function resetLocationFiltersAndMap(mapInstance) {
     currentCountryFilter = '';
     currentCityFilter = '';
+    try { sessionStorage.removeItem('eq_location_filter'); } catch {}
     const countrySelect = document.getElementById('country-select');
     if (countrySelect) {
         countrySelect.value = '';
@@ -222,7 +243,7 @@ export function showSidebarError(message) {
     listContainer.innerHTML = `
         <div class="error-state" style="padding: 20px; text-align: center; color: var(--text-secondary);">
             <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
-            <p>${message || t('error_data_access')}</p>
+            <p>${esc(message || t('error_data_access'))}</p>
             <p style="font-size: 12px; margin-top: 5px;">${t('error_check_connection')}</p>
         </div>
     `;
@@ -264,7 +285,7 @@ export function updateSidebar(earthquakes, mapInstance) {
         card.className = 'quake-card';
         card.innerHTML = `
             <span class="mag-badge ${magClass}">M ${mag}</span>
-            <span class="card-location">${localizeLocation(quake.place)}</span>
+            <span class="card-location">${esc(localizeLocation(quake.place))}</span>
             <div class="card-stats">
                 <span>${timeStr}</span>
                 <span>${Math.max(0, quake.depth)}km</span>
@@ -352,15 +373,7 @@ export function initSidebarResize(mapInstance) {
             mainContent.style.height = '';
             mainContent.style.flex = '1';
 
-            // Hedef yüksekliği hesapla
-            const logoArea = document.querySelector('.logo-area');
-            const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 0;
-            const resizerHeight = resizer.offsetHeight;
-            const sidebarStyles = window.getComputedStyle(sidebar);
-            const paddingBottom = parseFloat(sidebarStyles.paddingBottom) || 0;
-            const paddingTop = parseFloat(sidebarStyles.paddingTop) || 0;
-            // Same 56px floor as the initial mobile state — keeps the collapsed bar from clipping the chevron.
-            const targetHeight = Math.max(paddingTop + logoHeight + resizerHeight + paddingBottom, 56);
+            const targetHeight = computeMinimizedHeight(sidebar);
 
             // Yüksekliği sabit tut, sonra hesaplanan hedef yüksekliğe anime et
             sidebar.style.height = `${startHeight}px`;
@@ -394,13 +407,13 @@ export function initSidebarResize(mapInstance) {
             // Actually, for map index.html, mainContent is the map.
             // For others, it's the scrollable content.
             const isMapPage = document.getElementById('map') !== null;
+            mainContent.style.minHeight = '0';
             if (isMapPage) {
                 mainContent.style.height = '25dvh';
                 mainContent.style.flex = 'none';
             } else {
                 mainContent.style.height = 'auto';
                 mainContent.style.flex = '1';
-                mainContent.style.minHeight = '0';
             }
 
             mainContent.style.paddingBottom = '';
@@ -560,11 +573,7 @@ export function initSidebarToggle(mapInstance) {
             if (!sidebar.dataset.initMobile) {
                 sidebar.classList.add('minimized');
 
-                const logoArea = document.querySelector('.logo-area');
-                const logoHeight = logoArea ? logoArea.getBoundingClientRect().height : 44;
-                // Floor at 56px so the bar always fits the logo row + round chevron button,
-                // even when logo-area is measured before first-paint layout settles.
-                const targetHeight = Math.max(logoHeight + 16, 56);
+                const targetHeight = computeMinimizedHeight(sidebar);
                 
                 sidebar.style.position = 'fixed';
                 sidebar.style.bottom = '0';
@@ -642,6 +651,13 @@ export function initSidebarToggle(mapInstance) {
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 300);
+    });
+
+    // On Astro ClientRouter navigation the sidebar persists (transition:persist) but the page
+    // content changes — reset the mobile init guard so checkResponsiveSidebar re-runs.
+    document.addEventListener('astro:page-load', () => {
+        delete sidebar.dataset.initMobile;
+        checkResponsiveSidebar();
     });
 }
 
@@ -743,7 +759,7 @@ export function renderDashboard(earthquakes, mapInstance) {
         maxCard.title = 'Haritada Göster'; // Tooltip
         maxCard.innerHTML = `
             <div style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">${t('largest_earthquake')}</div>
-            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${localizeLocation(maxQuake.place)}</div>
+            <div class="text-truncate" style="color:var(--text-primary); font-weight:500;">${esc(localizeLocation(maxQuake.place))}</div>
             <div style="margin-top:5px; font-size:12px; color:var(--text-tertiary);">${new Date(maxQuake.time).toLocaleDateString()} ${new Date(maxQuake.time).toLocaleTimeString()}</div>
         `;
 
@@ -798,7 +814,7 @@ export function renderLocations(earthquakes, mapInstance) {
         item.style.padding = '12px';
 
         item.innerHTML = `
-            <span class="text-truncate" style="font-weight:500; color:var(--text-primary); flex:1; margin-right:10px;">${region}</span>
+            <span class="text-truncate" style="font-weight:500; color:var(--text-primary); flex:1; margin-right:10px;">${esc(region)}</span>
             <span class="badge">${data.count}</span>
         `;
 

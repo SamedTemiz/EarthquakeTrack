@@ -15,10 +15,10 @@
 // ── Config ────────────────────────────────────────────────────────────
 const CACHE_TTL_MS       = 30 * 60 * 1000;
 const FAILURE_TTL_MS     = 60 * 60 * 1000;
-const LOCATION_CACHE_MS  = 24 * 60 * 60 * 1000; // country re-check every 24h
+const LOCATION_CACHE_MS  = 24 * 60 * 60 * 1000;
 const CACHE_KEY          = 'eq_news_cache';
 const FAILURES_KEY       = 'eq_news_failures';
-const LOCATION_KEY       = 'eq_user_location';
+const IP_CACHE_KEY       = 'eq_ip_loc'; // shared with map.js — stores { at, code: ISO-3166-1-alpha-2 }
 
 // Add API keys here when available:
 const GNEWS_KEY    = 'b65afdaf6d3c22ccb5665448278a826e';   // https://gnews.io  — free: 100 req/day
@@ -26,50 +26,53 @@ const NEWSDATA_KEY = 'pub_357035f2d9a34c33a57a3b501a7e83c1';   // https://newsda
 
 // ── Location detection ────────────────────────────────────────────────
 
-async function getUserCountry() {
-  // 1. Cache check
+// Reads the shared IP cache that map.js also writes to; falls back to a fresh fetch.
+// Returns ISO 3166-1 alpha-2 country code (e.g. 'TR') to avoid locale-dependent country names.
+async function getUserCountryCode() {
+  // 1. Shared cache check (map.js writes country_code here)
   try {
-    const cached = JSON.parse(localStorage.getItem(LOCATION_KEY) || 'null');
-    if (cached && Date.now() - cached.at < LOCATION_CACHE_MS) return cached.country;
+    const cached = JSON.parse(localStorage.getItem(IP_CACHE_KEY) || 'null');
+    if (cached && Date.now() - cached.at < LOCATION_CACHE_MS && cached.code) return cached.code;
   } catch {}
 
   // 2. IP geolocation — no user permission needed
   try {
     const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
     const data = await res.json();
-    const country = data.country_name;
-    if (country) {
-      try { localStorage.setItem(LOCATION_KEY, JSON.stringify({ at: Date.now(), country })); } catch {}
-      console.log(`[news] Location detected: ${country}`);
-      return country;
+    const code = data.country_code;
+    if (code) {
+      try { localStorage.setItem(IP_CACHE_KEY, JSON.stringify({ at: Date.now(), code })); } catch {}
+      return code;
     }
   } catch {}
 
   // 3. Sidebar country filter as last resort
   const select = document.getElementById('country-select');
   if (select?.value) {
-    const map = { Turkey: 'Turkey', Greece: 'Greece', Italy: 'Italy', Japan: 'Japan' };
-    return map[select.value] || null;
+    const SIDEBAR_TO_CODE = { Turkey: 'TR', Greece: 'GR', Italy: 'IT', Japan: 'JP' };
+    return SIDEBAR_TO_CODE[select.value] || null;
   }
 
-  return null; // global fallback
+  return null;
 }
 
-// IP geolocation often returns local-language country names — normalize to English for API queries
-const COUNTRY_EN = {
-  'Türkiye': 'Turkey', 'Almanya': 'Germany', 'Fransa': 'France', 'İtalya': 'Italy',
-  'Yunanistan': 'Greece', 'Japonya': 'Japan', 'Amerika Birleşik Devletleri': 'United States',
-  'İspanya': 'Spain', 'Portekiz': 'Portugal', 'Romanya': 'Romania', 'Bulgaristan': 'Bulgaria',
+const COUNTRY_NAMES = {
+  TR: 'Turkey', GR: 'Greece', IT: 'Italy', JP: 'Japan',
+  US: 'United States', CN: 'China', MX: 'Mexico', IR: 'Iran',
+  ID: 'Indonesia', PH: 'Philippines', FR: 'France', DE: 'Germany',
+  ES: 'Spain', PT: 'Portugal', RO: 'Romania', BG: 'Bulgaria',
+  RU: 'Russia', UA: 'Ukraine', IN: 'India', AU: 'Australia',
+  AR: 'Argentina', BR: 'Brazil', CA: 'Canada', GB: 'United Kingdom',
+  PK: 'Pakistan', NZ: 'New Zealand', CL: 'Chile', PE: 'Peru',
 };
 
-function buildQuery(country) {
-  if (!country) return { gnews: 'earthquake', newsdata: 'earthquake', label: 'Dünya geneli' };
-  const en = COUNTRY_EN[country] || country;
-  const isTurkey = en === 'Turkey';
+function buildQuery(code) {
+  if (!code) return { gnews: 'earthquake', newsdata: 'earthquake', label: 'Dünya geneli' };
+  const name = COUNTRY_NAMES[code] || code;
   return {
-    gnews:    `earthquake ${en}`,
-    newsdata: isTurkey ? 'deprem' : `earthquake ${en}`,
-    label:    en,
+    gnews:    `earthquake ${name}`,
+    newsdata: code === 'TR' ? 'deprem' : `earthquake ${name}`,
+    label:    name,
   };
 }
 
@@ -180,8 +183,8 @@ async function fetchNews() {
     return cached;
   }
 
-  const country = await getUserCountry();
-  const query   = buildQuery(country);
+  const code  = await getUserCountryCode();
+  const query = buildQuery(code);
   console.log(`[news] Query for "${query.label}":`, query);
 
   for (const provider of PROVIDERS) {
@@ -267,64 +270,126 @@ function renderNews(container, articles, source, label) {
     container.appendChild(badge);
   }
 
-  const list = articles.slice(0, 13);
-  const [hero, ...rest] = list;
+  // Deduplicate by normalized title (same story from multiple sources)
+  const seenTitles = new Set();
+  const unique = articles.filter(a => {
+    const key = String(a.title || '').slice(0, 60).toLowerCase().replace(/\s+/g, ' ').trim();
+    if (!key || seenTitles.has(key)) return false;
+    seenTitles.add(key);
+    return true;
+  });
+  const list = unique.slice(0, 13);
 
-  // ── Hero (featured) card ──
+  const heroItem = list[0];
+  const heroImgUrl = safeImageUrl(heroItem?.image_url);
+  // Track used image URLs to avoid showing the same image in multiple slots
+  const usedImgs = new Set(heroImgUrl ? [heroImgUrl] : []);
+
+  // ── Top section: hero + side stack ──
+  const wrap = document.createElement('div');
+  wrap.className = 'news-wrap';
+
+  // Hero card
   const heroEl = document.createElement('a');
-  heroEl.href = hero.link || '#';
+  heroEl.href = heroItem.link || '#';
   heroEl.target = '_blank';
   heroEl.rel = 'noopener noreferrer';
   heroEl.className = 'news-hero';
-
-  const heroImg = safeImageUrl(hero.image_url);
-  const heroBg = heroImg
-    ? `background-image:url('${heroImg}')`
+  const heroBg = heroImgUrl
+    ? `background-image:url('${heroImgUrl}')`
     : `background:${CARD_GRADIENTS[0]}`;
-
   heroEl.innerHTML = `
     <div class="news-hero-bg" style="${heroBg}"></div>
     <div class="news-hero-overlay"></div>
     <div class="news-hero-body">
-      <div class="news-hero-source">${esc(hero.source_id || source)}</div>
-      <h2 class="news-hero-title">${esc(hero.title)}</h2>
-      <div class="news-hero-time">${timeAgo(hero.pubDate)}</div>
+      <div class="news-hero-source">${esc(heroItem.source_id || source)}</div>
+      <h2 class="news-hero-title">${esc(heroItem.title)}</h2>
+      <div class="news-hero-time">${timeAgo(heroItem.pubDate)}</div>
     </div>
     <div class="news-hero-ext">${EXT_ICON}</div>
   `;
-  container.appendChild(heroEl);
+  wrap.appendChild(heroEl);
 
-  // ── Grid of remaining cards ──
-  if (rest.length) {
-    const grid = document.createElement('div');
-    grid.className = 'news-grid-v2';
+  // Side stack (articles 1-3)
+  const side = document.createElement('div');
+  side.className = 'news-side';
+  list.slice(1, 4).forEach((a, i) => {
+    const card = document.createElement('a');
+    card.href = a.link || '#';
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+    card.className = 'news-side-card';
+    const imgUrl = safeImageUrl(a.image_url);
+    const useImg = imgUrl && !usedImgs.has(imgUrl);
+    const imgStyle = useImg
+      ? `background-image:url('${imgUrl}')`
+      : `background:${CARD_GRADIENTS[(i + 1) % CARD_GRADIENTS.length]}`;
+    if (useImg) usedImgs.add(imgUrl);
+    card.innerHTML = `
+      <div class="news-side-img" style="${imgStyle}"></div>
+      <div class="news-side-body">
+        <div class="news-side-source">${esc(a.source_id || source)}</div>
+        <div class="news-side-title">${esc(a.title)}</div>
+        <div class="news-side-time">${timeAgo(a.pubDate)}</div>
+      </div>
+    `;
+    side.appendChild(card);
+  });
+  wrap.appendChild(side);
+  container.appendChild(wrap);
 
-    rest.forEach((a, i) => {
+  // ── Mid grid: 4 equal columns (articles 4-7) ──
+  const midItems = list.slice(4, 8);
+  if (midItems.length) {
+    const mid = document.createElement('div');
+    mid.className = 'news-mid';
+    midItems.forEach((a, i) => {
       const card = document.createElement('a');
       card.href = a.link || '#';
       card.target = '_blank';
       card.rel = 'noopener noreferrer';
-      card.className = 'news-card-v2';
-
-      const cardImg = safeImageUrl(a.image_url);
-      const imgHtml = cardImg
-        ? `<div class="news-card-v2-img" style="background-image:url('${cardImg}')"></div>`
-        : `<div class="news-card-v2-img" style="background:${CARD_GRADIENTS[(i + 1) % CARD_GRADIENTS.length]}">
-             <span class="news-card-v2-initial">${esc((a.source_id || 'N').charAt(0).toUpperCase())}</span>
-           </div>`;
-
+      card.className = 'news-mid-card';
+      const imgUrl = safeImageUrl(a.image_url);
+      const useImg = imgUrl && !usedImgs.has(imgUrl);
+      const imgStyle = useImg
+        ? `background-image:url('${imgUrl}')`
+        : `background:${CARD_GRADIENTS[(i + 4) % CARD_GRADIENTS.length]}`;
+      if (useImg) usedImgs.add(imgUrl);
       card.innerHTML = `
-        ${imgHtml}
-        <div class="news-card-v2-body">
-          <div class="news-card-v2-source">${esc(a.source_id || source)}</div>
-          <h3 class="news-card-v2-title">${esc(a.title)}</h3>
-          <div class="news-card-v2-time">${timeAgo(a.pubDate)}</div>
+        <div class="news-mid-img" style="${imgStyle}"></div>
+        <div class="news-mid-body">
+          <div class="news-mid-source">${esc(a.source_id || source)}</div>
+          <h3 class="news-mid-title">${esc(a.title)}</h3>
+          <div class="news-mid-time">${timeAgo(a.pubDate)}</div>
         </div>
       `;
-      grid.appendChild(card);
+      mid.appendChild(card);
     });
+    container.appendChild(mid);
+  }
 
-    container.appendChild(grid);
+  // ── Compact list (articles 8-12) ──
+  const listItems = list.slice(8);
+  if (listItems.length) {
+    const listEl = document.createElement('div');
+    listEl.className = 'news-list';
+    listItems.forEach(a => {
+      const item = document.createElement('a');
+      item.href = a.link || '#';
+      item.target = '_blank';
+      item.rel = 'noopener noreferrer';
+      item.className = 'news-list-item';
+      item.innerHTML = `
+        <div class="news-list-dot"></div>
+        <div class="news-list-body">
+          <div class="news-list-source">${esc(a.source_id || source)}</div>
+          <div class="news-list-title">${esc(a.title)}</div>
+        </div>
+        <div class="news-list-time">${timeAgo(a.pubDate)}</div>
+      `;
+      listEl.appendChild(item);
+    });
+    container.appendChild(listEl);
   }
 }
 

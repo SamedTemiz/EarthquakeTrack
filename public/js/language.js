@@ -35,6 +35,14 @@ export const translations = {
         location_error_denied: "Konum izni verilmedi. Tarayıcı veya site ayarlarından konum erişimine izin verebilirsiniz.",
         location_error_unavailable: "Konum şu an alınamıyor. Bağlantı veya cihaz ayarlarınızı kontrol edin.",
         location_error_timeout: "Konum isteği zaman aşımına uğradı. Lütfen tekrar deneyin.",
+        navMap: "Deprem Haritası",
+        navBlog: "Blog & Haberler",
+        navInfoSection: "BİLGİ MERKEZİ",
+        blogTitle: "Deprem Blogu & Haberler",
+        blogLead: "Sismoloji, deprem hazırlıkları, fay hattı analizleri ve güvende kalmanız için ihtiyaç duyduğunuz tüm güncel ve detaylı makaleler.",
+        blogTabArticles: "Makaleler",
+        blogTabNews: "Son Dakika Haberleri",
+        newsLoading: "Güncel deprem haberleri yükleniyor...",
         ok: "Tamam"
     },
     en: {
@@ -73,15 +81,23 @@ export const translations = {
         location_error_denied: "Location permission denied. You can enable location access in your browser or site settings.",
         location_error_unavailable: "Location is currently unavailable. Check your connection or device settings.",
         location_error_timeout: "Location request timed out. Please try again.",
+        navMap: "Earthquake Map",
+        navBlog: "Blog & News",
+        navInfoSection: "INFO CENTER",
+        blogTitle: "Earthquake Blog & News",
+        blogLead: "Seismology, earthquake preparedness, fault line analyses, and all the in-depth articles you need to stay safe.",
+        blogTabArticles: "Articles",
+        blogTabNews: "Breaking News",
+        newsLoading: "Loading latest earthquake news...",
         ok: "OK"
     }
 };
 
 let currentLang = 'tr'; // Default to Turkish
-let onLanguageChangeCallback = null;
+const languageChangeCallbacks = [];
 
 export function initLanguage(callback) {
-    onLanguageChangeCallback = callback;
+    if (typeof callback === 'function') languageChangeCallbacks.push(callback);
 
     // Load preference
     const savedLang = localStorage.getItem('language');
@@ -99,7 +115,7 @@ export function toggleLanguage() {
     currentLang = currentLang === 'tr' ? 'en' : 'tr';
     localStorage.setItem('language', currentLang); // Save preference
     updateStaticText();
-    if (onLanguageChangeCallback) onLanguageChangeCallback();
+    languageChangeCallbacks.forEach(fn => { try { fn(); } catch (_) {} });
     return currentLang;
 }
 
@@ -187,10 +203,19 @@ export function getCountryDisplayName(canonicalKey, lang) {
 }
 
 function updateStaticText() {
+    document.documentElement.lang = currentLang;
+
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[currentLang][key]) {
             el.innerText = translations[currentLang][key];
+        }
+    });
+
+    document.querySelectorAll('[data-i18n-tooltip]').forEach(el => {
+        const key = el.getAttribute('data-i18n-tooltip');
+        if (translations[currentLang][key]) {
+            el.setAttribute('data-tooltip', translations[currentLang][key]);
         }
     });
 
