@@ -12,6 +12,8 @@
  * Successful responses are cached in localStorage for CACHE_TTL_MS.
  */
 
+import { getCurrentLang } from './language.js';
+
 // ── Config ────────────────────────────────────────────────────────────
 const CACHE_TTL_MS       = 30 * 60 * 1000;
 const FAILURE_TTL_MS     = 60 * 60 * 1000;
@@ -219,11 +221,21 @@ const CARD_GRADIENTS = [
   'linear-gradient(135deg,#0d0d2d,#1a1a4a)',
 ];
 
-function timeAgo(dateStr) {
+function timeAgo(dateStr, lang) {
   if (!dateStr) return '';
   try {
     const diff = Date.now() - new Date(dateStr).getTime();
     const m = Math.floor(diff / 60000);
+    if (lang === 'en') {
+      if (m < 2) return 'Just now';
+      if (m < 60) return `${m}m ago`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `${h}h ago`;
+      const d = Math.floor(h / 24);
+      if (d === 1) return 'Yesterday';
+      if (d < 7) return `${d}d ago`;
+      return new Date(dateStr).toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
+    }
     if (m < 2) return 'Az önce';
     if (m < 60) return `${m} dk önce`;
     const h = Math.floor(m / 60);
@@ -252,8 +264,9 @@ function safeImageUrl(u) {
 }
 
 function renderNews(container, articles, source, label) {
+  const lang = getCurrentLang();
   if (!articles?.length) {
-    container.innerHTML = '<div class="news-loading">Şu an için güncel haber bulunmuyor.</div>';
+    container.innerHTML = `<div class="news-loading">${lang === 'en' ? 'No current news available.' : 'Şu an için güncel haber bulunmuyor.'}</div>`;
     return;
   }
 
@@ -263,10 +276,12 @@ function renderNews(container, articles, source, label) {
   if (label) {
     const badge = document.createElement('div');
     badge.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-tertiary);margin-bottom:14px;';
-    const icon = label === 'Dünya geneli'
+    const isGlobal = label === 'Dünya geneli' || label === 'Worldwide';
+    const displayLabel = isGlobal ? (lang === 'en' ? 'Worldwide' : 'Dünya geneli') : esc(label);
+    const icon = isGlobal
       ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
       : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
-    badge.innerHTML = `${icon} ${esc(label)} deprem haberleri`;
+    badge.innerHTML = `${icon} ${displayLabel} ${lang === 'en' ? 'earthquake news' : 'deprem haberleri'}`;
     container.appendChild(badge);
   }
 
@@ -304,7 +319,7 @@ function renderNews(container, articles, source, label) {
     <div class="news-hero-body">
       <div class="news-hero-source">${esc(heroItem.source_id || source)}</div>
       <h2 class="news-hero-title">${esc(heroItem.title)}</h2>
-      <div class="news-hero-time">${timeAgo(heroItem.pubDate)}</div>
+      <div class="news-hero-time">${timeAgo(heroItem.pubDate, lang)}</div>
     </div>
     <div class="news-hero-ext">${EXT_ICON}</div>
   `;
@@ -330,7 +345,7 @@ function renderNews(container, articles, source, label) {
       <div class="news-side-body">
         <div class="news-side-source">${esc(a.source_id || source)}</div>
         <div class="news-side-title">${esc(a.title)}</div>
-        <div class="news-side-time">${timeAgo(a.pubDate)}</div>
+        <div class="news-side-time">${timeAgo(a.pubDate, lang)}</div>
       </div>
     `;
     side.appendChild(card);
@@ -360,7 +375,7 @@ function renderNews(container, articles, source, label) {
         <div class="news-mid-body">
           <div class="news-mid-source">${esc(a.source_id || source)}</div>
           <h3 class="news-mid-title">${esc(a.title)}</h3>
-          <div class="news-mid-time">${timeAgo(a.pubDate)}</div>
+          <div class="news-mid-time">${timeAgo(a.pubDate, lang)}</div>
         </div>
       `;
       mid.appendChild(card);
@@ -385,7 +400,7 @@ function renderNews(container, articles, source, label) {
           <div class="news-list-source">${esc(a.source_id || source)}</div>
           <div class="news-list-title">${esc(a.title)}</div>
         </div>
-        <div class="news-list-time">${timeAgo(a.pubDate)}</div>
+        <div class="news-list-time">${timeAgo(a.pubDate, lang)}</div>
       `;
       listEl.appendChild(item);
     });
@@ -394,7 +409,8 @@ function renderNews(container, articles, source, label) {
 }
 
 function showLoading(container) {
-  container.innerHTML = '<div class="news-loading">Güncel deprem haberleri yükleniyor…</div>';
+  const lang = getCurrentLang();
+  container.innerHTML = `<div class="news-loading">${lang === 'en' ? 'Loading latest earthquake news…' : 'Güncel deprem haberleri yükleniyor…'}</div>`;
 }
 
 function showError(container, msg) {
