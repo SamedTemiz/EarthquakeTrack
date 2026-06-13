@@ -26,7 +26,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       .topic-card:hover { border-color:rgba(197,160,101,.4); }
       .topic-card strong { display:block; color:var(--text-primary); font-size:.88rem; margin-bottom:5px; }
       .topic-card span { color:var(--text-secondary); font-size:.81rem; line-height:1.5; }
-      .info-box { margin-top:24px; padding:14px 18px; border-left:3px solid var(--border-color); background:rgba(255,255,255,.03); border-radius:0 8px 8px 0; font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
+      .info-box { margin-top:24px; padding:14px 18px; border-left:3px solid var(--border-color); background:color-mix(in srgb, var(--border-color) 40%, transparent); border-radius:0 8px 8px 0; font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
       @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
       @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } .topic-grid { grid-template-columns:1fr; } .mail-btn { width:100%; min-height:44px; box-sizing:border-box; } }
     </style>

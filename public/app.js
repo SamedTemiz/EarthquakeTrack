@@ -183,8 +183,13 @@ async function initApp() {
                 updateTitle();
                 refreshCooldownIntervalId = setInterval(updateTitle, 1000);
             }
-            // Manual refresh: clear country/city filters and reset map focus, then fetch fresh data.
-            resetLocationFiltersAndMap(map);
+            // Only reset location filter and recenter map when the map view is visible.
+            // When in a content view (SPA panel open), preserve the active country filter.
+            const mapContainer = document.getElementById('map-container');
+            const isMapVisible = mapContainer && mapContainer.style.display !== 'none';
+            if (isMapVisible) {
+                resetLocationFiltersAndMap(map);
+            }
             refreshData(false);
         };
         document.getElementById('refresh-btn')?.addEventListener('click', manualRefresh);

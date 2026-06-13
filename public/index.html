@@ -65,7 +65,7 @@
 
     <!-- Leaflet CSS (self-hosted to avoid local CORS/CDN issues) -->
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="style.css?v=2036">
+    <link rel="stylesheet" href="style.css?v=2037">
     <!-- Google AdSense - site verification & ad scripts -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1547168097704291"
         crossorigin="anonymous"></script>
@@ -104,7 +104,7 @@
 
             <nav class="main-nav">
                 <div class="nav-primary-section">
-                    <a href="index.html" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası">
+                    <a href="index.html" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası" data-i18n-tooltip="navMap">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
@@ -112,12 +112,12 @@
                                 <line x1="16" y1="6" x2="16" y2="22"></line>
                             </svg>
                         </span>
-                        <span>Deprem Haritası</span>
+                        <span data-i18n="navMap">Deprem Haritası</span>
                     </a>
                 </div>
-                <div class="nav-divider">BİLGİ MERKEZİ</div>
+                <div class="nav-divider" data-i18n="navInfoSection">BİLGİ MERKEZİ</div>
                 <div class="nav-links">
-                    <a href="blog.html" class="nav-link-item">
+                    <a href="blog.html" class="nav-link-item" data-i18n-tooltip="navBlog">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
@@ -126,18 +126,18 @@
                                 <path d="M10 6h8v4h-8V6Z"></path>
                             </svg>
                         </span>
-                        <span>Blog & Haberler</span>
+                        <span data-i18n="navBlog">Blog & Haberler</span>
                     </a>
-                    <a href="preparedness.html" class="nav-link-item">
+                    <a href="preparedness.html" class="nav-link-item" data-i18n-tooltip="preparedness">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                                 <path d="m9 12 2 2 4-4"></path>
                             </svg>
                         </span>
-                        <span>Deprem Önlemleri</span>
+                        <span data-i18n="preparedness">Deprem Önlemleri</span>
                     </a>
-                    <a href="education.html" class="nav-link-item">
+                    <a href="education.html" class="nav-link-item" data-i18n-tooltip="education">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m4 6 8-4 8 4"></path>
@@ -148,7 +148,7 @@
                                 <circle cx="12" cy="9" r="2"></circle>
                             </svg>
                         </span>
-                        <span>Deprem Eğitimi</span>
+                        <span data-i18n="education">Deprem Eğitimi</span>
                     </a>
                 </div>
 

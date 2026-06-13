@@ -9,6 +9,17 @@ interface Props {
   bodyClass?: string;
 }
 const { title, description, canonical, bodyClass = '' } = Astro.props;
+
+const pageAnim = {
+  forwards: {
+    old: [{ name: 'page-exit', duration: '170ms', easing: 'ease-in', fillMode: 'both' }],
+    new: [{ name: 'page-enter', duration: '280ms', easing: 'cubic-bezier(0.16,1,0.3,1)', fillMode: 'both' }],
+  },
+  backwards: {
+    old: [{ name: 'page-exit', duration: '170ms', easing: 'ease-in', fillMode: 'both' }],
+    new: [{ name: 'page-enter', duration: '280ms', easing: 'cubic-bezier(0.16,1,0.3,1)', fillMode: 'both' }],
+  },
+};
 ---
 <!DOCTYPE html>
 <html lang="tr">
@@ -35,7 +46,7 @@ const { title, description, canonical, bodyClass = '' } = Astro.props;
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="/style.css?v=2036">
+  <link rel="stylesheet" href="/style.css?v=2037">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
   <script is:inline>
     (function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); })();
@@ -73,7 +84,7 @@ const { title, description, canonical, bodyClass = '' } = Astro.props;
 
       <nav class="main-nav">
         <div class="nav-primary-section">
-          <a href="/index.html" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası">
+          <a href="/index.html" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası" data-i18n-tooltip="navMap">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
@@ -81,34 +92,34 @@ const { title, description, canonical, bodyClass = '' } = Astro.props;
                 <line x1="16" y1="6" x2="16" y2="22"></line>
               </svg>
             </span>
-            <span>Deprem Haritası</span>
+            <span data-i18n="navMap">Deprem Haritası</span>
           </a>
         </div>
-        <div class="nav-divider">BİLGİ MERKEZİ</div>
+        <div class="nav-divider" data-i18n="navInfoSection">BİLGİ MERKEZİ</div>
         <div class="nav-links">
-          <a href="/blog.html" class="nav-link-item" data-tooltip="Blog & Haberler">
+          <a href="/blog.html" class="nav-link-item" data-tooltip="Blog & Haberler" data-i18n-tooltip="navBlog">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path>
               </svg>
             </span>
-            <span>Blog & Haberler</span>
+            <span data-i18n="navBlog">Blog & Haberler</span>
           </a>
-          <a href="/preparedness.html" class="nav-link-item" data-tooltip="Deprem Önlemleri">
+          <a href="/preparedness.html" class="nav-link-item" data-tooltip="Deprem Önlemleri" data-i18n-tooltip="preparedness">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path>
               </svg>
             </span>
-            <span>Deprem Önlemleri</span>
+            <span data-i18n="preparedness">Deprem Önlemleri</span>
           </a>
-          <a href="/education.html" class="nav-link-item" data-tooltip="Deprem Eğitimi">
+          <a href="/education.html" class="nav-link-item" data-tooltip="Deprem Eğitimi" data-i18n-tooltip="education">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m4 6 8-4 8 4"></path><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"></path><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"></path><path d="M18 5v17"></path><path d="M6 5v17"></path><circle cx="12" cy="9" r="2"></circle>
               </svg>
             </span>
-            <span>Deprem Eğitimi</span>
+            <span data-i18n="education">Deprem Eğitimi</span>
           </a>
         </div>
 
@@ -160,7 +171,7 @@ const { title, description, canonical, bodyClass = '' } = Astro.props;
     </aside>
 
     <!-- Content area: swaps on each navigation -->
-    <main class="main-content scrollable" transition:animate="fade">
+    <main class="main-content scrollable" transition:name="main-content" transition:animate={pageAnim}>
       <slot />
     </main>
 
@@ -181,8 +192,20 @@ const { title, description, canonical, bodyClass = '' } = Astro.props;
       var path = window.location.pathname;
       document.querySelectorAll('.nav-link-item').forEach(function(link) {
         var linkPath = new URL(link.href, window.location.href).pathname;
-        link.classList.toggle('active', linkPath === path);
+        // Exact match, or current path is under this link's directory (e.g. /blog/post.html → /blog.html active)
+        var dir = linkPath.replace(/\.html$/, '/');
+        var isActive = linkPath === path || (dir !== '/' && dir !== '/index/' && path.startsWith(dir));
+        link.classList.toggle('active', isActive);
       });
+    });
+
+    // Re-apply theme after every ClientRouter swap.
+    // Astro syncs <html> attributes from the incoming page (<html lang="tr">, no data-theme),
+    // which removes data-theme. This restores it from localStorage before paint.
+    document.addEventListener('astro:after-swap', function restoreTheme() {
+      var theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.lang = localStorage.getItem('language') || 'tr';
     });
 
     // Page transition loader

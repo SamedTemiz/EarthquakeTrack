@@ -3,26 +3,11 @@
     const HIDDEN_CLASS = 'is-hidden';
     const HIDE_FALLBACK_MS = 3500;
 
-    function getLoadingLabel() {
-        try {
-            const lang = localStorage.getItem('language');
-            return lang === 'en' ? 'Loading...' : 'Yükleniyor...';
-        } catch {
-            return 'Yükleniyor...';
-        }
-    }
-
     function createLoaderElement() {
-        const overlay = document.createElement('div');
-        overlay.id = LOADER_ID;
-        overlay.setAttribute('aria-hidden', 'true');
-        overlay.innerHTML = `
-            <div class="page-transition-loader__content" role="status" aria-live="polite">
-                <span class="page-transition-loader__spinner" aria-hidden="true"></span>
-                <span class="page-transition-loader__text">${getLoadingLabel()}</span>
-            </div>
-        `;
-        return overlay;
+        const el = document.createElement('div');
+        el.id = LOADER_ID;
+        el.setAttribute('aria-hidden', 'true');
+        return el;
     }
 
     function getOrCreateLoader() {
@@ -41,7 +26,7 @@
 
     function showLoader() {
         const loader = getOrCreateLoader();
-        loader.style.left = getSidebarLeft() + 'px';
+        loader.style.setProperty('--sidebar-w', getSidebarLeft() + 'px');
         loader.classList.remove(HIDDEN_CLASS);
     }
 
