@@ -6,12 +6,19 @@ import ArticleShell from '../../components/ArticleShell.astro';
   description="Deprem sizi evde, yatakta, okulda, ofiste, araçta veya AVM'de yakalarsa ne yapmalısınız? Çök-Kapan-Tutun tekniği ve ortama göre doğru davranış rehberi."
   canonical="https://earthquaketrack.com.tr/blog/deprem-aninda-dogru-davranis.html"
   heading="Deprem Anında Nerede Ne Yapmalı? Ortama Göre Doğru Davranış Rehberi"
+  headingEn="What to Do During an Earthquake? A Location-by-Location Guide"
   date="8 Haziran 2026"
+  dateEn="June 8, 2026"
   readTime="7 Dk"
   related={[
     { href: '/blog/deprem-sonrasi-ilk-24-saat.html', title: 'Deprem Sonrası İlk 24 Saat: Saat Saat Hayatta Kalma Yol Haritası' },
     { href: '/blog/deprem-cantasi-hayat-kurtarir.html', title: 'Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)' },
     { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli' },
+  ]}
+  relatedEn={[
+    { href: '/blog/deprem-sonrasi-ilk-24-saat.html', title: 'The First 24 Hours After an Earthquake: A Hour-by-Hour Survival Roadmap' },
+    { href: '/blog/deprem-cantasi-hayat-kurtarir.html', title: 'Why an Earthquake Kit Saves Lives (A Detailed Preparation Guide)' },
+    { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Earthquake Magnitude vs. Intensity: Richter, Mw, and Mercalli' },
   ]}
 >
   <p>Bir deprem ortalama <strong>10 ila 45 saniye</strong> sürer. Bu kadar kısa bir sürede düşünüp taşınarak karar vermek mümkün değildir — beden, önceden öğrenilmiş refleksleri uygular. Bu yüzden "deprem anında ne yapacağını bilmek" yeterli değildir; bunu bulunduğunuz her ortam için ayrı ayrı zihninizde prova etmiş olmanız gerekir. Bu rehber, en sık bulunduğunuz yedi ortam için doğru davranış kalıplarını tek tek ele alıyor.</p>
@@ -121,4 +128,114 @@ import ArticleShell from '../../components/ArticleShell.astro';
 
   <h2>Sonuç</h2>
   <p>Deprem anında doğru davranış, bilgiden çok <strong>provaya</strong> dayanır. Bu yazıdaki senaryoları bir kez okumak yeterli değil — evinizde, iş yerinizde ve aracınızda kendinizi o anın içinde hayal edin, güvenli noktaları şimdiden belirleyin. Sarsıntı geldiğinde düşünmeye vaktiniz olmayacak; ama vücudunuz ne yapacağını biliyor olacak.</p>
+
+  <Fragment slot="en">
+  <p>An earthquake lasts an average of <strong>10 to 45 seconds</strong>. There's no time to think and deliberate in such a short span — your body will execute pre-learned reflexes. That's why "knowing what to do in an earthquake" is not enough; you need to have mentally rehearsed it for every environment you might be in. This guide covers the correct behavioral patterns for seven of the most common situations.</p>
+
+  <h2>The Golden Rule: Drop – Cover – Hold On</h2>
+  <p>Wherever you are, the universally recommended response from modern emergency management consists of three steps. This is the shared advice of all disaster agencies worldwide, including AFAD in Turkey:</p>
+
+  <div class="ckt-row">
+    <div class="ckt-step">
+      <span class="num">1</span>
+      <h3>DROP</h3>
+      <p>Drop to your knees. Being close to the ground prevents you from being thrown or falling.</p>
+    </div>
+    <div class="ckt-arrow">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </div>
+    <div class="ckt-step">
+      <span class="num">2</span>
+      <h3>COVER</h3>
+      <p>Protect your head and neck with your arms; if there's a sturdy table nearby, get under it.</p>
+    </div>
+    <div class="ckt-arrow">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </div>
+    <div class="ckt-step">
+      <span class="num">3</span>
+      <h3>HOLD ON</h3>
+      <p>Grip the table leg; if the table slides, move with it.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p>The method known as the "triangle of life" is <strong>not recommended</strong> by scientific organizations. Where objects will fall during shaking cannot be predicted; the evidence-based advice is Drop-Cover-Hold On.</p>
+  </div>
+
+  <h2>Correct Behavior by Location</h2>
+  <p>Drop-Cover-Hold On is the base template; however, each environment has its own unique risks and opportunities. Review the following scenarios one by one and mentally rehearse each by imagining yourself in it:</p>
+
+  <div class="vis-grid">
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5"/><path d="M5 8.5V21h14V8.5"/><path d="M9 21v-6h6v6"/></svg>
+      </div>
+      <h3>At Home</h3>
+      <p>Get under a sturdy table; if unavailable, apply Drop-Cover-Hold On next to an interior wall. Stay away from windows and furniture that could topple. Do not run to the stairs or balcony until the shaking stops.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+      </div>
+      <h3>In Bed</h3>
+      <p>Don't try to get out of bed — walking on broken glass in the dark is the most common cause of injury. Roll face-down, protect your head and neck with a pillow, and wait for the shaking to stop.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 8-4 8 4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M18 5v17"/><path d="M6 5v17"/></svg>
+      </div>
+      <h3>At School</h3>
+      <p>Get under your desk and hold the desk leg. Wait for the teacher's instructions; once shaking stops, proceed in an orderly evacuation (no running or pushing) to the assembly point in the schoolyard.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <h3>In the Office</h3>
+      <p>Get under your work desk; stay away from glass partitions, tall cabinets, and shelves. Never use the elevator. If you're on a high floor, swaying is normal — don't panic, the building is designed for it.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+      </div>
+      <h3>In a Vehicle</h3>
+      <p>Slow down, pull to the right, and stop. <strong>Do not stop</strong> under bridges, viaducts, tunnels, or power lines. Stay inside with your seatbelt on; the car provides a steel protective shell.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <h3>In a Mall / Supermarket</h3>
+      <p>Immediately move away from shelves and display windows; leave your cart. Don't rush toward exits with the crowd — a stampede causes more injuries than the quake. Apply Drop-Cover-Hold On next to a structural column.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h3>Outdoors</h3>
+      <p>You're arguably in the safest place — but move away from building facades, utility poles, retaining walls, and trees. Crouch in an open area and wait for the shaking to pass.</p>
+    </div>
+  </div>
+
+  <h2>The 3 Most Critical Mistakes</h2>
+  <p>The vast majority of earthquake-related mistakes fall into three behaviors. Recognizing them is the first step in breaking instilled wrong reflexes:</p>
+  <ol>
+    <li><strong>Running to the stairs or doorway:</strong> Stairs are among the most dangerous parts of a building during shaking; steps can separate and crowds turn into stampedes. Don't move until shaking stops.</li>
+    <li><strong>Jumping from a balcony or window:</strong> The injury rate for those who jump in panic is many times higher than for those who stay inside. If the building isn't collapsing, jumping is the worst decision.</li>
+    <li><strong>Taking the elevator:</strong> If the power cuts, you'll be trapped; the cabin can derail. Even during post-earthquake evacuation, elevators should not be used.</li>
+  </ol>
+
+  <div class="callout ok">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <p>Conduct <strong>earthquake drills</strong> at home at least twice a year: have everyone apply Drop-Cover-Hold On in their own room, then walk the evacuation route. Turning this into a game for children builds reflexes instead of panic.</p>
+  </div>
+
+  <h2>After the Shaking Stops</h2>
+  <p>The right behavior during an earthquake is only the first half of the story. In the minutes after shaking stops, evacuation, communication, and protection against aftershocks are critically important. We cover this entire process hour by hour in our <a href="/blog/deprem-sonrasi-ilk-24-saat.html">First 24 Hours After an Earthquake roadmap</a>.</p>
+
+  <h2>Conclusion</h2>
+  <p>Correct earthquake behavior depends more on <strong>rehearsal</strong> than on knowledge. Reading these scenarios once is not enough — imagine yourself in each situation at home, at work, and in your car, and identify safe spots now. When the shaking hits, you won't have time to think; but your body will know exactly what to do.</p>
+  </Fragment>
 </ArticleShell>

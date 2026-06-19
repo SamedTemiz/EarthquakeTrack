@@ -202,7 +202,7 @@ export function getCountryDisplayName(canonicalKey, lang) {
     return canonicalKey;
 }
 
-function updateStaticText() {
+export function updateStaticText() {
     document.documentElement.lang = currentLang;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {

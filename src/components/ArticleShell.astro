@@ -11,12 +11,16 @@ interface Props {
   description: string;
   canonical: string;
   heading: string;
+  headingEn?: string;
   date: string;
+  dateEn?: string;
   readTime: string;
   related?: RelatedPost[];
+  relatedEn?: RelatedPost[];
 }
 
-const { title, description, canonical, heading, date, readTime, related = [] } = Astro.props;
+const { title, description, canonical, heading, headingEn, date, dateEn, readTime, related = [], relatedEn = [] } = Astro.props;
+const readMinutes = readTime.replace(/\D/g, '');
 ---
 <PageLayout
   title={title}
@@ -192,7 +196,7 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
     </style>
   </Fragment>
 
-  <div class="edu-shell">
+  <div id="content-tr" class="edu-shell">
     <header class="edu-header">
       <a href="/blog.html" class="article-back-link">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -207,14 +211,38 @@ const { title, description, canonical, heading, date, readTime, related = [] } =
       </div>
       <h1>{heading}</h1>
     </header>
-
     <div class="edu-body article-content">
       <slot />
-
       {related.length > 0 && (
         <nav class="related-posts">
           <h2>İlgili Yazılar</h2>
           {related.map(r => <a href={r.href}>{r.title}</a>)}
+        </nav>
+      )}
+    </div>
+  </div>
+
+  <div id="content-en" class="edu-shell" style="display:none;">
+    <header class="edu-header">
+      <a href="/blog.html" class="article-back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+        </svg>
+        Blog &amp; News
+      </a>
+      <div class="blog-post-meta">
+        <span>{dateEn ?? date}</span>
+        <span>•</span>
+        <span>Reading Time: {readMinutes} Min</span>
+      </div>
+      <h1>{headingEn ?? heading}</h1>
+    </header>
+    <div class="edu-body article-content">
+      <slot name="en" />
+      {relatedEn.length > 0 && (
+        <nav class="related-posts">
+          <h2>Related Posts</h2>
+          {relatedEn.map(r => <a href={r.href}>{r.title}</a>)}
         </nav>
       )}
     </div>

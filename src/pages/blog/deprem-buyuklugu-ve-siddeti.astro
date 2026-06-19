@@ -6,12 +6,19 @@ import ArticleShell from '../../components/ArticleShell.astro';
   description="Richter ölçeği, moment büyüklüğü (Mw) ve Mercalli şiddet ölçeği arasındaki farklar. 6 ile 7 büyüklüğündeki deprem arasında neden 32 kat enerji farkı var?"
   canonical="https://earthquaketrack.com.tr/blog/deprem-buyuklugu-ve-siddeti.html"
   heading="Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli"
+  headingEn="Earthquake Magnitude vs. Intensity: Richter, Mw, and Mercalli"
   date="25 Mayıs 2026"
+  dateEn="May 25, 2026"
   readTime="7 Dk"
   related={[
     { href: '/blog/turkiye-deprem-tarihi.html', title: "Türkiye'nin Deprem Tarihi: 1939 Erzincan'dan 2023 Kahramanmaraş'a" },
     { href: '/blog/turkiye-fay-hatlari-tehlikesi.html', title: "Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak" },
     { href: '/blog/deprem-aninda-dogru-davranis.html', title: 'Deprem Anında Nerede Ne Yapmalı? Ortama Göre Doğru Davranış Rehberi' },
+  ]}
+  relatedEn={[
+    { href: '/blog/turkiye-deprem-tarihi.html', title: "Turkey's Earthquake History: From the 1939 Erzincan to the 2023 Kahramanmaraş" },
+    { href: '/blog/turkiye-fay-hatlari-tehlikesi.html', title: "Turkey's Active Fault Lines: Understanding the NAF, EAF, and WAF" },
+    { href: '/blog/deprem-aninda-dogru-davranis.html', title: 'What to Do During an Earthquake? A Location-by-Location Guide' },
   ]}
 >
   <p>Her depremden sonra aynı tartışma yaşanır: AFAD 6,6 dedi, Kandilli 6,8 ölçtü, USGS 6,7 duyurdu — "hangisi doğru?" Ya da haberlerde "7 şiddetinde deprem" ifadesi geçer, oysa <strong>şiddet ve büyüklük tamamen farklı iki kavramdır</strong>. Bu yazıda deprem ölçümünün arkasındaki bilimi sade bir dille anlatıyor; Richter, moment büyüklüğü (Mw) ve Mercalli ölçeklerinin ne anlama geldiğini açıklıyoruz.</p>
@@ -115,4 +122,108 @@ import ArticleShell from '../../components/ArticleShell.astro';
 
   <h2>Sonuç</h2>
   <p>Özetle: <strong>büyüklük depremin kimliği, şiddet ise sizin yaşadığınız deneyimdir</strong>. Büyüklük tek bir sayıdır ve kaynaktaki enerjiyi anlatır; şiddet yerden yere değişir ve yapı kalitesiyle zemin koşullarına göre şekillenir. Bu ayrımı bilmek, deprem haberlerini doğru okumanın ve riskinizi gerçekçi değerlendirmenin ilk adımıdır.</p>
+
+  <Fragment slot="en">
+  <p>After every earthquake, the same debate plays out: AFAD reported 6.6, Kandilli measured 6.8, USGS announced 6.7 — "which one is right?" Or the news says "an earthquake of intensity 7," when <strong>intensity and magnitude are two completely different concepts</strong>. In this article, we explain the science behind earthquake measurement in plain language, covering what the Richter scale, moment magnitude (Mw), and Mercalli scales actually mean.</p>
+
+  <h2>Magnitude: The Energy at the Source</h2>
+  <p>Magnitude is a single number that expresses the <strong>energy released at the earthquake's source</strong>. It doesn't change no matter where you measure from: the 7.8-magnitude Kahramanmaraş earthquake is 7.8 whether measured from Istanbul or Tokyo. Today, seismologists use the modern successor to the Richter scale — <strong>moment magnitude (Mw)</strong> — for large earthquakes, because the Richter scale saturates above 7 and underestimates the energy released.</p>
+
+  <p>The most misleading aspect of the magnitude scale is that it is <strong>logarithmic</strong>. Each unit increase on the scale represents a 10-fold increase in ground motion and approximately <strong>32 times</strong> more energy released:</p>
+
+  <div class="mag-scale">
+    <div class="mag-row">
+      <span class="mag-label">M 4.0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:8%; background:linear-gradient(90deg,#5dc97a,#8fd99f);"></div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 5.0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:18%; background:linear-gradient(90deg,#a8c75a,#cdd97a);">32×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 6.0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:38%; background:linear-gradient(90deg,#d9b04a,#e6c96a);">1,000×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 7.0</span>
+      <div class="mag-track"><div class="mag-bar" style="width:66%; background:linear-gradient(90deg,#e0884a,#e8a76a);">32,000×</div></div>
+    </div>
+    <div class="mag-row">
+      <span class="mag-label">M 7.8</span>
+      <div class="mag-track"><div class="mag-bar" style="width:100%; background:linear-gradient(90deg,#dd5c5c,#e88080);">~500,000× (vs M 4.0)</div></div>
+    </div>
+  </div>
+  <p style="font-size:.82rem; color:var(--text-tertiary); margin-top:-16px;">Bars represent energy released relative to M 4.0 on a logarithmic scale.</p>
+
+  <p>So a magnitude 6 earthquake is not just "a little bigger" than a magnitude 5 — it carries <strong>32 times the energy</strong>. The 2023 Kahramanmaraş earthquake (7.8) released roughly twice the energy of the 1999 Gölcük earthquake (7.6) — from a difference of just 0.2.</p>
+
+  <h2>Intensity: The Effect at a Given Location</h2>
+  <p>Intensity measures the <strong>felt effect of an earthquake at a specific point</strong> and varies from place to place. The same earthquake can cause destruction at intensity XI (eleven) at the epicenter while being felt only at intensity IV (four) — "chandeliers swaying" — 300 km away. Intensity is graded from I to XII using Roman numerals on the <strong>Modified Mercalli Intensity (MMI) scale</strong>:</p>
+
+  <table>
+    <thead>
+      <tr><th>Intensity (MMI)</th><th>Felt Effect</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>I – III</td><td>Most people don't feel it; sensitive instruments record it, hanging objects sway slightly.</td></tr>
+      <tr><td>IV – V</td><td>Everyone feels it; doors and windows rattle, small objects may fall from shelves.</td></tr>
+      <tr><td>VI – VII</td><td>Walking becomes difficult; plaster cracks, moderate damage begins in weak structures.</td></tr>
+      <tr><td>VIII – IX</td><td>Panic is widespread; heavy damage and partial collapses in poor-quality buildings.</td></tr>
+      <tr><td>X – XII</td><td>Widespread destruction; even well-built structures sustain damage, permanent ground deformation.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p>Saying "an earthquake of intensity 7 occurred" is technically incorrect. The right phrase is: a <strong>magnitude 7</strong> earthquake occurred; intensity is measured differently at each location and written in Roman numerals.</p>
+  </div>
+
+  <h2>Why Does the Same Earthquake Have Different Magnitudes?</h2>
+  <p>When AFAD, Kandilli, and USGS announce different values after an earthquake, it's not a mistake — it's a difference in method:</p>
+  <ul>
+    <li><strong>Different scale types:</strong> One agency may publish local magnitude (ML) while another publishes moment magnitude (Mw). The two scales naturally produce different numbers for the same earthquake.</li>
+    <li><strong>Different station networks:</strong> Each agency uses data from its own seismometer network; distance to the earthquake and station distribution affect the result.</li>
+    <li><strong>Initial values are estimates:</strong> The first value announced by automated systems is updated as analysts review the data. For large earthquakes, the finalized magnitude may not be confirmed for hours.</li>
+  </ul>
+
+  <h2>Damage Is Not Determined by Magnitude Alone</h2>
+  <p>Four main factors together determine the destructiveness of an earthquake:</p>
+
+  <div class="vis-grid">
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l3-9 4 18 3-9h3"/><circle cx="20" cy="12" r="2"/></svg>
+      </div>
+      <h3>Magnitude and Duration</h3>
+      <p>Total energy released and how many seconds the shaking lasts. Prolonged shaking fatigues structures into collapse.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="M12 18v4"/><circle cx="12" cy="14" r="4"/></svg>
+      </div>
+      <h3>Focal Depth</h3>
+      <p>Shallow earthquakes (0–20 km) deliver energy to the surface far more powerfully. Most of Turkey's destructive earthquakes are shallow-focus.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M3 22V8l4-2v16"/><path d="M10 22V4l4-2v20"/><path d="M17 22V9l4 2v11"/></svg>
+      </div>
+      <h3>Soil Conditions</h3>
+      <p>Alluvial and fill soils amplify shaking (site amplification). This was the main cause of the collapses in Bayraklı during the 2020 İzmir earthquake.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      </div>
+      <h3>Building Quality</h3>
+      <p>The single most decisive factor. Two buildings exposed to the same intensity — the code-compliant one stands, the uninspected one collapses.</p>
+    </div>
+  </div>
+
+  <h2>Reading These Numbers in Live Data</h2>
+  <p>Every record on the <a href="/index.html">EarthquakeTrack live map</a> shows the <strong>magnitude</strong> value announced by the relevant agency (USGS, Kandilli, EMSC). The size and color of the circles on the map also scale with magnitude. Seeing slightly different values for the same earthquake from different sources reflects the methodological differences described above — both are "correct."</p>
+
+  <h2>Conclusion</h2>
+  <p>In short: <strong>magnitude is the earthquake's identity, intensity is your personal experience of it</strong>. Magnitude is a single number describing the energy at the source; intensity varies from place to place and is shaped by building quality and soil conditions. Understanding this distinction is the first step in reading earthquake news accurately and assessing your risk realistically.</p>
+  </Fragment>
 </ArticleShell>

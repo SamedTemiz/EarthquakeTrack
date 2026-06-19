@@ -6,12 +6,19 @@ import ArticleShell from '../../components/ArticleShell.astro';
   description="Türkiye'yi şekillendiren büyük depremler: 1939 Erzincan, 1999 Gölcük, 2011 Van, 2023 Kahramanmaraş. Her felaketten çıkarılan dersler ve değişen deprem yönetmelikleri."
   canonical="https://earthquaketrack.com.tr/blog/turkiye-deprem-tarihi.html"
   heading="Türkiye'nin Deprem Tarihi: 1939 Erzincan'dan 2023 Kahramanmaraş'a"
+  headingEn="Turkey's Earthquake History: From the 1939 Erzincan to the 2023 Kahramanmaraş"
   date="1 Haziran 2026"
+  dateEn="June 1, 2026"
   readTime="9 Dk"
   related={[
     { href: '/blog/turkiye-fay-hatlari-tehlikesi.html', title: "Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak" },
     { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli' },
     { href: '/blog/deprem-sonrasi-ilk-24-saat.html', title: 'Deprem Sonrası İlk 24 Saat: Saat Saat Hayatta Kalma Yol Haritası' },
+  ]}
+  relatedEn={[
+    { href: '/blog/turkiye-fay-hatlari-tehlikesi.html', title: "Turkey's Active Fault Lines: Understanding the NAF, EAF, and WAF" },
+    { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Earthquake Magnitude vs. Intensity: Richter, Mw, and Mercalli' },
+    { href: '/blog/deprem-sonrasi-ilk-24-saat.html', title: 'The First 24 Hours After an Earthquake: A Hour-by-Hour Survival Roadmap' },
   ]}
 >
   <p>Türkiye, dünyanın en aktif deprem kuşaklarından birinin üzerinde yer alır. Anadolu levhası, kuzeyden Avrasya, doğudan Arabistan levhalarının sıkıştırmasıyla her yıl yaklaşık <strong>2 santimetre batıya doğru hareket eder</strong>. Bu hareketin biriktirdiği enerji, yüzyıllar boyunca düzenli aralıklarla yıkıcı depremler olarak boşalmıştır. Geçmiş depremleri anlamak bir tarih merakından ibaret değildir: her büyük deprem, fayların davranışı hakkında bilgi verir ve bir sonrakine hazırlığın yol haritasını çizer.</p>
@@ -100,4 +107,93 @@ import ArticleShell from '../../components/ArticleShell.astro';
 
   <h2>Sonuç</h2>
   <p>Türkiye'nin deprem tarihi, aynı fayların aynı bölgelerde tekrar tekrar kırıldığını gösteren uzun bir kayıttır. Bu kaydın bize söylediği şey nettir: soru "deprem olacak mı" değil, "olduğunda ne kadar hazır olacağız" sorusudur. Geçmişin derslerini bireysel hazırlığa dönüştürmek — sağlam konut seçimi, aile planı, deprem çantası — bu tarihin tekerrür eden acı bölümlerini kısaltmanın tek yoludur.</p>
+
+  <Fragment slot="en">
+  <p>Turkey sits on one of the world's most active seismic belts. The Anatolian plate is squeezed by the Eurasian plate to the north and the Arabian plate to the east, moving approximately <strong>2 centimeters westward every year</strong>. The energy accumulated by this movement has been released at regular intervals throughout history as devastating earthquakes. Understanding past earthquakes is more than historical curiosity: each major earthquake reveals information about fault behavior and charts the roadmap for preparing for the next one.</p>
+
+  <div class="stat-band">
+    <div class="stat"><span class="stat-num">~33,000</span><span class="stat-label">Lives lost in the 1939 Erzincan earthquake</span></div>
+    <div class="stat"><span class="stat-num">7.8</span><span class="stat-label">Magnitude of the 2023 Kahramanmaraş earthquake (Mw)</span></div>
+    <div class="stat"><span class="stat-num">70%+</span><span class="stat-label">Share of population living in high seismic risk zones</span></div>
+    <div class="stat"><span class="stat-num">485</span><span class="stat-label">Active faults on MTA's active fault map</span></div>
+  </div>
+
+  <h2>Disasters of the Century: A Chronological Overview</h2>
+  <p>The timeline below summarizes the earthquakes that profoundly affected Turkey over the past century and the shifts each one created in the country's disaster policies:</p>
+
+  <div class="htl">
+    <div class="htl-item major">
+      <div class="htl-year">1939</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 7.9</span><span class="htl-tag">Erzincan</span><span class="htl-tag">NAF</span></div>
+        <h3>Erzincan Earthquake — The Deadliest Disaster of the Republic Era</h3>
+        <p>On the night of December 27, a rupture at the eastern end of the North Anatolian Fault claimed approximately 33,000 lives and wiped Erzincan off the map. This disaster also marked the beginning of a westward-migrating earthquake sequence along the NAF: over the following 60 years the fault ruptured segment by segment toward the west like falling dominoes.</p>
+      </div>
+    </div>
+
+    <div class="htl-item">
+      <div class="htl-year">1944</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 7.2</span><span class="htl-tag">Bolu-Gerede</span></div>
+        <h3>Bolu-Gerede and the Birth of Earthquake Regulations</h3>
+        <p>Four major earthquakes on the NAF between 1939 and 1944 prompted the drafting of Turkey's first earthquake building code (1944) and first seismic hazard map (1945). The concept of "earthquake-resistant construction" entered legislation for the first time.</p>
+      </div>
+    </div>
+
+    <div class="htl-item major">
+      <div class="htl-year">1999</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 7.6</span><span class="htl-tag">Gölcük / İzmit</span><span class="htl-tag">NAF</span></div>
+        <h3>Gölcük Earthquake — Turkey's Breaking Point</h3>
+        <p>On August 17, 1999, at 03:02, a fault rupture in the eastern Marmara region claimed more than 17,000 lives by official figures; hundreds of thousands of buildings in the industrial heartland of Kocaeli and surrounding provinces were damaged. The Düzce earthquake (M 7.2) followed that November. These two disasters gave birth to mandatory earthquake insurance (DASK), the building inspection system, and modern search and rescue organization. Turkish earthquake awareness is divided into "before and after August 17."</p>
+      </div>
+    </div>
+
+    <div class="htl-item">
+      <div class="htl-year">2011</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 7.1</span><span class="htl-tag">Van</span></div>
+        <h3>Van Earthquake</h3>
+        <p>The earthquake that struck the Van-Erciş corridor on October 23 claimed more than 600 lives. Buildings that collapsed during the aftershock period demonstrated in the most painful way possible how vital the rule "never return to a damaged building" truly is. The urban transformation law (Law No. 6306) was enacted in 2012, immediately following this earthquake.</p>
+      </div>
+    </div>
+
+    <div class="htl-item">
+      <div class="htl-year">2020</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 6.8</span><span class="htl-tag">Elazığ</span><span class="htl-tag mag">M 6.9</span><span class="htl-tag">İzmir-Samos</span></div>
+        <h3>Elazığ and İzmir: Two Warning Earthquakes</h3>
+        <p>In January the Elazığ-Sivrice earthquake struck (on the EAF), and in October the Aegean Sea-Samos earthquake caused widespread destruction in İzmir. Building collapses in Bayraklı — 70 km from the epicenter — due to soil amplification brought the <strong>decisive role of ground conditions in structural safety</strong> sharply into focus.</p>
+      </div>
+    </div>
+
+    <div class="htl-item major">
+      <div class="htl-year">2023</div>
+      <div class="htl-body">
+        <div class="htl-tags"><span class="htl-tag mag">M 7.8</span><span class="htl-tag mag">M 7.6</span><span class="htl-tag">Kahramanmaraş</span><span class="htl-tag">EAF</span></div>
+        <h3>Kahramanmaraş Earthquakes — The Disaster of the Century</h3>
+        <p>On February 6, 2023, two earthquakes of magnitude 7.8 and 7.6 struck nine hours apart, rupturing approximately 500 kilometers of the East Anatolian Fault. Affecting 11 provinces and causing more than 50,000 deaths, this double earthquake is recorded as one of the largest continental earthquakes in modern measurement history. The oversight of building stock, construction amnesties, and the development of assembly areas were called into question — sharply and once again.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Three Major Lessons from This History</h2>
+
+  <h3>1. Earthquakes repeat — fault memory is unfailing</h3>
+  <p>The segments of the North Anatolian Fault that ruptured in 1939 proceeded to break westward in succession over the following 60 years: 1942 Niksar, 1943 Tosya, 1944 Gerede, 1957 Abant, 1967 Mudurnu, and finally 1999 Gölcük. This is precisely why scientists draw attention to the segment beneath the Marmara Sea. Seismic hazard is not a statistical abstraction — it is a cycle confirmed by a century of observation.</p>
+
+  <h3>2. Building quality, not the earthquake, determines casualties</h3>
+  <p>Earthquakes of similar magnitude produce vastly different outcomes depending on the building stock involved. Investigations into buildings that collapsed in the 1999 and 2023 disasters found unauthorized additional floors, severed load-bearing columns, and uninspected materials in a significant proportion. Turkey's earthquake history is also a history of <strong>building inspection</strong>: every major disaster pushed regulations a step forward — the 1944, 1975, 1998, 2007, and 2018 codes were all written in the shadow of great earthquakes.</p>
+
+  <h3>3. Prepared communities change their fate</h3>
+  <p>Countries with high seismic risk, like Japan and Chile, survive earthquakes of similar magnitude with far fewer casualties. The difference is not only engineering — it is regular drills, family disaster plans, and a culture of preparedness. You can find the first steps of individual preparedness in our <a href="/blog/deprem-cantasi-hayat-kurtarir.html">earthquake kit guide</a> and <a href="/blog/deprem-aninda-dogru-davranis.html">earthquake behavior guide</a>.</p>
+
+  <div class="callout info">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <p>You can monitor current seismic activity in Turkey and around the world in real time on our <a href="/index.html">live earthquake map</a>. Data is updated within minutes from USGS, Kandilli, and EMSC sources.</p>
+  </div>
+
+  <h2>Conclusion</h2>
+  <p>Turkey's earthquake history is a long record showing that the same faults rupture in the same regions again and again. What that record tells us is clear: the question is not "will an earthquake happen?" but "how prepared will we be when it does?" Converting the lessons of the past into individual preparedness — choosing sound housing, having a family plan, keeping an earthquake kit — is the only way to shorten the painful recurring chapters of this history.</p>
+  </Fragment>
 </ArticleShell>

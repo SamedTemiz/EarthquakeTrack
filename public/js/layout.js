@@ -1,4 +1,4 @@
-import { initLanguage, toggleLanguage, getCurrentLang } from './language.js';
+import { initLanguage, toggleLanguage, getCurrentLang, updateStaticText } from './language.js';
 import { initTheme } from './theme.js';
 import { initSidebarResize, initSidebarToggle } from './ui.js';
 
@@ -22,8 +22,12 @@ function initLayout() {
     initSidebarResize(null);
     initSidebarToggle(null);
 
-    // Re-sync content language on every ClientRouter page swap
-    document.addEventListener('astro:page-load', syncContentLanguage);
+    // Re-sync content language and data-i18n text on every ClientRouter page swap
+    document.addEventListener('astro:page-load', () => {
+        updateStaticText();
+        syncContentLanguage();
+    });
+    updateStaticText();
     syncContentLanguage();
 }
 

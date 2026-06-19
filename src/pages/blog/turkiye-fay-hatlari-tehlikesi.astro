@@ -6,12 +6,19 @@ import ArticleShell from '../../components/ArticleShell.astro';
   description="Kuzey Anadolu, Doğu Anadolu ve Batı Anadolu fay hatlarının sismik özellikleri, potansiyel riskler ve güncel durumları hakkında uzman analizi."
   canonical="https://earthquaketrack.com.tr/blog/turkiye-fay-hatlari-tehlikesi.html"
   heading="Türkiye'nin Aktif Fay Hatları: KAF, DAF ve BAF'ı Anlamak"
+  headingEn="Turkey's Active Fault Lines: Understanding the NAF, EAF, and WAF"
   date="10 Mayıs 2026"
+  dateEn="May 10, 2026"
   readTime="6 Dk"
   related={[
     { href: '/blog/turkiye-deprem-tarihi.html', title: "Türkiye'nin Deprem Tarihi: 1939 Erzincan'dan 2023 Kahramanmaraş'a" },
     { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Deprem Büyüklüğü ile Şiddeti Aynı Şey Değil: Richter, Mw ve Mercalli' },
     { href: '/blog/deprem-cantasi-hayat-kurtarir.html', title: 'Deprem Çantası Neden Hayat Kurtarır? (Detaylı Hazırlık Rehberi)' },
+  ]}
+  relatedEn={[
+    { href: '/blog/turkiye-deprem-tarihi.html', title: "Turkey's Earthquake History: From the 1939 Erzincan to the 2023 Kahramanmaraş" },
+    { href: '/blog/deprem-buyuklugu-ve-siddeti.html', title: 'Earthquake Magnitude vs. Intensity: Richter, Mw, and Mercalli' },
+    { href: '/blog/deprem-cantasi-hayat-kurtarir.html', title: 'Why an Earthquake Kit Saves Lives (A Detailed Preparation Guide)' },
   ]}
 >
   <p>Türkiye, tektonik açıdan dünyanın en karmaşık ve aktif bölgelerinden biri olan Alp-Himalaya deprem kuşağında yer almaktadır. Ülkemizin sismik yapısı temel olarak Afrika, Arap ve Avrasya tektonik levhalarının birbirleriyle olan sürekli hareketleri sonucunda şekillenmiştir. Bu devasa tektonik hareketler, Türkiye haritasını adeta bir ağ gibi saran ve sürekli enerji biriktiren üç büyük fay hattı sistemini oluşturmuştur: Kuzey Anadolu Fay Hattı (KAF), Doğu Anadolu Fay Hattı (DAF) ve Batı Anadolu Fay Hattı (BAF).</p>
@@ -57,4 +64,50 @@ import ArticleShell from '../../components/ArticleShell.astro';
 
   <h2>Sonuç ve Çözüm: Depremle Yaşamayı Öğrenmek</h2>
   <p>Fay hatlarının yerini değiştiremeyeceğimize göre, odaklanmamız gereken tek gerçek <strong>depreme dirençli kentler</strong> inşa etmektir. Zemin etütlerinin doğru yapıldığı, mühendislik kurallarına tavizsiz uyulan binalar ve sismik izolatör gibi modern teknolojilerin kullanımı sayesinde fay hatları üzerindeki yaşamı güvenli hale getirmek mümkündür. Japonya ve Şili örnekleri, doğru yapılaşma ile büyük depremlerin sıfır can kaybıyla atlatılabileceğinin en büyük kanıtlarıdır.</p>
+
+  <Fragment slot="en">
+  <p>Turkey sits in the Alpine-Himalayan seismic belt, one of the most tectonically complex and active regions in the world. The country's seismic structure has been shaped by the continuous movement of three major tectonic plates — African, Arabian, and Eurasian — against each other. These enormous tectonic forces have created three major fault system networks that cross Turkey like a web, constantly accumulating energy: the North Anatolian Fault (NAF), the East Anatolian Fault (EAF), and the West Anatolian Fault (WAF).</p>
+
+  <div class="vis-grid">
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg>
+      </div>
+      <h3>NAF — North Anatolian</h3>
+      <p>~1,500 km, strike-slip. Extends from Karlıova to the Aegean; the Marmara segment is the most critical zone.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4L12 14 8 10 2 16"/><path d="M16 4h6v6"/></svg>
+      </div>
+      <h3>EAF — East Anatolian</h3>
+      <p>~600 km. Extends from Hatay to Bingöl; the source of the 2023 Kahramanmaraş earthquakes.</p>
+    </div>
+    <div class="vis-card">
+      <div class="vis-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </div>
+      <h3>WAF — West Anatolian</h3>
+      <p>A graben system of parallel short faults. Produces frequent earthquakes in the M 6.0–7.0 range.</p>
+    </div>
+  </div>
+
+  <h2>1. North Anatolian Fault (NAF)</h2>
+  <p>The North Anatolian Fault is recognized as one of the world's most active strike-slip faults and is often compared to the famous San Andreas Fault in California. It begins in the east at Karlıova (Bingöl), extends westward along the south of the Black Sea Mountains, passes beneath the Sea of Marmara, and reaches the Aegean Sea.</p>
+  <p><strong>Seismic Characteristics and Risks:</strong> The NAF is capable of producing very high seismic energy along its length. Its most distinctive feature is the sequence of large earthquakes that began with the 1939 Erzincan earthquake and migrated westward like dominoes: 1942 Niksar-Erbaa, 1943 Tosya-Ladik, 1944 Bolu-Gerede, 1957 Abant, 1967 Mudurnu, and finally 1999 Gölcük-Düzce. Today, the area most closely watched by seismologists is the <strong>segment beneath the Sea of Marmara</strong>, where energy is accumulating and rupture is anticipated. A potential Istanbul earthquake is expected to originate from a rupture on this segment. We examined this entire earthquake migration sequence chronologically in our <a href="/blog/turkiye-deprem-tarihi.html">Turkey's earthquake history article</a>.</p>
+
+  <h2>2. East Anatolian Fault (EAF)</h2>
+  <p>The East Anatolian Fault is a major fault zone approximately 600 kilometers long that joins the NAF at Bingöl Karlıova and extends to the southwest. It runs from Hatay through Osmaniye, Kahramanmaraş, Adıyaman, Elazığ, and Bingöl.</p>
+  <p><strong>Historical Background and Current Status:</strong> Long considered relatively "quiet," this fault line has in fact caused massive destruction throughout history. The double earthquakes of magnitudes 7.8 and 7.6 centered in Kahramanmaraş on February 6, 2023 — which deeply affected 11 provinces and caused tens of thousands of deaths — demonstrated to the entire world in the most painful way how enormous the EAF's destructive power can be. As the Arabian plate pushes the Anatolian plate northward, stress continuously re-accumulates on this fault.</p>
+
+  <h2>3. West Anatolian Fault (WAF)</h2>
+  <p>The Western Anatolia region has a complex network or "graben system" structure composed of many short faults parallel to each other, rather than a single long fault line like the NAF or EAF. Provinces such as Kütahya, Manisa, İzmir, Aydın, Denizli, and Muğla lie on or within the influence zone of this fault system.</p>
+  <p><strong>Earthquake Characteristics:</strong> The crust in the WAF region is under north-south extensional stress, which is why these faults are generally of "normal fault" character. Rather than the massive M 7.5+ earthquakes seen on the NAF and EAF, the WAF system more commonly produces earthquakes in the M 6.0–7.0 range at much higher frequency. Because they occur close to the surface, they have high acceleration values and significant damage potential.</p>
+
+  <h2>Plate Tectonics and Turkey's Future</h2>
+  <p>The Anatolian landmass is regularly pushed northward by the Arabian plate each year, and due to the resistance of the Eurasian plate to the north, it slowly drifts counterclockwise, westward toward the Aegean. This geological reality means that earthquakes in Turkey will not stop and cannot be prevented. You can follow current seismic activity on the fault lines in real time on our <a href="/index.html">live earthquake map</a>.</p>
+
+  <h2>Conclusion: Learning to Live with Earthquakes</h2>
+  <p>Since we cannot move the fault lines, the only reality we need to focus on is building <strong>earthquake-resilient cities</strong>. Through proper soil surveys, uncompromising adherence to engineering codes, and the use of modern technologies such as seismic isolators, it is possible to make life safe even on fault lines. The examples of Japan and Chile are the greatest proof that, with the right construction practices, major earthquakes can be survived with zero casualties.</p>
+  </Fragment>
 </ArticleShell>
