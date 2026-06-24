@@ -90,4 +90,22 @@
         <priority>0.6</priority>
         <changefreq>yearly</changefreq>
     </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/bina-deprem-dayanikliligi-nasil-anlasilir.html</loc>
+        <lastmod>2026-06-24</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/cocuklara-deprem-egitimi-nasil-verilir.html</loc>
+        <lastmod>2026-06-24</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://earthquaketrack.com.tr/blog/japonya-deprem-hazirligindan-dersler.html</loc>
+        <lastmod>2026-06-24</lastmod>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
 </urlset>

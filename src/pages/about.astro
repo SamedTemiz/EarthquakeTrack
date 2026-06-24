@@ -33,12 +33,19 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div id="content-tr">
       <header class="ct-head"><h1>Hakkında</h1></header>
       <div class="ct-body">
-      <p>EarthquakeTrack, Türkiye ve dünya genelindeki depremleri anlık olarak izlemenizi sağlayan, tamamen ücretsiz bir web uygulamasıdır. Harita üzerinde görselleştirme, büyüklük ve zaman filtresi, konum bazlı sorgulama ve çoklu veri kaynağı desteği sunar.</p>
+      <p>EarthquakeTrack, Türkiye ve dünya genelindeki depremleri anlık olarak izlemenizi sağlayan, tamamen ücretsiz bir web platformudur. Deprem verilerini dağınık resmi kaynaklardan bir araya getirerek harita üzerinde görselleştirir; teknik bilgisi olmayan herkesin kolayca anlayabileceği bir arayüzde sunar.</p>
+
       <h2>Neden geliştirdik?</h2>
-      <p>Türkiye, dünyanın en aktif sismik bölgelerinden birinde yer almaktadır. 1999 yılında yaşanan Kocaeli depremi ve 2023 Kahramanmaraş depremleri, güvenilir ve hızlı deprem bilgisine erişimin ne denli hayati olduğunu bir kez daha ortaya koymuştur. Mevcut kaynaklar dağınık, arayüzler ise çoğu zaman teknik kullanıcılara yöneliktir.</p>
-      <p>EarthquakeTrack'i hem teknik hem de teknik olmayan kullanıcıların kolayca okuyabileceği, mobil uyumlu, hızlı yüklenen ve reklamlardan arındırılmış bir platform olarak tasarladık.</p>
+      <p>Türkiye, dünyanın en aktif sismik bölgelerinden birinde yer almaktadır. 1999 Kocaeli ve 2023 Kahramanmaraş depremleri, güvenilir ve hızlı deprem bilgisine erişimin ne denli hayati olduğunu bir kez daha ortaya koymuştur. Ne var ki mevcut kaynaklar dağınık, arayüzler ise çoğu zaman yalnızca teknik kullanıcılara hitap etmektedir.</p>
+      <p>EarthquakeTrack, bu boşluğu doldurmak amacıyla 2026 yılında bir yazılım geliştirici tarafından hayata geçirilmiştir. Temel ilke sadedir: doğru veriyi, doğru anda, herkesin anlayabileceği biçimde sunmak.</p>
+
+      <h2>Editoryal yaklaşım</h2>
+      <p>Platformdaki blog yazıları ve bilgi içerikleri hazırlanırken yalnızca USGS, EMSC, Kandilli Rasathanesi, AFAD ve uluslararası hakemli yayınlar kaynak olarak kullanılmaktadır. Hiçbir içerik bilimsel dayanaktan yoksun deprem tahminleri veya doğrulanmamış iddialar içermez. Yanlış ya da güncel olmayan bilgi tespit edildiğinde içerik güncellenir ve okuyucular bilgilendirilir.</p>
+      <p>Deprem güvenliği doğrudan can güvenliğini ilgilendiren bir konudur. Bu nedenle her yazının bilimsel doğruluğuna özellikle dikkat edilmekte; resmi kurum açıklamalarıyla çelişen içerik yayımlanmamaktadır.</p>
+
       <h2>Nasıl çalışır?</h2>
-      <p>Uygulama, birden fazla güvenilir sismoloji kurumunun halka açık API'larından veri alır. Gelen veriler standart bir formata dönüştürülür ve ön bellekleme mekanizmaları aracılığıyla hızla kullanıcıya iletilir.</p>
+      <p>Uygulama, birden fazla güvenilir sismoloji kurumunun halka açık API'larından eş zamanlı veri alır. Gelen veriler standart bir formata dönüştürülür, yinelemeler temizlenir ve Cloudflare'ın küresel CDN ağı üzerinden kullanıcıya iletilir. Harita görünümü, filtreler ve dil desteği tamamen istemci taraflı çalışır; herhangi bir hesap veya kayıt gerekmez.</p>
+
       <h2>Veri kaynakları</h2>
       <div class="source-grid">
         <div class="source-card"><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong><span>ABD Jeoloji Araştırmaları Kurumu. Dünya genelindeki büyük depremler için küresel referans kaynağı.</span></div>
@@ -46,34 +53,70 @@ import PageLayout from '../layouts/PageLayout.astro';
         <div class="source-card"><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Rasathanesi</a></strong><span>Boğaziçi Üniversitesi bünyesinde; Türkiye'deki depremleri en ayrıntılı izleyen kurumlardan biri.</span></div>
         <div class="source-card"><strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong><span>Afet ve Acil Durum Yönetimi Başkanlığı. Türkiye'nin resmi deprem ve erken uyarı otoritesi.</span></div>
       </div>
+
       <h2>Veri doğruluğu hakkında</h2>
-      <p>Veri sağlayıcı kurumlar, büyük depremler için ilk büyüklük değerini genellikle 2–5 dakika içinde yayımlar. Ancak bu ön hesaplamalar birkaç dakika ile birkaç saat içinde revize edilebilir.</p>
-      <p>EarthquakeTrack, ham verileri yalnızca iletir ve görselleştirir. Olağanüstü durumlarda AFAD ve yerel yönetimlerin resmi açıklamalarını esas alınız.</p>
+      <p>Veri sağlayıcı kurumlar, büyük depremler için ilk büyüklük değerini genellikle 2–5 dakika içinde yayımlar. Ancak bu ön hesaplamalar birkaç dakika ile birkaç saat içinde revize edilebilir; aynı deprem için farklı kurumların farklı değer bildirmesi normaldir.</p>
+      <p>EarthquakeTrack ham verileri iletir ve görselleştirir; bağımsız bir sismoloji ölçüm merkezi değildir. Olağanüstü durumlarda AFAD ve yerel yönetimlerin resmi açıklamalarını esas alınız. Acil durumlarda <strong>112</strong>'yi arayın.</p>
+
       <h2>Özellikler</h2>
       <ul>
         <li><strong>Anlık harita görünümü:</strong> Tüm depremleri büyüklüklerine göre renkli noktalarla harita üzerinde görüntüleyin.</li>
+        <li><strong>Çoklu veri kaynağı:</strong> USGS, EMSC ve Kandilli verilerini tek ekranda birleştirin.</li>
         <li><strong>Ülke ve şehir filtresi:</strong> İstediğiniz bölgeye odaklanın.</li>
         <li><strong>Konum bazlı arama:</strong> Tarayıcı konum izni ile bulunduğunuz şehre anında odaklanın.</li>
         <li><strong>Karanlık / aydınlık tema:</strong> Tercihlerinize göre görsel deneyimi özelleştirin.</li>
         <li><strong>Türkçe / İngilizce dil desteği:</strong> Tüm arayüz ve içerik iki dilde sunulmaktadır.</li>
-        <li><strong>Tam mobil uyum:</strong> Akıllı telefon ve tablette rahat kullanım.</li>
+        <li><strong>Tam mobil uyum:</strong> Akıllı telefon ve tablette eksiksiz kullanım.</li>
+        <li><strong>Gizlilik öncelikli:</strong> Hesap, kayıt veya kişisel veri gerektirmez.</li>
       </ul>
+
+      <div class="disclaimer-box">
+        <strong>Sorumluluk reddi:</strong> EarthquakeTrack deprem verilerini resmi kurumlardan (USGS, EMSC, Kandilli, AFAD) alarak iletmektedir. Platforma sunulan içerikler bilgi amaçlıdır; resmi afet yönetimi kararlarında AFAD ve ilgili kamu kurumlarının açıklamaları esas alınmalıdır.
+      </div>
       </div>
     </div>
     <div id="content-en" style="display:none;">
-      <header class="ct-head"><h1>About</h1></header>
+      <header class="ct-head"><h1>About EarthquakeTrack</h1></header>
       <div class="ct-body">
-      <p>EarthquakeTrack is a completely free web application that allows you to monitor earthquakes in Turkey and around the world in real time.</p>
+      <p>EarthquakeTrack is a completely free web platform for monitoring earthquakes in Turkey and around the world in real time. It brings together earthquake data from scattered official sources, visualises it on an interactive map, and presents it in an interface that anyone — regardless of technical background — can easily understand.</p>
+
       <h2>Why We Built It</h2>
-      <p>Turkey is located in one of the world's most active seismic regions. The 1999 Kocaeli and 2023 Kahramanmaraş earthquakes demonstrated how vital access to reliable, fast earthquake information is.</p>
+      <p>Turkey sits in one of the world's most seismically active regions. The 1999 Kocaeli and 2023 Kahramanmaraş earthquakes demonstrated how vital access to reliable, fast earthquake information is. Yet existing sources are fragmented, and their interfaces are often aimed at technical specialists rather than the general public.</p>
+      <p>EarthquakeTrack was launched in 2026 by a software developer to fill this gap. The core principle is simple: deliver accurate data, at the right moment, in a format everyone can understand.</p>
+
+      <h2>Editorial Approach</h2>
+      <p>All blog posts and educational content on this platform are prepared using only peer-reviewed sources and data from authoritative institutions: USGS, EMSC, Kandilli Observatory, AFAD, and international seismological publications. No content contains unsubstantiated earthquake predictions or unverified claims. When incorrect or outdated information is identified, content is updated and readers are informed.</p>
+      <p>Earthquake safety is a matter of life and safety. For this reason, the scientific accuracy of every article is given particular attention; content that contradicts official institutional statements is not published.</p>
+
       <h2>How It Works</h2>
-      <p>The application retrieves data from the public APIs of multiple reliable seismology institutions, converts them to a standard format, and delivers them quickly through caching mechanisms.</p>
+      <p>The application simultaneously pulls data from the public APIs of multiple seismology institutions. Incoming data is converted to a standard format, duplicates are removed, and results are delivered via Cloudflare's global CDN. The map view, filters, and language support all run client-side; no account or registration is required.</p>
+
       <h2>Data Sources</h2>
       <div class="source-grid">
         <div class="source-card"><strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a></strong><span>United States Geological Survey. The global reference source for major earthquakes worldwide.</span></div>
         <div class="source-card"><strong><a href="https://www.emsc-csem.org/" target="_blank" rel="noopener noreferrer">EMSC</a></strong><span>Euro-Mediterranean Seismological Centre. An important data provider focused on Europe and the Mediterranean.</span></div>
-        <div class="source-card"><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Observatory</a></strong><span>Under Boğaziçi University; one of the institutions that most closely monitors earthquakes in Turkey.</span></div>
+        <div class="source-card"><strong><a href="http://www.koeri.boun.edu.tr/" target="_blank" rel="noopener noreferrer">Kandilli Observatory</a></strong><span>Under Boğaziçi University; one of Turkey's primary seismic monitoring institutions.</span></div>
         <div class="source-card"><strong><a href="https://deprem.afad.gov.tr/" target="_blank" rel="noopener noreferrer">AFAD</a></strong><span>Disaster and Emergency Management Authority. Turkey's official earthquake and early warning authority.</span></div>
+      </div>
+
+      <h2>A Note on Data Accuracy</h2>
+      <p>Data providers typically publish an initial magnitude within 2–5 minutes of a significant earthquake. These preliminary values may be revised within minutes to hours; it is normal for different institutions to report slightly different values for the same event.</p>
+      <p>EarthquakeTrack relays and visualises raw data — it is not an independent seismological measurement centre. In emergency situations, always follow official statements from AFAD and local authorities. In an emergency, call <strong>112</strong>.</p>
+
+      <h2>Features</h2>
+      <ul>
+        <li><strong>Live map view:</strong> All earthquakes displayed as colour-coded dots scaled by magnitude.</li>
+        <li><strong>Multiple data sources:</strong> USGS, EMSC, and Kandilli data merged on a single screen.</li>
+        <li><strong>Country and city filter:</strong> Focus on any region instantly.</li>
+        <li><strong>Location-based search:</strong> With browser location permission, zoom instantly to your city.</li>
+        <li><strong>Dark / light theme:</strong> Choose the visual experience that suits you.</li>
+        <li><strong>Turkish / English language support:</strong> Full interface and content in both languages.</li>
+        <li><strong>Fully mobile-optimised:</strong> Seamless use on smartphones and tablets.</li>
+        <li><strong>Privacy-first:</strong> No account, registration, or personal data required.</li>
+      </ul>
+
+      <div class="disclaimer-box">
+        <strong>Disclaimer:</strong> EarthquakeTrack receives and relays earthquake data from official institutions (USGS, EMSC, Kandilli, AFAD). Content on this platform is for informational purposes only. For official disaster management decisions, always refer to AFAD and relevant public authority announcements.
       </div>
       </div>
     </div>

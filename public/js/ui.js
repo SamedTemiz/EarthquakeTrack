@@ -293,6 +293,15 @@ export function updateSidebar(earthquakes, mapInstance) {
         `;
 
         card.addEventListener('click', () => {
+            // If content panel is visible (SPA navigation on index.html), reveal the map first
+            const contentPanel = document.getElementById('content-panel');
+            if (contentPanel && contentPanel.style.display === 'block') {
+                contentPanel.style.display = 'none';
+                const mapCon = document.getElementById('map-container');
+                if (mapCon) mapCon.style.display = '';
+                document.querySelectorAll('.nav-link-item, .sidebar-footer a').forEach(a => a.classList.remove('active'));
+            }
+
             mapInstance.flyTo([quake.lat, quake.lon], 10, {
                 animate: true,
                 duration: 1.5
@@ -403,18 +412,9 @@ export function initSidebarResize(mapInstance) {
             sidebar.style.flex = 'none';
             sidebar.style.overflow = '';
 
-            // If it's a map page, we use 25vh for map, otherwise for static pages we might want it full?
-            // Actually, for map index.html, mainContent is the map.
-            // For others, it's the scrollable content.
-            const isMapPage = document.getElementById('map') !== null;
             mainContent.style.minHeight = '0';
-            if (isMapPage) {
-                mainContent.style.height = '25dvh';
-                mainContent.style.flex = 'none';
-            } else {
-                mainContent.style.height = 'auto';
-                mainContent.style.flex = '1';
-            }
+            mainContent.style.height = '25dvh';
+            mainContent.style.flex = 'none';
 
             mainContent.style.paddingBottom = '';
 
@@ -651,6 +651,16 @@ export function initSidebarToggle(mapInstance) {
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 300);
+    });
+
+    // Close sidebar on mobile when a nav link is clicked (while sidebar is expanded)
+    sidebar.addEventListener('click', (e) => {
+        const link = e.target.closest('.nav-link-item');
+        if (!link) return;
+        if (window.innerWidth > mobileBreak) return;
+        if (sidebar.classList.contains('minimized')) return;
+        const toggleIcon = document.getElementById('mobile-toggle-icon');
+        if (toggleIcon) toggleIcon.click();
     });
 
     // On Astro ClientRouter navigation the sidebar persists (transition:persist) but the page
