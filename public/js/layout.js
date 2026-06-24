@@ -15,7 +15,10 @@ function initLayout() {
 
     const langToggleBtn = document.getElementById('lang-toggle');
     if (langToggleBtn) {
-        langToggleBtn.addEventListener('click', () => toggleLanguage());
+        langToggleBtn.addEventListener('click', () => {
+            toggleLanguage();
+            window.location.reload();
+        });
     }
 
     initTheme(null);

@@ -29,6 +29,7 @@ async function initApp() {
 
         document.getElementById('lang-toggle').addEventListener('click', () => {
             toggleLanguage();
+            window.location.reload();
         });
 
         // 1. Initialize Map

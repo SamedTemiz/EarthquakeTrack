@@ -16,9 +16,19 @@ function computeMinimizedHeight(sidebar) {
     return Math.max(paddingTop + logoHeight + resizerHeight + paddingBottom, 56);
 }
 
-let currentQuakes = []; // Store data internally to avoid stale closures
+let currentQuakes = [];
 let currentCountryFilter = '';
 let currentCityFilter = '';
+
+// Filled by initSidebarResize; lets other callers close the sidebar without
+// going through the fragile mobile-toggle-icon.click() chain.
+let _doCloseSidebar = null;
+let _sidebarMobileBreak = 768;
+
+export function closeSidebarOnMobile() {
+    if (window.innerWidth > _sidebarMobileBreak) return;
+    _doCloseSidebar?.();
+}
 
 function getFilteredQuakes(quakes) {
     if (!currentCountryFilter) return quakes;
@@ -315,10 +325,7 @@ export function updateSidebar(earthquakes, mapInstance) {
             }
 
             // Auto-close sidebar on mobile
-            if (window.innerWidth <= 768) {
-                const toggleIcon = document.getElementById('mobile-toggle-icon');
-                if (toggleIcon) toggleIcon.click();
-            }
+            closeSidebarOnMobile();
         });
 
         listContainer.appendChild(card);
@@ -343,6 +350,7 @@ export function initSidebarResize(mapInstance) {
      * toggle could run the wrong branch and leave `.minimized` stuck (footer stays `display:none`).
      */
     const mobileBreak = mapInstance ? 768 : 600;
+    _sidebarMobileBreak = mobileBreak;
 
     // Backdrop overlay. On Astro ClientRouter navigations the <body> is swapped and elements not
     // marked transition:persist are dropped — so a cached backdrop detaches while the persisted
@@ -433,6 +441,11 @@ export function initSidebarResize(mapInstance) {
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 320); // After height transition (~240ms) + buffer
+    };
+
+    // Expose close-only handle for closeSidebarOnMobile()
+    _doCloseSidebar = () => {
+        if (!sidebar.classList.contains('minimized')) toggleSidebar();
     };
 
     // Tap anywhere on minimized bar to expand (backdrop click closes — wired in ensureBackdrop)
@@ -560,12 +573,10 @@ export function initSidebarResize(mapInstance) {
 export function initSidebarToggle(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const mobileBreak = mapInstance ? 768 : 600;
 
-    // Rail mode: tablet band only. On phone (<=768) always strip rail-mode so global
-    // .sidebar.rail-mode .sidebar-footer { display:none } cannot hide the footer after resize from tablet.
     const checkResponsiveSidebar = () => {
         const w = window.innerWidth;
-        const mobileBreak = mapInstance ? 768 : 600;
         if (w <= mobileBreak) {
             sidebar.classList.remove('rail-mode');
             
@@ -653,14 +664,11 @@ export function initSidebarToggle(mapInstance) {
         }, 300);
     });
 
-    // Close sidebar on mobile when a nav link is clicked (while sidebar is expanded)
+    // Close sidebar on mobile when a nav or footer link is clicked
     sidebar.addEventListener('click', (e) => {
-        const link = e.target.closest('.nav-link-item');
+        const link = e.target.closest('.nav-link-item, .sidebar-footer a');
         if (!link) return;
-        if (window.innerWidth > mobileBreak) return;
-        if (sidebar.classList.contains('minimized')) return;
-        const toggleIcon = document.getElementById('mobile-toggle-icon');
-        if (toggleIcon) toggleIcon.click();
+        closeSidebarOnMobile();
     });
 
     // On Astro ClientRouter navigation the sidebar persists (transition:persist) but the page
