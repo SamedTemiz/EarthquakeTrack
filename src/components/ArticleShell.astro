@@ -21,6 +21,38 @@ interface Props {
 
 const { title, description, canonical, heading, headingEn, date, dateEn, readTime, related = [], relatedEn = [] } = Astro.props;
 const readMinutes = readTime.replace(/\D/g, '');
+// Parse "Month D, YYYY" (dateEn) as UTC explicitly — plain `new Date(string)` parses
+// month-name dates as local time, which shifts the date by a day depending on the
+// build machine's timezone.
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function toIsoDate(englishDate: string): string {
+  const match = englishDate.match(/^(\w+)\s+(\d{1,2}),\s+(\d{4})$/);
+  if (!match) return new Date(englishDate).toISOString();
+  const [, monthName, day, year] = match;
+  const monthIndex = MONTHS.indexOf(monthName);
+  return new Date(Date.UTC(Number(year), monthIndex, Number(day))).toISOString();
+}
+const isoDate = toIsoDate(dateEn ?? date);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: headingEn ?? heading,
+  description,
+  datePublished: isoDate,
+  dateModified: isoDate,
+  inLanguage: 'tr-TR',
+  image: 'https://earthquaketrack.com.tr/og-image.jpg',
+  url: canonical,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  author: { '@type': 'Organization', name: 'EarthquakeTrack', url: 'https://earthquaketrack.com.tr/about' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'EarthquakeTrack',
+    url: 'https://earthquaketrack.com.tr/',
+    logo: { '@type': 'ImageObject', url: 'https://earthquaketrack.com.tr/favicon.svg' },
+  },
+};
 ---
 <PageLayout
   title={title}
@@ -29,12 +61,15 @@ const readMinutes = readTime.replace(/\D/g, '');
   activePage="blog"
 >
   <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
     <style is:global>
       /* ── Article shell ─────────────────────────────────────────── */
       .edu-shell { display:flex; flex-direction:column; min-height:100%; }
       .edu-header { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
       .edu-header h1 { margin:0 0 0; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; color:var(--accent-gold); letter-spacing:-.02em; line-height:1.25; }
       .blog-post-meta { display:flex; align-items:center; gap:12px; font-size:.88rem; color:var(--text-tertiary); margin-bottom:14px; }
+      .blog-post-meta a { color:var(--text-tertiary); text-decoration:underline; text-underline-offset:2px; }
+      .blog-post-meta a:hover { color:var(--accent-gold); }
       .edu-body { padding:28px 48px 56px; flex:1; }
       .article-content { max-width:800px; }
       .article-content h2 { font-size:1.4rem; color:var(--text-primary); margin:34px 0 15px; }
@@ -198,16 +233,18 @@ const readMinutes = readTime.replace(/\D/g, '');
 
   <div id="content-tr" class="edu-shell">
     <header class="edu-header">
-      <a href="/blog.html" class="article-back-link">
+      <a href="/blog" class="article-back-link">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
         </svg>
         Blog &amp; Haberler
       </a>
       <div class="blog-post-meta">
-        <span>{date}</span>
+        <time datetime={isoDate}>{date}</time>
         <span>•</span>
         <span>Okuma Süresi: {readTime}</span>
+        <span>•</span>
+        <a href="/about">EarthquakeTrack Ekibi</a>
       </div>
       <h1>{heading}</h1>
     </header>
@@ -224,16 +261,18 @@ const readMinutes = readTime.replace(/\D/g, '');
 
   <div id="content-en" class="edu-shell" style="display:none;">
     <header class="edu-header">
-      <a href="/blog.html" class="article-back-link">
+      <a href="/blog" class="article-back-link">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
         </svg>
         Blog &amp; News
       </a>
       <div class="blog-post-meta">
-        <span>{dateEn ?? date}</span>
+        <time datetime={isoDate}>{dateEn ?? date}</time>
         <span>•</span>
         <span>Reading Time: {readMinutes} Min</span>
+        <span>•</span>
+        <a href="/about">EarthquakeTrack Team</a>
       </div>
       <h1>{headingEn ?? heading}</h1>
     </header>

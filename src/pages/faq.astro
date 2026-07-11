@@ -1,12 +1,42 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+
+const faqItems = [
+  { q: 'Haritada bir depreme tıkladığımda ne görebilirim?', a: 'Haritadaki herhangi bir deprem noktasına tıklayarak o depreme ait büyüklük, derinlik, tarih-saat ve konum bilgilerine ulaşabilirsiniz. Aynı bilgiler soldaki listeye tıklandığında da görüntülenir; harita otomatik olarak o bölgeye odaklanır.' },
+  { q: 'Ülke ve şehir filtresi nasıl çalışır?', a: 'Kenar çubuğundaki "Ülke" ve "Şehir" açılır listelerinden seçim yaparak deprem listesini ve haritayı belirli bir bölgeyle sınırlayabilirsiniz. "Konumum" butonuna tıklarsanız tarayıcı konum izni ister ve bulunduğunuz şehre otomatik olarak odaklanır.' },
+  { q: 'Karanlık ve aydınlık mod nasıl değiştirilir?', a: 'Sayfanın üst kısmındaki tema simgesine (güneş/ay ikonu) tıklayarak karanlık ve aydınlık mod arasında geçiş yapabilirsiniz. Tercihiniz tarayıcınıza kaydedilir ve bir sonraki ziyaretinizde otomatik uygulanır.' },
+  { q: 'Site mobil cihazlarda düzgün çalışıyor mu?', a: 'Evet. EarthquakeTrack akıllı telefon ve tablet ekranları için optimize edilmiştir. Mobil görünümde harita ve deprem listesi ayrı sekmeler arasında geçiş yaparak kullanılabilir. Sayfanın altındaki sekme çubuğuyla harita, liste ve filtreler arasında kolayca geçiş sağlanır.' },
+  { q: 'Dil nasıl değiştirilir?', a: 'Üst çubukta yer alan "TR / EN" düğmesine basarak Türkçe ve İngilizce arasında geçiş yapabilirsiniz. Seçtiğiniz dil, sitenin tüm sayfaları için kaydedilir.' },
+  { q: 'Veriler ne sıklıkla güncelleniyor?', a: 'Veriler, sismoloji merkezlerinden (USGS, EMSC, Kandilli, AFAD) yayınlandığı anda sistemimize düşer. Genellikle deprem gerçekleştikten birkaç dakika sonra listede görebilirsiniz. Büyük depremler genellikle 2–5 dakika içinde görünür hale gelir; küçük yerel depremler ise veri sağlayıcıların işlem süresine bağlı olarak biraz daha geç gelebilir.' },
+  { q: 'Neden bazı depremleri listede göremiyorum?', a: 'Uygulamamız varsayılan olarak son 24 saatteki ve belirli bir büyüklük eşiğinin (genellikle 2.5+) üzerindeki depremleri listeler. Çok küçük sarsıntılar (örneğin 1.0–2.0 arası) veri sağlayıcılar tarafından zaman zaman gecikmeli yayınlanabilir veya hiç yayınlanmayabilir.' },
+  { q: 'USGS, EMSC, Kandilli ve AFAD arasındaki fark nedir?', a: 'USGS (ABD Jeoloji Araştırmaları Kurumu), dünya genelinde depremleri izleyen küresel bir referans kaynağıdır. EMSC (Avrupa-Akdeniz Sismoloji Merkezi) Avrupa ve Akdeniz bölgesine odaklanır. Kandilli Rasathanesi (Boğaziçi Üniversitesi bünyesindedir), Türkiye\'deki depremleri en ayrıntılı şekilde izleyen kurumlardan biridir. AFAD ise Türkiye Afet ve Acil Durum Yönetimi Başkanlığı olup resmi acil durum uyarılarını yayımlar.' },
+  { q: 'Neden aynı deprem için farklı büyüklük değerleri görüyorum?', a: 'Her sismoloji merkezi, kendi istasyon ağından aldığı verileri farklı algoritmalarla işler. İlk yayınlanan değer ön hesaplamaya dayanır; kurumlar birkaç dakika ile birkaç saat içinde bu değeri revize edebilir. Bu nedenle büyük depremlerde başlangıç büyüklüğü ile son raporlanan değer arasında 0.1–0.3 birim fark olması normaldir.' },
+  { q: '"Büyüklük" (magnitude) ne anlama geliyor?', a: 'Depremin odakta açığa çıkardığı enerjinin ölçüsüdür. Logaritmik bir ölçek olduğu için her bir tam sayı adımı, bir öncekine kıyasla yaklaşık 10 kat daha fazla yer sarsıntısına ve 32 kat daha fazla enerji açığa çıkmasına karşılık gelir.' },
+  { q: 'Odak derinliği neden önemli?', a: 'Derinlik, depremin yerin kaç kilometre altında gerçekleştiğini gösterir. Sığ depremler (0–70 km) daha dar bir alanda etkili olsa da yüzeye yakın oldukları için yıkıcılıkları yüksek olabilir. Derin depremler (300 km üzeri) ise çok daha geniş bir alanda hissedilir ancak enerji yüzeye ulaşana kadar önemli ölçüde azalır.' },
+  { q: 'Türkiye neden bu kadar sık deprem yaşıyor?', a: 'Türkiye, Avrasya, Afrika ve Arap levhalarının kesiştiği aktif bir tektonik bölgede yer almaktadır. Kuzey Anadolu Fayı (KAF) ve Doğu Anadolu Fayı (DAF) bu iki ana fay sistemi, ülkemizin deprem riskinin temel nedenidir.' },
+  { q: 'Deprem tahmini mümkün mü?', a: 'Günümüz bilim dünyasında herhangi bir depremin tam tarih, saat ve büyüklüğünü önceden tahmin etmek mümkün değildir. Sismologlar, belirli bir bölgenin uzun vadeli deprem tehlikesini ve olasılığını istatistiksel yöntemlerle değerlendirebilir; ancak bu olasılık haritaları, yıllık veya on yıllık zaman ölçeklerinde anlam taşır.' },
+  { q: 'Deprem anında ne yapmalıyım?', a: 'Kapalı alanda iseniz hemen çöküp bir masanın altına ya da sağlam bir duvarın yanına sığının, başınızı ve ensanizi koruyun, sarsıntı geçene kadar bekleyin. Camdan, raflardan ve sarkan nesnelerden uzak durun. Kesinlikle deprem sırasında merdiven veya asansör kullanmaya kalkmayın.' },
+  { q: 'Büyük bir deprem sonrasında ne yapmalıyım?', a: 'Önce kendinizin ve yanınızdakilerin güvende olduğundan emin olun. Yaralılar için 112\'yi arayın. Bina hasar görmüşse tekrar girmeden önce yetkililerin onayını bekleyin. Resmi kanal ve uyarıları (AFAD, yerel yönetim bildirimleri) takip edin.' },
+  { q: 'Deprem çantasında neler bulunmalı?', a: 'Deprem çantanız en az 72 saatlik su (kişi başı günde 2 litre), bozulmayan yiyecek, ilk yardım seti, el feneri ve yedek pil, düdük, yedeği olan cep telefonu şarj cihazı, önemli belgelerin kopyaları, acil ilaçlar ve sıcak bir battaniye içermelidir. Detaylı liste için Deprem Önlemleri sayfamızı inceleyebilirsiniz.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
 <PageLayout
   title="Sıkça Sorulan Sorular - EarthquakeTrack"
   description="EarthquakeTrack hakkında sıkça sorulan sorular. Veri kaynakları, deprem büyüklüğü, filtreleme, güvenlik ve Türkiye'nin sismik yapısı hakkında bilgiler."
-  canonical="https://earthquaketrack.com.tr/faq.html"
+  canonical="https://earthquaketrack.com.tr/faq"
 >
   <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
     <style>
       .content-container { display:flex; flex-direction:column; min-height:100%; }
       .ct-head { padding:36px 48px 28px; border-bottom:1px solid var(--border-color); background:linear-gradient(160deg,rgba(197,160,101,.07) 0%,transparent 65%); flex-shrink:0; }
@@ -84,7 +114,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       <p>Önce kendinizin ve yanınızdakilerin güvende olduğundan emin olun. Yaralılar için 112'yi arayın. Bina hasar görmüşse tekrar girmeden önce yetkililerin onayını bekleyin. Resmi kanal ve uyarıları (AFAD, yerel yönetim bildirimleri) takip edin.</p>
 
       <h3>Deprem çantasında neler bulunmalı?</h3>
-      <p>Deprem çantanız en az 72 saatlik su (kişi başı günde 2 litre), bozulmayan yiyecek, ilk yardım seti, el feneri ve yedek pil, düdük, yedeği olan cep telefonu şarj cihazı, önemli belgelerin kopyaları, acil ilaçlar ve sıcak bir battaniye içermelidir. Detaylı liste için <a href="/preparedness.html">Deprem Önlemleri</a> sayfamızı inceleyebilirsiniz.</p>
+      <p>Deprem çantanız en az 72 saatlik su (kişi başı günde 2 litre), bozulmayan yiyecek, ilk yardım seti, el feneri ve yedek pil, düdük, yedeği olan cep telefonu şarj cihazı, önemli belgelerin kopyaları, acil ilaçlar ve sıcak bir battaniye içermelidir. Detaylı liste için <a href="/preparedness">Deprem Önlemleri</a> sayfamızı inceleyebilirsiniz.</p>
 
       </div>
     </div>
@@ -150,7 +180,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       <p>First check yourself and those around you for injuries; call 112 for emergencies. Do not re-enter a damaged building without official clearance. If you suspect a gas leak, do not use electrical switches or open flames. Follow official channels (AFAD, local authority broadcasts).</p>
 
       <h3>What should be in an earthquake kit?</h3>
-      <p>Your kit should include at least 72 hours of water (2 litres per person per day), non-perishable food, a first-aid kit, a torch with spare batteries, a whistle, a backup phone charger, copies of important documents, essential medication, and a warm blanket. See our <a href="/preparedness.html">Preparedness</a> page for a full checklist.</p>
+      <p>Your kit should include at least 72 hours of water (2 litres per person per day), non-perishable food, a first-aid kit, a torch with spare batteries, a whistle, a backup phone charger, copies of important documents, essential medication, and a warm blanket. See our <a href="/preparedness">Preparedness</a> page for a full checklist.</p>
 
       </div>
     </div>

@@ -69,13 +69,15 @@ export async function getEarthquakeData() {
     let localDataPoints = [];
 
     // Helper to parse Kandilli date format: "2025.02.07 15:10:45" or "2025-02-07 15:10:45" -> timestamp
+    // Kandilli timestamps are always Turkey local time (UTC+3, no DST), so they must be
+    // parsed as UTC+3 rather than the visitor's own timezone, or times skew for non-TR viewers.
     const parseKandilliDate = (dateStr) => {
         if (!dateStr) return Date.now();
         // Handle both . and - as separators
         const parts = dateStr.match(/(\d{4})[.-](\d{2})[.-](\d{2})\s(\d{2}):(\d{2}):(\d{2})/);
         if (parts) {
-            // new Date(year, monthIndex, day, hour, minute, second) is local time
-            return new Date(parts[1], parts[2] - 1, parts[3], parts[4], parts[5], parts[6]).getTime();
+            const utcMs = Date.UTC(parts[1], parts[2] - 1, parts[3], parts[4], parts[5], parts[6]);
+            return utcMs - 3 * 60 * 60 * 1000;
         }
         return new Date(dateStr.replace(/\./g, '-')).getTime(); // Fallback
     };
@@ -156,14 +158,13 @@ export async function getEarthquakeData() {
             return lat >= 30 && lat <= 72 && lon >= -25 && lon <= 50;
         };
 
-        // If we have EMSC/Kandilli data, prefer them for their region.
-        const outside = usgsNormalized.filter(q => !isInsideEMSCRegion(q.lat, q.lon));
+        // Only drop USGS points inside the EMSC region if EMSC actually returned data for it.
+        // Otherwise (EMSC request failed/empty) we'd silently blank out Turkey + Europe
+        // even though USGS still has coverage there.
+        const emscHasData = emscData.status === 'fulfilled' && emscPoints.length > 0;
+        const outside = emscHasData ? usgsNormalized.filter(q => !isInsideEMSCRegion(q.lat, q.lon)) : usgsNormalized;
         finalEarthquakes = [...finalEarthquakes, ...outside];
     }
 
-    // console.log(`Merged: ${finalEarthquakes.length}, Source: ${turkeySourceUsed}`);
-    return finalEarthquakes;
-
-    // console.log(`Merged: ${finalEarthquakes.length}, Source: ${turkeySourceUsed}`);
     return finalEarthquakes;
 }

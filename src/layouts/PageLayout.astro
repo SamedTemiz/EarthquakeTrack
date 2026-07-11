@@ -61,7 +61,7 @@ const pageAnim = {
     <aside class="sidebar" transition:persist="sidebar">
       <div class="logo-area" style="position:relative;">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:20px;">
-          <h1><a href="/index.html" style="text-decoration:none; color:inherit;">Earthquake<span>Track</span></a></h1>
+          <h1><a href="/" style="text-decoration:none; color:inherit;">Earthquake<span>Track</span></a></h1>
           <div class="controls" style="display:flex; align-items:center; gap:8px;">
             <button id="theme-toggle-btn" class="icon-btn" aria-label="Tema değiştir">
               <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +84,7 @@ const pageAnim = {
 
       <nav class="main-nav">
         <div class="nav-primary-section">
-          <a href="/index.html" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası" data-i18n-tooltip="navMap">
+          <a href="/" class="nav-link-item nav-link-primary" data-tooltip="Deprem Haritası" data-i18n-tooltip="navMap">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
@@ -97,7 +97,7 @@ const pageAnim = {
         </div>
         <div class="nav-divider" data-i18n="navInfoSection">BİLGİ MERKEZİ</div>
         <div class="nav-links">
-          <a href="/blog.html" class="nav-link-item" data-tooltip="Blog & Haberler" data-i18n-tooltip="navBlog">
+          <a href="/blog" class="nav-link-item" data-tooltip="Blog & Haberler" data-i18n-tooltip="navBlog">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path>
@@ -105,7 +105,7 @@ const pageAnim = {
             </span>
             <span data-i18n="navBlog">Blog & Haberler</span>
           </a>
-          <a href="/preparedness.html" class="nav-link-item" data-tooltip="Deprem Önlemleri" data-i18n-tooltip="preparedness">
+          <a href="/preparedness" class="nav-link-item" data-tooltip="Deprem Önlemleri" data-i18n-tooltip="preparedness">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path>
@@ -113,7 +113,7 @@ const pageAnim = {
             </span>
             <span data-i18n="preparedness">Deprem Önlemleri</span>
           </a>
-          <a href="/education.html" class="nav-link-item" data-tooltip="Deprem Eğitimi" data-i18n-tooltip="education">
+          <a href="/education" class="nav-link-item" data-tooltip="Deprem Eğitimi" data-i18n-tooltip="education">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m4 6 8-4 8 4"></path><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"></path><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"></path><path d="M18 5v17"></path><path d="M6 5v17"></path><circle cx="12" cy="9" r="2"></circle>
@@ -158,13 +158,13 @@ const pageAnim = {
 
       <div class="sidebar-footer">
         <div class="footer-row">
-          <a href="/about.html" data-i18n="about">Hakkında</a>
-          <a href="/faq.html" data-i18n="faq">SSS</a>
-          <a href="/contact.html" data-i18n="contact">İletişim</a>
+          <a href="/about" data-i18n="about">Hakkında</a>
+          <a href="/faq" data-i18n="faq">SSS</a>
+          <a href="/contact" data-i18n="contact">İletişim</a>
         </div>
         <div class="footer-row">
-          <a href="/privacy.html" data-i18n="privacy">Gizlilik Politikası</a>
-          <a href="/terms.html" data-i18n="terms">Kullanım Koşulları</a>
+          <a href="/privacy" data-i18n="privacy">Gizlilik Politikası</a>
+          <a href="/terms" data-i18n="terms">Kullanım Koşulları</a>
         </div>
       </div>
       <div id="sidebar-resizer"></div>
@@ -192,9 +192,9 @@ const pageAnim = {
       var path = window.location.pathname;
       document.querySelectorAll('.nav-link-item').forEach(function(link) {
         var linkPath = new URL(link.href, window.location.href).pathname;
-        // Exact match, or current path is under this link's directory (e.g. /blog/post.html → /blog.html active)
-        var dir = linkPath.replace(/\.html$/, '/');
-        var isActive = linkPath === path || (dir !== '/' && dir !== '/index/' && path.startsWith(dir));
+        // Exact match, or current path is under this link's directory (e.g. /blog/post → /blog active)
+        var dir = linkPath === '/' ? '/' : linkPath + '/';
+        var isActive = linkPath === path || (dir !== '/' && path.startsWith(dir));
         link.classList.toggle('active', isActive);
       });
     });
