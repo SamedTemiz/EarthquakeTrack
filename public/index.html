@@ -65,7 +65,7 @@
 
     <!-- Leaflet CSS (self-hosted to avoid local CORS/CDN issues) -->
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="style.css?v=2038">
+    <link rel="stylesheet" href="style.css?v=2039">
     <!-- Google AdSense - site verification & ad scripts -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1547168097704291"
         crossorigin="anonymous"></script>
@@ -161,7 +161,7 @@
                         <h3 data-i18n="recentActivity">Son Hareketler</h3>
                         <div style="display:flex; align-items:center; gap:5px;">
                             <div class="sort-wrapper" style="position:relative;">
-                                <button id="sort-btn" class="icon-btn" title="Sırala">
+                                <button id="sort-btn" class="icon-btn" title="Sırala" data-i18n-title="sort">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round">
@@ -179,7 +179,7 @@
                                         Küçük)</div>
                                 </div>
                             </div>
-                            <button id="refresh-btn" class="icon-btn" title="Yenile">
+                            <button id="refresh-btn" class="icon-btn" title="Yenile" data-i18n-title="refresh">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
@@ -228,6 +228,46 @@
         <main class="main-content" aria-label="Deprem haritası ve veriler">
             <div id="map-container">
                 <div id="map"></div>
+
+                <!-- Crawlable site description: collapsible panel over the map -->
+                <details class="home-info" id="home-info">
+                    <summary>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span id="home-info-summary-tr">EarthquakeTrack Nedir?</span>
+                        <span id="home-info-summary-en" style="display:none;">What is EarthquakeTrack?</span>
+                    </summary>
+                    <div class="home-info-body">
+                        <div id="home-info-tr">
+                            <h2>Türkiye ve Dünyadan Canlı Deprem Takibi</h2>
+                            <p>EarthquakeTrack; Türkiye ve dünyada meydana gelen son depremleri interaktif harita üzerinde anlık olarak gösteren ücretsiz bir deprem takip platformudur. Veriler; <strong>USGS</strong> (ABD Jeoloji Araştırmaları Kurumu), <strong>Kandilli Rasathanesi</strong> ve <strong>EMSC</strong> (Avrupa-Akdeniz Sismoloji Merkezi) gibi resmi sismoloji merkezlerinden alınır ve her 60 saniyede bir otomatik olarak güncellenir.</p>
+                            <p>Soldaki listeden depremleri büyüklüğe veya tarihe göre sıralayabilir, ülke ve şehir filtresiyle yalnızca ilgilendiğiniz bölgedeki sarsıntıları görüntüleyebilir, harita üzerindeki işaretlere tıklayarak derinlik, büyüklük ve kaynak bilgilerine ulaşabilirsiniz.</p>
+                            <p>Deprem anında ve öncesinde ne yapmanız gerektiğini <a href="/preparedness">Deprem Önlemleri</a> rehberimizden, depremlerin nasıl oluştuğunu ve ölçüldüğünü <a href="/education">Deprem Eğitimi</a> sayfamızdan öğrenebilirsiniz. Fay hatları, tarihi depremler ve hazırlık konularındaki detaylı yazılarımız için <a href="/blog">Blog</a> bölümümüze, sık sorulan sorular için <a href="/faq">SSS</a> sayfamıza göz atabilirsiniz.</p>
+                            <p class="home-info-note">EarthquakeTrack yalnızca bilgilendirme amaçlıdır; resmi uyarı sistemi değildir. Acil durumlarda 112'yi arayın, AFAD duyurularını takip edin.</p>
+                        </div>
+                        <div id="home-info-en" style="display:none;">
+                            <h2>Live Earthquake Tracking for Turkey and the World</h2>
+                            <p>EarthquakeTrack is a free earthquake monitoring platform that shows recent earthquakes in Turkey and around the world on an interactive map in real time. Data comes from official seismology centers such as <strong>USGS</strong> (United States Geological Survey), <strong>Kandilli Observatory</strong> and <strong>EMSC</strong> (European-Mediterranean Seismological Centre), refreshed automatically every 60 seconds.</p>
+                            <p>Use the list on the left to sort earthquakes by magnitude or date, filter by country and city to focus on the region you care about, and click any marker on the map to see depth, magnitude and source details.</p>
+                            <p>Learn what to do before and during an earthquake in our <a href="/preparedness">Preparedness</a> guide, and how earthquakes form and are measured on our <a href="/education">Education</a> page. Visit the <a href="/blog">Blog</a> for in-depth articles on fault lines, historical earthquakes and preparedness, or check the <a href="/faq">FAQ</a> for common questions.</p>
+                            <p class="home-info-note">EarthquakeTrack is for informational purposes only and is not an official warning system. In an emergency, call 112 and follow AFAD announcements.</p>
+                        </div>
+                    </div>
+                </details>
+                <script>
+                    // Show the info panel in the saved language (page reloads on language toggle)
+                    (function () {
+                        var lang = localStorage.getItem('language') || 'tr';
+                        if (lang !== 'en') return;
+                        ['home-info-tr', 'home-info-summary-tr'].forEach(function (id) {
+                            var el = document.getElementById(id); if (el) el.style.display = 'none';
+                        });
+                        ['home-info-en', 'home-info-summary-en'].forEach(function (id) {
+                            var el = document.getElementById(id); if (el) el.style.display = '';
+                        });
+                    })();
+                </script>
             </div>
             <div id="content-panel" class="content-panel" hidden></div>
         </main>

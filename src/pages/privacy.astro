@@ -3,7 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 <PageLayout
   title="Gizlilik Politikası - EarthquakeTrack"
-  description="EarthquakeTrack Gizlilik Politikası. Kişisel veri toplama, çerezler ve kullanıcı hakları hakkında bilgi."
+  description="EarthquakeTrack Gizlilik Politikası. Kişisel veri toplama, çerezler, Google AdSense reklamları, KVKK hakları ve kullanıcı tercihleri hakkında bilgi."
   canonical="https://earthquaketrack.com.tr/privacy"
 >
   <Fragment slot="head">
@@ -14,6 +14,10 @@ import PageLayout from '../layouts/PageLayout.astro';
       .ct-body { padding:32px 48px 56px; max-width:820px; }
       .ct-body h3 { color:var(--text-primary); margin:24px 0 6px; font-size:1rem; font-weight:600; }
       .ct-body p { color:var(--text-secondary); margin:0 0 14px; font-size:.93rem; line-height:1.65; }
+      .ct-body ul { color:var(--text-secondary); margin:0 0 14px; padding-left:22px; font-size:.93rem; line-height:1.65; }
+      .ct-body li { margin-bottom:6px; }
+      .ct-body a { color:var(--accent-blue); text-decoration:none; word-break:break-word; }
+      .ct-body a:hover { text-decoration:underline; }
       @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
       @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } }
     </style>
@@ -23,29 +27,91 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div id="content-tr">
       <header class="ct-head"><h1>Gizlilik Politikası</h1></header>
       <div class="ct-body">
-        <p>Son Güncelleme: 12 Şubat 2026</p>
+        <p>Son Güncelleme: 11 Temmuz 2026</p>
+        <p>Bu Gizlilik Politikası, earthquaketrack.com.tr ("EarthquakeTrack", "site") ziyaretçilerinden hangi verilerin, hangi amaçlarla ve hangi yöntemlerle işlendiğini açıklar. Siteyi kullanarak bu politikada açıklanan uygulamaları kabul etmiş sayılırsınız.</p>
+
         <h3>1. Toplanan Veriler</h3>
-        <p>EarthquakeTrack olarak gizliliğinize önem veriyoruz. Sitemizi ziyaret ettiğinizde herhangi bir kişisel verinizi kaydetmiyoruz. Üyelik sistemi bulunmamaktadır.</p>
+        <p>EarthquakeTrack'te üyelik sistemi yoktur; ad, e-posta, telefon gibi kişisel bilgiler talep edilmez ve sunucularımızda saklanmaz. Site, Cloudflare altyapısı üzerinde barındırılır; Cloudflare, hizmetin güvenliği ve performansı için IP adresi ve tarayıcı bilgisi gibi standart sunucu günlüklerini kendi gizlilik politikası kapsamında geçici olarak işleyebilir.</p>
+
         <h3>2. Çerezler ve Yerel Depolama</h3>
-        <p>Sitemiz, kullanıcı deneyimini iyileştirmek için tarayıcınızın "Local Storage" özelliğini kullanabilir (örneğin: tema tercihinizi hatırlamak için). Ayrıca Google AdSense ve Google Analytics gibi üçüncü taraf hizmetler çerez kullanabilir.</p>
-        <h3>3. Konum Bilgisi</h3>
-        <p>Harita üzerinde konumunuzu görmek isterseniz, tarayıcınız konum izni isteyecektir. Bu veri sadece cihazınızda işlenir ve sunucularımıza kaydedilmez.</p>
-        <h3>4. Üçüncü Taraf Bağlantılar</h3>
-        <p>Sitemizdeki dış bağlantıların gizlilik politikalarından sorumlu değiliz.</p>
+        <p>Sitemiz, tema (koyu/açık) ve dil (TR/EN) tercihlerinizi hatırlamak için tarayıcınızın "Local Storage" özelliğini kullanır. Bu veriler yalnızca cihazınızda tutulur, bize iletilmez. Bunun dışında, aşağıda açıklanan reklam hizmetleri kendi çerezlerini kullanabilir.</p>
+
+        <h3>3. Google AdSense ve Reklamlar</h3>
+        <p>Sitemizde reklamlar Google AdSense aracılığıyla gösterilmektedir. Bu kapsamda bilmeniz gerekenler:</p>
+        <ul>
+          <li>Google dahil üçüncü taraf sağlayıcılar, reklam sunmak için çerezler kullanır.</li>
+          <li>Google, reklam çerezlerini kullanarak sizlere bu siteye ve internetteki diğer sitelere yaptığınız önceki ziyaretlere dayalı reklamlar gösterebilir.</li>
+          <li>Kişiselleştirilmiş reklamcılığı <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Reklam Ayarları</a> sayfasından devre dışı bırakabilirsiniz.</li>
+          <li>Üçüncü taraf sağlayıcıların kişiselleştirilmiş reklam çerezlerini <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer">www.aboutads.info</a> adresinden de yönetebilirsiniz.</li>
+          <li>Google'ın ortak sitelerdeki verileri nasıl kullandığına ilişkin ayrıntılı bilgiye <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">bu sayfadan</a> ulaşabilirsiniz.</li>
+        </ul>
+        <p>Avrupa Ekonomik Alanı, Birleşik Krallık veya İsviçre'den ziyaret eden kullanıcılara, geçerli mevzuat gereği reklam çerezleri için bir onay bildirimi gösterilebilir.</p>
+
+        <h3>4. Konum Bilgisi</h3>
+        <p>Harita üzerinde konumunuzu görmek isterseniz tarayıcınız konum izni ister. Konum verisi yalnızca cihazınızda işlenir; sunucularımıza kaydedilmez. Bölge tahmini için kullanılan servisler (ör. ters coğrafi kodlama) sorgu sırasında IP adresinizi kendi politikaları kapsamında işleyebilir.</p>
+
+        <h3>5. Deprem Veri Kaynakları</h3>
+        <p>Deprem verileri tarayıcınız üzerinden doğrudan USGS, EMSC ve Kandilli Rasathanesi (aracı API) gibi kaynaklardan çekilir. Bu istekler sırasında ilgili servisler, standart web istekleriyle sınırlı teknik bilgileri (ör. IP adresi) kendi gizlilik politikaları çerçevesinde görebilir.</p>
+
+        <h3>6. KVKK Kapsamındaki Haklarınız</h3>
+        <p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, düzeltilmesini veya silinmesini isteme haklarına sahipsiniz. EarthquakeTrack kişisel veri saklamadığından bu talepler çoğunlukla üçüncü taraf hizmet sağlayıcılarını (Google, Cloudflare) ilgilendirir; yine de her türlü sorunuz için bize <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a> adresinden ulaşabilirsiniz.</p>
+
+        <h3>7. Çocukların Gizliliği</h3>
+        <p>Sitemiz genel kitleye yöneliktir ve çocuklardan bilerek kişisel veri toplamaz.</p>
+
+        <h3>8. Üçüncü Taraf Bağlantılar</h3>
+        <p>Sitemizde yer alan dış bağlantıların (ör. haber kaynakları, resmi kurum siteleri) içeriklerinden ve gizlilik uygulamalarından sorumlu değiliz.</p>
+
+        <h3>9. Politika Değişiklikleri</h3>
+        <p>Bu politika gerektiğinde güncellenebilir. Değişiklikler bu sayfada, güncel tarih bilgisiyle birlikte yayımlanır.</p>
+
+        <h3>10. İletişim</h3>
+        <p>Gizlilikle ilgili soru ve talepleriniz için: <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></p>
       </div>
     </div>
     <div id="content-en" style="display:none;">
       <header class="ct-head"><h1>Privacy Policy</h1></header>
       <div class="ct-body">
-        <p>Last Update: February 12, 2026</p>
+        <p>Last Update: July 11, 2026</p>
+        <p>This Privacy Policy explains what data is processed from visitors of earthquaketrack.com.tr ("EarthquakeTrack", "the site"), for which purposes and by which means. By using the site you accept the practices described in this policy.</p>
+
         <h3>1. Collected Data</h3>
-        <p>We value your privacy at EarthquakeTrack. We do not record any of your personal data when you visit our site. There is no membership system.</p>
+        <p>EarthquakeTrack has no membership system; no personal information such as name, email or phone number is requested or stored on our servers. The site is hosted on Cloudflare infrastructure; Cloudflare may temporarily process standard server logs (such as IP address and browser information) for security and performance, under its own privacy policy.</p>
+
         <h3>2. Cookies and Local Storage</h3>
-        <p>Our site may use your browser's "Local Storage" feature to improve user experience. Additionally, third-party services such as Google AdSense and Google Analytics may use cookies.</p>
-        <h3>3. Location Information</h3>
-        <p>If you wish to see your location on the map, your browser will request location permission. This data is only processed on your device and is not saved to our servers.</p>
-        <h3>4. Third Party Links</h3>
-        <p>We are not responsible for the privacy policies of external links on our site.</p>
+        <p>Our site uses your browser's Local Storage to remember your theme (dark/light) and language (TR/EN) preferences. This data stays on your device only and is not transmitted to us. Beyond that, the advertising services described below may use their own cookies.</p>
+
+        <h3>3. Google AdSense and Advertising</h3>
+        <p>Advertisements on our site are served through Google AdSense. Please note:</p>
+        <ul>
+          <li>Third-party vendors, including Google, use cookies to serve ads.</li>
+          <li>Google's use of advertising cookies enables it to show you ads based on your prior visits to this website and other websites on the Internet.</li>
+          <li>You may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.</li>
+          <li>You can also manage third-party vendors' cookies for personalized advertising at <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>.</li>
+          <li>For details on how Google uses data from partner sites, see <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">this page</a>.</li>
+        </ul>
+        <p>Visitors from the European Economic Area, the United Kingdom or Switzerland may be shown a consent notice for advertising cookies as required by applicable law.</p>
+
+        <h3>4. Location Information</h3>
+        <p>If you wish to see your location on the map, your browser will request location permission. Location data is processed only on your device and is not saved to our servers. Services used for region lookup (e.g. reverse geocoding) may process your IP address during the request under their own policies.</p>
+
+        <h3>5. Earthquake Data Sources</h3>
+        <p>Earthquake data is fetched directly by your browser from sources such as USGS, EMSC and Kandilli Observatory (via an intermediary API). During these requests, the respective services may see the technical information inherent in standard web requests (e.g. IP address) under their own privacy policies.</p>
+
+        <h3>6. Your Rights (KVKK / GDPR)</h3>
+        <p>Under Turkey's Personal Data Protection Law No. 6698 (KVKK) and, where applicable, the GDPR, you have the right to learn whether your personal data is processed, to request information, correction or deletion. As EarthquakeTrack does not store personal data, such requests mostly concern third-party providers (Google, Cloudflare); nevertheless, you can always reach us at <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a>.</p>
+
+        <h3>7. Children's Privacy</h3>
+        <p>Our site is intended for a general audience and does not knowingly collect personal data from children.</p>
+
+        <h3>8. Third-Party Links</h3>
+        <p>We are not responsible for the content or privacy practices of external links on our site (e.g. news sources, official institution websites).</p>
+
+        <h3>9. Changes to This Policy</h3>
+        <p>This policy may be updated when necessary. Changes are published on this page together with the updated date.</p>
+
+        <h3>10. Contact</h3>
+        <p>For privacy-related questions and requests: <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></p>
       </div>
     </div>
   </div>

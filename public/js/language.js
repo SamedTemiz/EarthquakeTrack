@@ -43,7 +43,9 @@ export const translations = {
         blogTabArticles: "Makaleler",
         blogTabNews: "Son Dakika Haberleri",
         newsLoading: "Güncel deprem haberleri yükleniyor...",
-        ok: "Tamam"
+        ok: "Tamam",
+        refresh: "Yenile",
+        sort: "Sırala"
     },
     en: {
         title: "EarthquakeTrack",
@@ -89,7 +91,9 @@ export const translations = {
         blogTabArticles: "Articles",
         blogTabNews: "Breaking News",
         newsLoading: "Loading latest earthquake news...",
-        ok: "OK"
+        ok: "OK",
+        refresh: "Refresh",
+        sort: "Sort"
     }
 };
 
@@ -216,6 +220,13 @@ export function updateStaticText() {
         const key = el.getAttribute('data-i18n-tooltip');
         if (translations[currentLang][key]) {
             el.setAttribute('data-tooltip', translations[currentLang][key]);
+        }
+    });
+
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (translations[currentLang][key]) {
+            el.setAttribute('title', translations[currentLang][key]);
         }
     });
 

@@ -3,7 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 <PageLayout
   title="Kullanım Koşulları - EarthquakeTrack"
-  description="EarthquakeTrack Kullanım Koşulları. Hizmet kullanımı, sorumluluk reddi ve telif hakları."
+  description="EarthquakeTrack Kullanım Koşulları. Hizmet kullanımı, veri kaynakları ve doğruluk, sorumluluk reddi, reklamlar ve telif hakları."
   canonical="https://earthquaketrack.com.tr/terms"
 >
   <Fragment slot="head">
@@ -14,6 +14,8 @@ import PageLayout from '../layouts/PageLayout.astro';
       .ct-body { padding:32px 48px 56px; max-width:820px; }
       .ct-body h3 { color:var(--text-primary); margin:24px 0 6px; font-size:1rem; font-weight:600; }
       .ct-body p { color:var(--text-secondary); margin:0 0 14px; font-size:.93rem; line-height:1.65; }
+      .ct-body a { color:var(--accent-blue); text-decoration:none; word-break:break-word; }
+      .ct-body a:hover { text-decoration:underline; }
       @media (max-width:900px) { .ct-head { padding:24px 28px 20px; } .ct-body { padding:20px 28px 40px; } }
       @media (max-width:600px) { .ct-head { padding:16px; } .ct-body { padding:16px; } }
     </style>
@@ -23,25 +25,63 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div id="content-tr">
       <header class="ct-head"><h1>Kullanım Koşulları</h1></header>
       <div class="ct-body">
-        <p>Lütfen sitemizi kullanmadan önce bu koşulları okuyunuz.</p>
-        <h3>1. Hizmetin Kullanımı</h3>
-        <p>EarthquakeTrack, yalnızca bilgilendirme amaçlıdır. Deprem tahminleri yapmaz veya resmi bir uyarı sistemi yerine geçmez. Doğal afet durumlarında lütfen AFAD ve yetkili mercilerin duyurularını takip ediniz.</p>
-        <h3>2. Sorumluluk Reddi</h3>
-        <p>Sunulan deprem verileri, sismoloji merkezlerinden otomatik olarak çekilmektedir. Verilerin doğruluğu konusunda garanti veremeyiz. Bu verilerin kullanımından doğabilecek zararlardan EarthquakeTrack sorumlu tutulamaz.</p>
-        <h3>3. Telif Hakları</h3>
-        <p>Sitemizin tasarımı ve kodları telif hakları ile korunmaktadır. İzinsiz kopyalanamaz.</p>
+        <p>Son Güncelleme: 11 Temmuz 2026</p>
+        <p>earthquaketrack.com.tr ("EarthquakeTrack", "site") adresini kullanarak aşağıdaki koşulları kabul etmiş sayılırsınız. Lütfen siteyi kullanmadan önce bu koşulları dikkatlice okuyunuz.</p>
+
+        <h3>1. Hizmetin Tanımı ve Amacı</h3>
+        <p>EarthquakeTrack; Türkiye ve dünyadaki son depremleri harita üzerinde görüntüleyen, deprem hazırlığı ve deprem bilimi konularında bilgilendirici içerikler sunan ücretsiz bir web sitesidir. Site yalnızca bilgilendirme amaçlıdır; deprem tahmini yapmaz ve hiçbir şekilde resmi bir erken uyarı sistemi yerine geçmez. Acil durumlarda 112'yi arayın ve AFAD ile yetkili mercilerin duyurularını takip edin.</p>
+
+        <h3>2. Veri Kaynakları ve Doğruluk</h3>
+        <p>Sitede gösterilen deprem verileri; USGS, EMSC ve Kandilli Rasathanesi gibi sismoloji merkezlerinden otomatik olarak çekilir ve işlenmeden aktarılır. Kaynaklardaki gecikme, revizyon veya hatalar sitedeki verilere de yansıyabilir. Verilerin doğruluğu, güncelliği veya eksiksizliği konusunda garanti verilmez; resmi bilgi için ilgili kurumların kendi kanallarına başvurulmalıdır.</p>
+
+        <h3>3. Sorumluluk Reddi</h3>
+        <p>EarthquakeTrack, sitede sunulan verilerin veya içeriklerin kullanımından doğabilecek doğrudan ya da dolaylı hiçbir zarardan sorumlu tutulamaz. Hizmet "olduğu gibi" sunulur; kesintisiz veya hatasız çalışacağı taahhüt edilmez.</p>
+
+        <h3>4. Reklamlar</h3>
+        <p>Site, Google AdSense aracılığıyla üçüncü taraf reklamlar gösterebilir. Reklam içeriklerinden ve reklam verenlerin sitelerinden EarthquakeTrack sorumlu değildir. Reklam çerezleri hakkında ayrıntılı bilgi için <a href="/privacy">Gizlilik Politikası</a> sayfamıza bakabilirsiniz.</p>
+
+        <h3>5. Fikri Mülkiyet</h3>
+        <p>Sitenin tasarımı, kodları ve özgün içerikleri (blog yazıları, rehberler) telif hakları ile korunmaktadır; yazılı izin olmadan kopyalanamaz veya çoğaltılamaz. Deprem verileri ilgili sismoloji merkezlerine aittir ve onların kullanım koşullarına tabidir.</p>
+
+        <h3>6. Üçüncü Taraf Bağlantılar</h3>
+        <p>Sitede yer alan dış bağlantılar yalnızca kolaylık amacıyla sunulur. Bağlantı verilen sitelerin içeriklerinden ve uygulamalarından EarthquakeTrack sorumlu değildir.</p>
+
+        <h3>7. Koşullarda Değişiklik</h3>
+        <p>Bu koşullar gerektiğinde güncellenebilir. Güncel sürüm her zaman bu sayfada yayımlanır; siteyi kullanmaya devam etmeniz güncel koşulları kabul ettiğiniz anlamına gelir.</p>
+
+        <h3>8. İletişim</h3>
+        <p>Kullanım koşullarıyla ilgili sorularınız için: <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></p>
       </div>
     </div>
     <div id="content-en" style="display:none;">
       <header class="ct-head"><h1>Terms of Use</h1></header>
       <div class="ct-body">
-        <p>Please read these terms before using our site.</p>
-        <h3>1. Use of Service</h3>
-        <p>EarthquakeTrack is for informational purposes only. It does not make earthquake predictions or serve as an official warning system.</p>
-        <h3>2. Disclaimer</h3>
-        <p>The earthquake data presented is automatically retrieved from seismology centers. We cannot guarantee the accuracy of the data. EarthquakeTrack cannot be held responsible for any damages arising from the use of this data.</p>
-        <h3>3. Copyrights</h3>
-        <p>Our site's design and code are protected by copyright. It cannot be copied without permission.</p>
+        <p>Last Update: July 11, 2026</p>
+        <p>By using earthquaketrack.com.tr ("EarthquakeTrack", "the site") you agree to the following terms. Please read them carefully before using the site.</p>
+
+        <h3>1. Description and Purpose of the Service</h3>
+        <p>EarthquakeTrack is a free website that displays recent earthquakes in Turkey and around the world on a map, and publishes informative content on earthquake preparedness and seismology. The site is for informational purposes only; it does not predict earthquakes and does not replace any official early-warning system. In an emergency, call 112 and follow the announcements of AFAD and the competent authorities.</p>
+
+        <h3>2. Data Sources and Accuracy</h3>
+        <p>Earthquake data shown on the site is automatically retrieved from seismology centers such as USGS, EMSC and Kandilli Observatory and relayed as-is. Delays, revisions or errors at the sources may also be reflected on the site. No guarantee is given regarding the accuracy, timeliness or completeness of the data; for official information, please refer to the institutions' own channels.</p>
+
+        <h3>3. Disclaimer</h3>
+        <p>EarthquakeTrack cannot be held liable for any direct or indirect damages arising from the use of the data or content presented on the site. The service is provided "as is"; uninterrupted or error-free operation is not warranted.</p>
+
+        <h3>4. Advertising</h3>
+        <p>The site may display third-party advertisements through Google AdSense. EarthquakeTrack is not responsible for the content of advertisements or advertisers' websites. For details about advertising cookies, see our <a href="/privacy">Privacy Policy</a>.</p>
+
+        <h3>5. Intellectual Property</h3>
+        <p>The site's design, code and original content (blog posts, guides) are protected by copyright and may not be copied or reproduced without written permission. Earthquake data belongs to the respective seismology centers and is subject to their terms of use.</p>
+
+        <h3>6. Third-Party Links</h3>
+        <p>External links on the site are provided for convenience only. EarthquakeTrack is not responsible for the content or practices of linked websites.</p>
+
+        <h3>7. Changes to These Terms</h3>
+        <p>These terms may be updated when necessary. The current version is always published on this page; continued use of the site means you accept the updated terms.</p>
+
+        <h3>8. Contact</h3>
+        <p>For questions about these terms: <a href="mailto:info@earthquaketrack.com.tr">info@earthquaketrack.com.tr</a></p>
       </div>
     </div>
   </div>

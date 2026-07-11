@@ -1,4 +1,5 @@
 import { getEarthquakeData } from './api.js';
+import { t } from './language.js';
 
 const CACHE_MS = 60 * 1000;
 const SESSION_KEY = 'eq_sidebar_cache';
@@ -97,7 +98,7 @@ function buildFilters(quakes, listEl, countrySelect, citySelect) {
 
     function populateCities() {
         if (!citySelect) return;
-        citySelect.innerHTML = '<option value="">Tüm şehirler</option>';
+        citySelect.innerHTML = `<option value="">${t('allCities')}</option>`;
         if (countrySelect.value === 'Turkey') {
             const cities = [...new Set(quakes.filter(q => q.countryName === 'Turkey').map(q => q.cityName).filter(Boolean))].sort();
             cities.forEach(c => {
@@ -167,7 +168,7 @@ async function init() {
     const quakes = await loadQuakes();
 
     if (!quakes.length) {
-        listEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-secondary)">Veri alınamadı.</div>';
+        listEl.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-secondary)">${t('error_data_access')}</div>`;
         return;
     }
 

@@ -1,7 +1,7 @@
 import { getEarthquakeData, getCountryFromCoords } from './js/api.js';
 import { initMap, updateMapMarkers } from './js/map.js';
 import { updateSidebar, initSidebarResize, initSidebarToggle, initTabs, setEarthquakeData, toggleSidebarLoading, initSort, showSidebarError, renderDashboard, renderLocations, initLocationSelector, resetLocationFiltersAndMap } from './js/ui.js';
-import { initLanguage, toggleLanguage } from './js/language.js';
+import { initLanguage, toggleLanguage, t } from './js/language.js';
 import { initTheme } from './js/theme.js';
 import { initModal } from './js/modal.js';
 import { initRouter, showMap } from './js/router.js?v=2';
@@ -102,7 +102,7 @@ async function initApp() {
             } catch (err) {
                 console.error("Refresh failed", err);
                 if (!silent) {
-                    showSidebarError("Veri erişim sorunu.");
+                    showSidebarError(t('error_data_access'));
                 }
             } finally {
                 if (btn) btn.style.animation = '';
@@ -172,13 +172,13 @@ async function initApp() {
                 let remaining = Math.ceil(REFRESH_COOLDOWN_MS / 1000);
                 const updateTitle = () => {
                     if (remaining > 0) {
-                        btn.title = `Yenile (${remaining} s)`;
+                        btn.title = `${t('refresh')} (${remaining} s)`;
                         remaining--;
                     } else {
                         clearInterval(refreshCooldownIntervalId);
                         refreshCooldownIntervalId = null;
                         btn.disabled = false;
-                        btn.title = 'Yenile';
+                        btn.title = t('refresh');
                     }
                 };
                 updateTitle();
