@@ -123,6 +123,18 @@ html {
     scrollbar-gutter: stable;
 }
 
+/* .main-content is a column flex container, so its direct child (the page's shell div —
+   .content-container, .edu-shell, .prep-shell, etc.) is a flex item with the default
+   flex-shrink:1. When content is taller than .main-content's own box, that default
+   shrinks the shell below its natural content height instead of letting .main-content
+   scroll to it; overflow:visible then lets the content spill out visually, but scrollHeight
+   and any trailing padding-bottom on the shell end up anchored to the shrunk (wrong) box
+   instead of the true content height — the page then can't scroll to reveal its own end.
+   flex-shrink:0 keeps the shell at its real height so scrolling/padding are correct. */
+.main-content > * {
+    flex-shrink: 0;
+}
+
 /* ===== RAIL MODE ===== */
 .sidebar.rail-mode {
     width: var(--rail-width) !important;
@@ -1559,6 +1571,10 @@ input:checked+.slider:before {
         border-right: none !important;
         border-top: none !important;
         padding: 24px 18px !important;
+        /* Reserve space for the fixed minimized bottom bar on top of the page's own 24px
+           padding — see the .main-content > * comment above for why this must live here
+           and not on .main-content itself. */
+        padding-bottom: calc(24px + var(--mobile-bar-clearance, 0px)) !important;
         min-height: 100%;
         box-sizing: border-box;
     }

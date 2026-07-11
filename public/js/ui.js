@@ -404,7 +404,10 @@ export function initSidebarResize(mapInstance) {
             sidebar.offsetHeight;
 
             sidebar.style.height = `${targetHeight}px`;
-            mainContent.style.paddingBottom = `${targetHeight}px`;
+            // Reserve bottom clearance on the page's own shell div (see .main-content > * in
+            // style.css) — a padding-bottom on .main-content itself is not honored once content
+            // overflows through the shell's overflow:visible box.
+            document.documentElement.style.setProperty('--mobile-bar-clearance', `${targetHeight}px`);
             // Ensure main content fills the space above minimized sidebar
             mainContent.style.minHeight = `calc(100dvh - ${targetHeight}px)`;
 
@@ -429,7 +432,7 @@ export function initSidebarResize(mapInstance) {
             mainContent.style.height = '25dvh';
             mainContent.style.flex = 'none';
 
-            mainContent.style.paddingBottom = '';
+            document.documentElement.style.setProperty('--mobile-bar-clearance', '0px');
 
             // Yüksekliği sabit tut, sonra 75vh'ye anime et
             sidebar.style.height = `${startHeight}px`;
@@ -602,9 +605,9 @@ export function initSidebarToggle(mapInstance) {
                 sidebar.style.height = `${targetHeight}px`;
                 sidebar.style.flex = 'none';
                 
+                document.documentElement.style.setProperty('--mobile-bar-clearance', `${targetHeight}px`);
                 const mainContent = document.querySelector('.main-content');
                 if (mainContent) {
-                    mainContent.style.paddingBottom = `${targetHeight}px`;
                     mainContent.style.minHeight = `calc(100dvh - ${targetHeight}px)`;
                     mainContent.style.flex = '1';
                 }
@@ -621,9 +624,9 @@ export function initSidebarToggle(mapInstance) {
             sidebar.style.height = '';
             sidebar.style.flex = '';
             
+            document.documentElement.style.setProperty('--mobile-bar-clearance', '0px');
             const mainContent = document.querySelector('.main-content');
             if (mainContent) {
-                mainContent.style.paddingBottom = '';
                 mainContent.style.minHeight = '';
                 mainContent.style.height = '';
             }
