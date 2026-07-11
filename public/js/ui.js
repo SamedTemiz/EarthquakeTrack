@@ -334,8 +334,12 @@ export function updateSidebar(earthquakes, mapInstance) {
 
 export function initSidebarResize(mapInstance) {
     const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content'); // Need this to adjust map height
     const resizer = document.getElementById('sidebar-resizer');
+
+    // On Astro ClientRouter navigations <main> is swapped (it isn't transition:persist —
+    // only the sidebar is), so a cached reference goes stale after the first navigation.
+    // Re-query it fresh on every use, same reasoning as ensureBackdrop() below.
+    const getMainContent = () => document.querySelector('.main-content');
 
     if (!resizer) return;
 
@@ -372,6 +376,7 @@ export function initSidebarResize(mapInstance) {
         if (window.innerWidth > mobileBreak) return;
 
         const backdrop = ensureBackdrop();
+        const mainContent = getMainContent();
         const isCollapsed = sidebar.classList.contains('minimized');
 
         if (!isCollapsed) {
@@ -448,11 +453,14 @@ export function initSidebarResize(mapInstance) {
         if (!sidebar.classList.contains('minimized')) toggleSidebar();
     };
 
-    // Tap anywhere on minimized bar to expand (backdrop click closes — wired in ensureBackdrop)
+    // Tap anywhere on minimized bar to expand (backdrop click closes — wired in ensureBackdrop).
+    // Excludes #earthquake-list: a quake-card click already collapses the sidebar itself
+    // (see closeSidebarOnMobile() in updateSidebar()) — by the time this bubbles up here the
+    // `.minimized` class was just added, so without this guard we'd immediately re-expand it.
     sidebar.addEventListener('click', (e) => {
         if (!sidebar.classList.contains('minimized')) return;
         if (window.innerWidth > mobileBreak) return;
-        if (e.target.closest('#sidebar-resizer, button, a, select, input')) return;
+        if (e.target.closest('#sidebar-resizer, button, a, select, input, #earthquake-list')) return;
         toggleSidebar();
     });
 
@@ -508,7 +516,7 @@ export function initSidebarResize(mapInstance) {
 
             const newListHeight = totalHeight - newMapHeight;
 
-            mainContent.style.height = `${newMapHeight}px`;
+            getMainContent().style.height = `${newMapHeight}px`;
             sidebar.style.height = `${newListHeight}px`;
 
         } else {
